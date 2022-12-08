@@ -12,7 +12,7 @@ app.use(exporess.urlencoded({ extended: false }));
 app.use("/send-user-info", require("./routes/rootRoutes"));
 
 mongoose
-  .connect(process.env.MONGO_URI.toString())
+  .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("connect");
 
