@@ -13,11 +13,15 @@ const userShema = new Schema({
   },
   image: {
     type: String,
-    require: false,
+  },
+  address: {
+    type: String,
+  },
+  city: {
+    type: String,
   },
   cigarettes: {
     type: String,
-    require: false,
   },
   packCigarettesPrice: {
     type: String,

@@ -15,7 +15,6 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("connect");
-
     app.listen(port, () => console.log("Server Start"));
   })
   .catch((err) => console.log(err));
