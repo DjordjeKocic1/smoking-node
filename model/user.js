@@ -11,22 +11,13 @@ const userShema = new Schema({
     type: String,
     require: true,
   },
-  image: {
-    type: String,
-  },
-  address: {
-    type: String,
-  },
-  city: {
-    type: String,
-  },
-  cigarettes: {
-    type: String,
-  },
-  packCigarettesPrice: {
-    type: String,
-    require: false,
-  },
+  image: String,
+  address: String,
+  city: String,
+  cigarettes: String,
+  packCigarettesPrice: String,
+  cigarettesInPack: String,
+  userVerified:Boolean
 });
 
 module.exports = mongoose.model("User", userShema);

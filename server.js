@@ -1,14 +1,13 @@
-const exporess = require("express");
+const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const port = process.env.PORT || 8000;
 const User = require("./model/user");
 
-const app = exporess();
+const app = express();
 
-app.use(exporess.json());
-app.use(exporess.urlencoded({ extended: false }));
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use("/send-user-info", require("./routes/rootRoutes"));
 
 mongoose
