@@ -2,7 +2,7 @@ const Categorie = require("../model/categories");
 
 exports.getCategories = (req, res, next) => {
   Categorie.find().then((categories) => {
-    res.json({ categories });
+    res.status(200).json({ categories });
   });
 };
 
@@ -12,6 +12,6 @@ exports.createCategories = (req, res, next) => {
   });
   categorie
     .save()
-    .then((categorie) => res.json({ categorie }))
-    .catch((error) => res.json({ error }));
+    .then((categorie) => res.status(201).json({ categorie }))
+    .catch((error) => res.status(502).json({ error }));
 };
