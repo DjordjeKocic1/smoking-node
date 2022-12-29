@@ -9,7 +9,9 @@ exports.getUsers = (req, res, next) => {
 exports.createUser = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    const err = new Error("Validation failed, entered data is not correct!");
+    err.statusCode = 422;
+    throw err; //thorw error will go to next error handling
   }
   const user = new User({
     name: req.body.name,
@@ -26,14 +28,30 @@ exports.createUser = (req, res, next) => {
     user
       .save()
       .then((user) => res.status(201).json({ user }))
-      .catch((error) => res.status(502).json({ error }));
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
   });
 };
 
 exports.updateUser = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const err = new Error("Validation failed, entered data is not correct!");
+    err.statusCode = 422;
+    throw err; //thorw error will go to next error handling
+  }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
       res.status(201).json({ user });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };

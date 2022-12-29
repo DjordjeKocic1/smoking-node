@@ -9,11 +9,7 @@ const router = exporess.Router();
 //Users
 router.get("/users", userController.getUsers);
 
-router.post(
-  "/create-user",
-  body("email").custom(userValidation.validateEmail),
-  userController.createUser
-);
+router.post("/create-user", body("email").isEmail(), userController.createUser);
 
 router.put("/update-user/:id", userController.updateUser);
 
