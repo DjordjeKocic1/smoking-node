@@ -9,14 +9,17 @@ const userShema = new Schema({
     required: true,
   },
   image: String,
-  address: String,
-  city: String,
+  userVerified: Boolean,
+  userBasicInfo: {
+    address: String,
+    city: String,
+  },
   smokingInfo: {
     cigarettes: String,
     packCigarettesPrice: String,
     cigarettesInPack: String,
   },
-  userVerified: Boolean,
+
   categories: [
     {
       categorieId: {

@@ -1,6 +1,4 @@
 const exporess = require("express");
-const User = require("../model/user");
-const userValidation = require("../validation/userValidation");
 const userController = require("../controllers/userController");
 const categorieController = require("../controllers/categorieController");
 const { body } = require("express-validator");

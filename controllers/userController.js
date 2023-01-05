@@ -38,12 +38,6 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.updateUser = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const err = new Error("Validation failed, entered data is not correct!");
-    err.statusCode = 422;
-    throw err; //thorw error will go to next error handling
-  }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
       res.status(201).json({ user });
