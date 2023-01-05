@@ -27,7 +27,10 @@ exports.createUser = (req, res, next) => {
     }
     user
       .save()
-      .then((user) => res.status(201).json({ user }))
+      .then((user) => {
+        console.log({ "User Created": user });
+        res.status(201).json({ user });
+      })
       .catch((err) => {
         if (!err.statusCode) {
           err.statusCode = 500;
@@ -40,6 +43,7 @@ exports.createUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
+      console.log({ "User Updated": user });
       res.status(201).json({ user });
     })
     .catch((err) => {
