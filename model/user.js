@@ -13,6 +13,8 @@ const userShema = new Schema({
   userBasicInfo: {
     address: String,
     city: String,
+    country: String,
+    flag: String,
   },
   smokingInfo: {
     cigarettes: String,
