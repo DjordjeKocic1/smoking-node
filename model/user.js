@@ -26,7 +26,7 @@ const userShema = new Schema({
     packCigarettesPrice: String,
     cigarettesInPack: String,
   },
-  cigarettesAvoided: String,
+  cigarettesAvoided: Number,
   categories: [
     {
       categorieId: {
