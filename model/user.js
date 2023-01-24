@@ -17,11 +17,16 @@ const userShema = new Schema({
     flag: String,
   },
   smokingInfo: {
+    cigarettesDay: String,
+    packCigarettesPrice: String,
+    cigarettesInPack: String,
+  },
+  newSmokingInfo: {
     cigarettes: String,
     packCigarettesPrice: String,
     cigarettesInPack: String,
   },
-
+  cigarettesAvoided: String,
   categories: [
     {
       categorieId: {
