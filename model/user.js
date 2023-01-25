@@ -21,9 +21,10 @@ const userShema = new Schema({
     packCigarettesPrice: String,
     cigarettesInPack: String,
     cigarettesAvoided: Number,
+    cigarettesAvoidedCost: Number,
   },
   newSmokingInfo: {
-    cigarettes: String,
+    cigarettesDay: String,
     packCigarettesPrice: String,
     cigarettesInPack: String,
   },
