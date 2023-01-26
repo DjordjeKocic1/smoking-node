@@ -20,11 +20,18 @@ const userShema = new Schema({
     cigarettesDay: Number,
     packCigarettesPrice: Number,
     cigarettesInPack: Number,
-    cigarettesAvoided: Number,
+    cigarettesAvoided: {
+      type: Number,
+      default: 0,
+    },
     cigarettesDailyCost: Number,
     cigarettesMontlyCost: Number,
     cigarettesYearlyCost: Number,
-    cigarettesAvoidedCost: Number,
+    cigarettesAvoidedCost: {
+      type: Number,
+      default: 0,
+    },
+    cigarettesAvoidedOldCost: Number,
   },
   newSmokingInfo: {
     cigarettesDay: String,
@@ -43,41 +50,22 @@ const userShema = new Schema({
 });
 
 userShema.methods.calculateCosts = function (req) {
-  this.smokingInfo.cigarettesDailyCost =
-    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-    req.smokingInfo.cigarettesDay;
-  this.smokingInfo.cigarettesMontlyCost =
-    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-    req.smokingInfo.cigarettesDay *
-    30;
-  this.smokingInfo.cigarettesYearlyCost =
-    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-    req.smokingInfo.cigarettesDay *
-    365;
+  this.smokingInfo.cigarettesAvoided = req.cigarettesAvoided;
 
-  if (req.smokingInfo.cigarettesAvoided) {
-    if (
-      req.smokingInfo.packCigarettesPrice !=
-        this.smokingInfo.packCigarettesPrice ||
-      req.smokingInfo.cigarettesInPack != this.smokingInfo.cigarettesInPack
-    ) {
-      this.smokingInfo.cigarettesAvoidedCost =
-        (this.smokingInfo.packCigarettesPrice /
-          this.smokingInfo.cigarettesInPack) *
-          req.smokingInfo.cigarettesAvoided +
-        this.smokingInfo.cigarettesAvoidedCost;
-    } else {
-      this.smokingInfo.cigarettesAvoidedCost =
-        (this.smokingInfo.packCigarettesPrice /
-          this.smokingInfo.cigarettesInPack) *
-        req.smokingInfo.cigarettesAvoided;
-    }
+  if (req.packCigarettesPrice || req.cigarettesInPack || req.cigarettesDay) {
+    this.smokingInfo.cigarettesDailyCost =
+      (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay;
+    this.smokingInfo.cigarettesMontlyCost =
+      (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 30;
+    this.smokingInfo.cigarettesYearlyCost =
+      (req.packCigarettesPrice / req.cigarettesInPack) *
+      req.cigarettesDay *
+      365;
   }
 
-  this.smokingInfo.packCigarettesPrice = req.smokingInfo.packCigarettesPrice;
-  this.smokingInfo.cigarettesInPack = req.smokingInfo.cigarettesInPack;
-  this.smokingInfo.cigarettesDay = req.smokingInfo.cigarettesDay;
-  this.smokingInfo.cigarettesAvoided = req.smokingInfo.cigarettesAvoided;
+  this.smokingInfo.cigarettesAvoidedCost =
+    (req.packCigarettesPrice / req.cigarettesInPack) *
+    this.smokingInfo.cigarettesAvoided;
 
   return this.save();
 };
