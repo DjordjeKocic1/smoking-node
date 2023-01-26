@@ -17,10 +17,13 @@ const userShema = new Schema({
     flag: String,
   },
   smokingInfo: {
-    cigarettesDay: String,
-    packCigarettesPrice: String,
-    cigarettesInPack: String,
+    cigarettesDay: Number,
+    packCigarettesPrice: Number,
+    cigarettesInPack: Number,
     cigarettesAvoided: Number,
+    cigarettesDailyCost: Number,
+    cigarettesMontlyCost: Number,
+    cigarettesYearlyCost: Number,
     cigarettesAvoidedCost: Number,
   },
   newSmokingInfo: {
@@ -38,5 +41,45 @@ const userShema = new Schema({
     },
   ],
 });
+
+userShema.methods.calculateCosts = function (req) {
+  this.smokingInfo.cigarettesDailyCost =
+    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+    req.smokingInfo.cigarettesDay;
+  this.smokingInfo.cigarettesMontlyCost =
+    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+    req.smokingInfo.cigarettesDay *
+    30;
+  this.smokingInfo.cigarettesYearlyCost =
+    (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+    req.smokingInfo.cigarettesDay *
+    365;
+
+  if (req.smokingInfo.cigarettesAvoided) {
+    if (
+      req.smokingInfo.packCigarettesPrice !=
+        this.smokingInfo.packCigarettesPrice ||
+      req.smokingInfo.cigarettesInPack != this.smokingInfo.cigarettesInPack
+    ) {
+      this.smokingInfo.cigarettesAvoidedCost =
+        (this.smokingInfo.packCigarettesPrice /
+          this.smokingInfo.cigarettesInPack) *
+          req.smokingInfo.cigarettesAvoided +
+        this.smokingInfo.cigarettesAvoidedCost;
+    } else {
+      this.smokingInfo.cigarettesAvoidedCost =
+        (this.smokingInfo.packCigarettesPrice /
+          this.smokingInfo.cigarettesInPack) *
+        req.smokingInfo.cigarettesAvoided;
+    }
+  }
+
+  this.smokingInfo.packCigarettesPrice = req.smokingInfo.packCigarettesPrice;
+  this.smokingInfo.cigarettesInPack = req.smokingInfo.cigarettesInPack;
+  this.smokingInfo.cigarettesDay = req.smokingInfo.cigarettesDay;
+  this.smokingInfo.cigarettesAvoided = req.smokingInfo.cigarettesAvoided;
+
+  return this.save();
+};
 
 module.exports = mongoose.model("User", userShema);

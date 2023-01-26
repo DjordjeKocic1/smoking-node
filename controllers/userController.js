@@ -53,3 +53,19 @@ exports.updateUser = (req, res, next) => {
       next(err);
     });
 };
+
+exports.updateUserCosts = (req, res, next) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      return user.calculateCosts(req.body);
+    })
+    .then((user) => {
+      res.status(201).json({ user });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
