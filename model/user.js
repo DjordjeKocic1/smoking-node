@@ -45,6 +45,9 @@ const userShema = new Schema({
 
 userShema.methods.calculateCosts = function (req) {
   this.smokingInfo.cigarettesAvoided = req.cigarettesAvoided;
+  this.smokingInfo.packCigarettesPrice = req.packCigarettesPrice;
+  this.smokingInfo.cigarettesInPack = req.cigarettesInPack;
+  this.smokingInfo.cigarettesDay = req.cigarettesDay;
 
   if (req.packCigarettesPrice || req.cigarettesInPack || req.cigarettesDay) {
     this.smokingInfo.cigarettesDailyCost =
