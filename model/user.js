@@ -31,7 +31,6 @@ const userShema = new Schema({
       type: Number,
       default: 0,
     },
-    cigarettesAvoidedOldCost: Number,
   },
   newSmokingInfo: {
     cigarettesDay: String,
