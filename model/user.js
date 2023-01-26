@@ -32,11 +32,6 @@ const userShema = new Schema({
       default: 0,
     },
   },
-  newSmokingInfo: {
-    cigarettesDay: String,
-    packCigarettesPrice: String,
-    cigarettesInPack: String,
-  },
   categories: [
     {
       categorieId: {
