@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const calculations = require("../helpers/calcs")
 const Schema = mongoose.Schema;
 
 const userShema = new Schema({
@@ -33,6 +33,8 @@ const userShema = new Schema({
     cigarettesDailyCost: Number,
     cigarettesMontlyCost: Number,
     cigarettesYearlyCost: Number,
+    cigarettesAvoidedCost: Number,
+    cigarettesAvoided: Number,
   },
   categories: [
     {
@@ -51,6 +53,7 @@ userShema.methods.calculateCosts = function (req) {
     this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
     this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
     this.savedInfo.cigarettesDay = req.savedInfo.cigarettesDay;
+    this.savedInfo.cigarettesAvoided = req.savedInfo.cigarettesAvoided;
   } else {
     this.smokingInfo.cigarettesAvoided = req.smokingInfo.cigarettesAvoided;
     this.smokingInfo.packCigarettesPrice = req.smokingInfo.packCigarettesPrice;
@@ -59,35 +62,15 @@ userShema.methods.calculateCosts = function (req) {
   }
 
   if (!req.savedInfo) {
-    this.smokingInfo.cigarettesDailyCost =
-      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-      req.smokingInfo.cigarettesDay;
-    this.smokingInfo.cigarettesMontlyCost =
-      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-      req.smokingInfo.cigarettesDay *
-      30;
-    this.smokingInfo.cigarettesYearlyCost =
-      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-      req.smokingInfo.cigarettesDay *
-      365;
-    this.smokingInfo.cigarettesAvoidedCost =
-      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
-      this.smokingInfo.cigarettesAvoided;
+    this.smokingInfo.cigarettesDailyCost = calculations.cigDailyCosts(req.smokingInfo)
+    this.smokingInfo.cigarettesMontlyCost = calculations.cigMontlyCost(req.smokingInfo)
+    this.smokingInfo.cigarettesYearlyCost = calculations.cigYearlyCost(req.smokingInfo)
+    this.smokingInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(req.smokingInfo,this.smokingInfo.cigarettesAvoided)
   } else {
-    this.savedInfo.cigarettesDailyCost =
-      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
-      req.savedInfo.cigarettesDay;
-    this.savedInfo.cigarettesMontlyCost =
-      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
-      req.savedInfo.cigarettesDay *
-      30;
-    this.savedInfo.cigarettesYearlyCost =
-      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
-      req.savedInfo.cigarettesDay *
-      365;
-    this.savedInfo.cigarettesAvoidedCost =
-      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
-      this.savedInfo.cigarettesAvoided;
+    this.savedInfo.cigarettesDailyCost = calculations.cigDailyCosts(req.savedInfo)
+    this.savedInfo.cigarettesMontlyCost = calculations.cigMontlyCost(req.savedInfo)
+    this.savedInfo.cigarettesYearlyCost = calculations.cigYearlyCost(req.savedInfo)
+    this.savedInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(req.savedInfo,this.savedInfo.cigarettesAvoided)
   }
 
   return this.save();
