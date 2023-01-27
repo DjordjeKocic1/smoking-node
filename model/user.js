@@ -20,17 +20,19 @@ const userShema = new Schema({
     cigarettesDay: Number,
     packCigarettesPrice: Number,
     cigarettesInPack: Number,
-    cigarettesAvoided: {
-      type: Number,
-      default: 0,
-    },
+    cigarettesAvoided: Number,
     cigarettesDailyCost: Number,
     cigarettesMontlyCost: Number,
     cigarettesYearlyCost: Number,
-    cigarettesAvoidedCost: {
-      type: Number,
-      default: 0,
-    },
+    cigarettesAvoidedCost: Number,
+  },
+  savedInfo: {
+    cigarettesDay: Number,
+    packCigarettesPrice: Number,
+    cigarettesInPack: Number,
+    cigarettesDailyCost: Number,
+    cigarettesMontlyCost: Number,
+    cigarettesYearlyCost: Number,
   },
   categories: [
     {
@@ -44,25 +46,49 @@ const userShema = new Schema({
 });
 
 userShema.methods.calculateCosts = function (req) {
-  this.smokingInfo.cigarettesAvoided = req.cigarettesAvoided;
-  this.smokingInfo.packCigarettesPrice = req.packCigarettesPrice;
-  this.smokingInfo.cigarettesInPack = req.cigarettesInPack;
-  this.smokingInfo.cigarettesDay = req.cigarettesDay;
-
-  if (req.packCigarettesPrice || req.cigarettesInPack || req.cigarettesDay) {
-    this.smokingInfo.cigarettesDailyCost =
-      (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay;
-    this.smokingInfo.cigarettesMontlyCost =
-      (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 30;
-    this.smokingInfo.cigarettesYearlyCost =
-      (req.packCigarettesPrice / req.cigarettesInPack) *
-      req.cigarettesDay *
-      365;
+  //Updated smoking info
+  if (req.savedInfo) {
+    this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
+    this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
+    this.savedInfo.cigarettesDay = req.savedInfo.cigarettesDay;
+  } else {
+    this.smokingInfo.cigarettesAvoided = req.smokingInfo.cigarettesAvoided;
+    this.smokingInfo.packCigarettesPrice = req.smokingInfo.packCigarettesPrice;
+    this.smokingInfo.cigarettesInPack = req.smokingInfo.cigarettesInPack;
+    this.smokingInfo.cigarettesDay = req.smokingInfo.cigarettesDay;
   }
 
-  this.smokingInfo.cigarettesAvoidedCost =
-    (req.packCigarettesPrice / req.cigarettesInPack) *
-    this.smokingInfo.cigarettesAvoided;
+  if (!req.savedInfo) {
+    this.smokingInfo.cigarettesDailyCost =
+      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+      req.smokingInfo.cigarettesDay;
+    this.smokingInfo.cigarettesMontlyCost =
+      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+      req.smokingInfo.cigarettesDay *
+      30;
+    this.smokingInfo.cigarettesYearlyCost =
+      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+      req.smokingInfo.cigarettesDay *
+      365;
+    this.smokingInfo.cigarettesAvoidedCost =
+      (req.smokingInfo.packCigarettesPrice / req.smokingInfo.cigarettesInPack) *
+      this.smokingInfo.cigarettesAvoided;
+  } else {
+    this.savedInfo.cigarettesDailyCost =
+      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
+      req.savedInfo.cigarettesDay;
+    this.savedInfo.cigarettesMontlyCost =
+      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
+      req.savedInfo.cigarettesDay *
+      30;
+    this.savedInfo.cigarettesYearlyCost =
+      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
+      req.savedInfo.cigarettesDay *
+      365;
+    this.savedInfo.cigarettesAvoidedCost =
+      (req.savedInfo.packCigarettesPrice / req.savedInfo.cigarettesInPack) *
+      this.savedInfo.cigarettesAvoided;
+  }
 
   return this.save();
 };

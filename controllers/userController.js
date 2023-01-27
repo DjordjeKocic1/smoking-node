@@ -57,7 +57,7 @@ exports.updateUser = (req, res, next) => {
 exports.updateUserCosts = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      return user.calculateCosts(req.body.smokingInfo);
+      return user.calculateCosts(req.body);
     })
     .then((user) => {
       res.status(201).json({ user });
