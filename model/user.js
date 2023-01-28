@@ -24,6 +24,8 @@ const userShema = new Schema({
     cigarettesDailyCost: Number,
     cigarettesMontlyCost: Number,
     cigarettesYearlyCost: Number,
+    cigarettes5YearCost: Number,
+    cigarettes10YearCost: Number,
     cigarettesAvoidedCost: Number,
   },
   savedInfo: {
@@ -33,6 +35,8 @@ const userShema = new Schema({
     cigarettesDailyCost: Number,
     cigarettesMontlyCost: Number,
     cigarettesYearlyCost: Number,
+    cigarettes5YearCost: Number,
+    cigarettes10YearCost: Number,
     cigarettesAvoidedCost: Number,
     cigarettesAvoided: Number,
   },
@@ -63,6 +67,12 @@ userShema.methods.calculateCosts = function (req) {
     this.savedInfo.cigarettesYearlyCost = calculations.cigYearlyCost(
       req.savedInfo
     );
+    this.savedInfo.cigarettes5YearCost = calculations.cig5YearCost(
+      req.savedInfo
+    );
+    this.savedInfo.cigarettes10YearCost = calculations.cig10YearCost(
+      req.savedInfo
+    );
     this.savedInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(
       req.savedInfo,
       this.savedInfo.cigarettesAvoided
@@ -80,6 +90,12 @@ userShema.methods.calculateCosts = function (req) {
       req.smokingInfo
     );
     this.smokingInfo.cigarettesYearlyCost = calculations.cigYearlyCost(
+      req.smokingInfo
+    );
+    this.smokingInfo.cigarettes5YearCost = calculations.cig5YearCost(
+      req.smokingInfo
+    );
+    this.smokingInfo.cigarettes10YearCost = calculations.cig10YearCost(
       req.smokingInfo
     );
     this.smokingInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(
