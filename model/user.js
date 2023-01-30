@@ -17,10 +17,8 @@ const userShema = new Schema({
     flag: String,
   },
   smokingInfo: {
-    isQuiting: {
-      type: Boolean,
-    },
-    dateOfQuiting: Date,
+    isQuiting: Boolean,
+    dateOfQuiting: String,
   },
   consumptionInfo: {
     cigarettesDay: Number,
