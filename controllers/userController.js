@@ -41,31 +41,47 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.updateUser = (req, res, next) => {
-  User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((user) => {
-      console.log({ "User Updated": user });
-      res.status(201).json({ user });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
+  if (req.body.consumptionInfo || req.body.savedInfo) {
+    User.findById(req.params.id)
+      .then((user) => {
+        return user.calculateCosts(req.body);
+      })
+      .then((user) => {
+        res.status(201).json({ user });
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  } else {
+    User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      .then((user) => {
+        console.log({ "User Updated": user });
+        res.status(201).json({ user });
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  }
 };
 
-exports.updateUserCosts = (req, res, next) => {
-  User.findById(req.params.id)
-    .then((user) => {
-      return user.calculateCosts(req.body);
-    })
-    .then((user) => {
-      res.status(201).json({ user });
-    })
-    .catch((err) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
-    });
-};
+// exports.updateUserCosts = (req, res, next) => {
+//   User.findById(req.params.id)
+//     .then((user) => {
+//       return user.calculateCosts(req.body);
+//     })
+//     .then((user) => {
+//       res.status(201).json({ user });
+//     })
+//     .catch((err) => {
+//       if (!err.statusCode) {
+//         err.statusCode = 500;
+//       }
+//       next(err);
+//     });
+// };

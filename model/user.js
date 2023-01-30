@@ -17,6 +17,12 @@ const userShema = new Schema({
     flag: String,
   },
   smokingInfo: {
+    isQuiting: {
+      type: Boolean,
+    },
+    dateOfQuiting: Date,
+  },
+  consumptionInfo: {
     cigarettesDay: Number,
     packCigarettesPrice: Number,
     cigarettesInPack: Number,
@@ -78,29 +84,32 @@ userShema.methods.calculateCosts = function (req) {
       this.savedInfo.cigarettesAvoided
     );
   } else {
-    this.smokingInfo.cigarettesAvoided = req.smokingInfo.cigarettesAvoided;
-    this.smokingInfo.packCigarettesPrice = req.smokingInfo.packCigarettesPrice;
-    this.smokingInfo.cigarettesInPack = req.smokingInfo.cigarettesInPack;
-    this.smokingInfo.cigarettesDay = req.smokingInfo.cigarettesDay;
+    this.consumptionInfo.cigarettesAvoided =
+      req.consumptionInfo.cigarettesAvoided;
+    this.consumptionInfo.packCigarettesPrice =
+      req.consumptionInfo.packCigarettesPrice;
+    this.consumptionInfo.cigarettesInPack =
+      req.consumptionInfo.cigarettesInPack;
+    this.consumptionInfo.cigarettesDay = req.consumptionInfo.cigarettesDay;
 
-    this.smokingInfo.cigarettesDailyCost = calculations.cigDailyCosts(
-      req.smokingInfo
+    this.consumptionInfo.cigarettesDailyCost = calculations.cigDailyCosts(
+      req.consumptionInfo
     );
-    this.smokingInfo.cigarettesMontlyCost = calculations.cigMontlyCost(
-      req.smokingInfo
+    this.consumptionInfo.cigarettesMontlyCost = calculations.cigMontlyCost(
+      req.consumptionInfo
     );
-    this.smokingInfo.cigarettesYearlyCost = calculations.cigYearlyCost(
-      req.smokingInfo
+    this.consumptionInfo.cigarettesYearlyCost = calculations.cigYearlyCost(
+      req.consumptionInfo
     );
-    this.smokingInfo.cigarettes5YearCost = calculations.cig5YearCost(
-      req.smokingInfo
+    this.consumptionInfo.cigarettes5YearCost = calculations.cig5YearCost(
+      req.consumptionInfo
     );
-    this.smokingInfo.cigarettes10YearCost = calculations.cig10YearCost(
-      req.smokingInfo
+    this.consumptionInfo.cigarettes10YearCost = calculations.cig10YearCost(
+      req.consumptionInfo
     );
-    this.smokingInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(
-      req.smokingInfo,
-      this.smokingInfo.cigarettesAvoided
+    this.consumptionInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(
+      req.consumptionInfo,
+      this.consumptionInfo.cigarettesAvoided
     );
   }
 
