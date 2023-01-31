@@ -57,11 +57,6 @@ exports.updateUser = (req, res, next) => {
         next(err);
       });
   } else {
-    if (req.body.smokingInfo) {
-      req.body.smokingInfo.dateOfQuiting = moment(
-        req.body.smokingInfo.dateOfQuiting
-      ).format("YY-MM-DD");
-    }
     User.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then((user) => {
         console.log({ "User Updated": user });
