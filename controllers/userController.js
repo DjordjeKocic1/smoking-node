@@ -56,6 +56,11 @@ exports.updateUser = (req, res, next) => {
         next(err);
       });
   } else {
+    if (req.body.smokingInfo) {
+      req.body.smokingInfo.dateOfQuiting = moment(
+        req.body.smokingInfo.dateOfQuiting
+      ).format("YY-MM-DD");
+    }
     User.findByIdAndUpdate(req.params.id, req.body, { new: true })
       .then((user) => {
         console.log({ "User Updated": user });
@@ -69,19 +74,3 @@ exports.updateUser = (req, res, next) => {
       });
   }
 };
-
-// exports.updateUserCosts = (req, res, next) => {
-//   User.findById(req.params.id)
-//     .then((user) => {
-//       return user.calculateCosts(req.body);
-//     })
-//     .then((user) => {
-//       res.status(201).json({ user });
-//     })
-//     .catch((err) => {
-//       if (!err.statusCode) {
-//         err.statusCode = 500;
-//       }
-//       next(err);
-//     });
-// };

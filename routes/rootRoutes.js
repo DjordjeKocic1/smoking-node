@@ -11,8 +11,6 @@ router.post("/create-user", body("email").isEmail(), userController.createUser);
 
 router.put("/update-user/:id", userController.updateUser);
 
-// router.put("/update-user-costs/:id", userController.updateUserCosts);
-
 // Categories
 router.get("/categories", categorieController.getCategories);
 
