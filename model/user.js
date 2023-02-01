@@ -105,10 +105,12 @@ userShema.methods.calculateCosts = function (req) {
     this.consumptionInfo.cigarettes10YearCost = calculations
       .cig10YearCost(req.consumptionInfo)
       .toFixed(1);
-    this.consumptionInfo.cigarettesAvoidedCost = calculations.cigAvoidedCost(
-      req.consumptionInfo,
-      this.consumptionInfo.cigarettesAvoided
-    );
+    this.consumptionInfo.cigarettesAvoidedCost = calculations
+      .cigAvoidedCost(
+        req.consumptionInfo,
+        this.consumptionInfo.cigarettesAvoided
+      )
+      .toFixed(1);
   }
 
   return this.save();
