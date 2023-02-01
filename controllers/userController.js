@@ -1,5 +1,4 @@
 const User = require("../model/user");
-const moment = require("moment");
 const { validationResult } = require("express-validator");
 exports.getUsers = (req, res, next) => {
   User.find().then((users) => {
