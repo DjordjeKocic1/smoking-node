@@ -69,3 +69,19 @@ exports.updateUser = (req, res, next) => {
       });
   }
 };
+
+exports.getUserHealth = (req,res,next) => {
+  User.findById(req.params.id)
+  .then((user) => {
+    return user.calculateHealth(user)
+  })
+  .then((user) => {
+    res.status(201).json({ user });
+  })
+  .catch((err) => {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  });
+}

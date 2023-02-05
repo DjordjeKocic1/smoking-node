@@ -16,6 +16,17 @@ const userShema = new Schema({
     country: String,
     flag: String,
   },
+  healthInfo: {
+    bloodPressure: Number,
+    heartRhythm: Number,
+    COinBloodDecreases: Number,
+    lungCapacity: Number,
+    riskofheartAttack: Number,
+    irritatingCough: Number,
+    riskofLungeCancer: Number,
+    riskofThroatCancer: Number,
+    riskofKidneyCancer: Number,
+  },
   smokingInfo: {
     isQuiting: Boolean,
     dateOfQuiting: String,
@@ -111,6 +122,41 @@ userShema.methods.calculateCosts = function (req) {
         this.consumptionInfo.cigarettesAvoided
       )
       .toFixed(1);
+  }
+
+  return this.save();
+};
+
+userShema.methods.calculateHealth = function (req) {
+  this.healthInfo.bloodPressure = req.smokingInfo.noSmokingDays * 2.5;
+  this.healthInfo.heartRhythm = req.smokingInfo.noSmokingDays * 2.5;
+  this.healthInfo.COinBloodDecreases = req.smokingInfo.noSmokingDays * 2.5;
+  this.healthInfo.lungCapacity = req.smokingInfo.noSmokingDays * 0.5;
+  this.healthInfo.riskofheartAttack = req.smokingInfo.noSmokingDays * 0.5;
+  this.healthInfo.irritatingCough = req.smokingInfo.noSmokingDays * 0.4;
+  this.healthInfo.riskofKidneyCancer = req.smokingInfo.noSmokingDays * 0.3;
+  this.healthInfo.riskofThroatCancer = req.smokingInfo.noSmokingDays * 0.3;
+  this.healthInfo.riskofLungeCancer = req.smokingInfo.noSmokingDays * 0.3;
+
+  if (this.healthInfo.bloodPressure > 100) {
+    this.healthInfo.bloodPressure = 100;
+    this.healthInfo.heartRhythm = 100;
+    this.healthInfo.COinBloodDecreases = 100;
+  }
+
+  if (this.healthInfo.lungCapacity > 100) {
+    this.healthInfo.lungCapacity = 100;
+    this.healthInfo.riskofheartAttack = 100;
+  }
+
+  if (this.healthInfo.irritatingCough > 100) {
+    this.healthInfo.irritatingCough = 100;
+  }
+
+  if (this.healthInfo.riskofThroatCancer > 100) {
+    this.healthInfo.riskofThroatCancer = 100;
+    this.healthInfo.riskofKidneyCancer = 100;
+    this.healthInfo.riskofLungeCancer = 100;
   }
 
   return this.save();

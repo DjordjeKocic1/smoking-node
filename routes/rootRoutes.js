@@ -11,6 +11,8 @@ router.post("/create-user", body("email").isEmail(), userController.createUser);
 
 router.put("/update-user/:id", userController.updateUser);
 
+router.get("/user-health/:id", userController.getUserHealth);
+
 // Categories
 router.get("/categories", categorieController.getCategories);
 
