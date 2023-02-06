@@ -1,9 +1,27 @@
 const User = require("../model/user");
+const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
+
 exports.getUsers = (req, res, next) => {
   User.find().then((users) => {
     res.status(200).json({ users });
   });
+};
+
+exports.getUserHealth = (req, res, next) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      return user.calculateHealth(user);
+    })
+    .then((user) => {
+      res.status(201).json({ user });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 };
 
 exports.createUser = (req, res, next) => {
@@ -69,19 +87,3 @@ exports.updateUser = (req, res, next) => {
       });
   }
 };
-
-exports.getUserHealth = (req,res,next) => {
-  User.findById(req.params.id)
-  .then((user) => {
-    return user.calculateHealth(user)
-  })
-  .then((user) => {
-    res.status(201).json({ user });
-  })
-  .catch((err) => {
-    if (!err.statusCode) {
-      err.statusCode = 500;
-    }
-    next(err);
-  });
-}
