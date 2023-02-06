@@ -21,11 +21,14 @@ const userShema = new Schema({
     heartRhythm: Number,
     COinBloodDecreases: Number,
     lungCapacity: Number,
+    physicalAndBodilyStrength: Number,
     riskofheartAttack: Number,
     irritatingCough: Number,
+    stressTolerance: Number,
     riskofLungeCancer: Number,
     riskofThroatCancer: Number,
     riskofKidneyCancer: Number,
+    riskofStroke: Number,
   },
   smokingInfo: {
     isQuiting: Boolean,
@@ -131,17 +134,22 @@ userShema.methods.calculateHealth = function (req) {
   this.healthInfo.bloodPressure = req.smokingInfo.noSmokingDays * 2.5;
   this.healthInfo.heartRhythm = req.smokingInfo.noSmokingDays * 2.5;
   this.healthInfo.COinBloodDecreases = req.smokingInfo.noSmokingDays * 2.5;
+  this.healthInfo.physicalAndBodilyStrength =
+    req.smokingInfo.noSmokingDays * 2.5;
   this.healthInfo.lungCapacity = req.smokingInfo.noSmokingDays * 0.5;
-  this.healthInfo.riskofheartAttack = req.smokingInfo.noSmokingDays * 0.5;
   this.healthInfo.irritatingCough = req.smokingInfo.noSmokingDays * 0.4;
+  this.healthInfo.stressTolerance = req.smokingInfo.noSmokingDays * 0.4;
+  this.healthInfo.riskofheartAttack = req.smokingInfo.noSmokingDays * 0.3;
   this.healthInfo.riskofKidneyCancer = req.smokingInfo.noSmokingDays * 0.3;
   this.healthInfo.riskofThroatCancer = req.smokingInfo.noSmokingDays * 0.3;
   this.healthInfo.riskofLungeCancer = req.smokingInfo.noSmokingDays * 0.3;
+  this.healthInfo.riskofStroke = req.smokingInfo.noSmokingDays * 0.3;
 
   if (this.healthInfo.bloodPressure > 100) {
     this.healthInfo.bloodPressure = 100;
     this.healthInfo.heartRhythm = 100;
     this.healthInfo.COinBloodDecreases = 100;
+    this.healthInfo.physicalAndBodilyStrength = 100;
   }
 
   if (this.healthInfo.lungCapacity > 100) {
@@ -151,12 +159,14 @@ userShema.methods.calculateHealth = function (req) {
 
   if (this.healthInfo.irritatingCough > 100) {
     this.healthInfo.irritatingCough = 100;
+    this.healthInfo.stressTolerance = 100;
   }
 
   if (this.healthInfo.riskofThroatCancer > 100) {
     this.healthInfo.riskofThroatCancer = 100;
     this.healthInfo.riskofKidneyCancer = 100;
     this.healthInfo.riskofLungeCancer = 100;
+    this.healthInfo.riskofStroke = 100;
   }
 
   return this.save();
