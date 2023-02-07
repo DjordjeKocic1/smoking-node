@@ -131,17 +131,17 @@ userShema.methods.calculateCosts = function (req) {
 };
 
 userShema.methods.calculateHealth = function (req) {
-  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 2.7).toFixed(
     1
   );
   this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
     1
   );
   this.healthInfo.COinBloodDecreases = (
-    req.smokingInfo.noSmokingDays * 2.5
+    req.smokingInfo.noSmokingDays * 2.3
   ).toFixed(1);
   this.healthInfo.physicalAndBodilyStrength = (
-    req.smokingInfo.noSmokingDays * 2.5
+    req.smokingInfo.noSmokingDays * 2.1
   ).toFixed(1);
   this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
     1
@@ -170,18 +170,33 @@ userShema.methods.calculateHealth = function (req) {
 
   if (this.healthInfo.bloodPressure > 100) {
     this.healthInfo.bloodPressure = 100;
+  }
+
+  if (this.healthInfo.heartRhythm > 100) {
     this.healthInfo.heartRhythm = 100;
+  }
+
+  if (this.healthInfo.COinBloodDecreases > 100) {
     this.healthInfo.COinBloodDecreases = 100;
+  }
+
+  if (this.healthInfo.physicalAndBodilyStrength > 100) {
     this.healthInfo.physicalAndBodilyStrength = 100;
   }
 
   if (this.healthInfo.lungCapacity > 100) {
     this.healthInfo.lungCapacity = 100;
+  }
+
+  if (this.healthInfo.riskofheartAttack > 100) {
     this.healthInfo.riskofheartAttack = 100;
   }
 
   if (this.healthInfo.irritatingCough > 100) {
     this.healthInfo.irritatingCough = 100;
+  }
+
+  if (this.healthInfo.stressTolerance > 100) {
     this.healthInfo.stressTolerance = 100;
   }
 
