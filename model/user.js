@@ -131,19 +131,42 @@ userShema.methods.calculateCosts = function (req) {
 };
 
 userShema.methods.calculateHealth = function (req) {
-  this.healthInfo.bloodPressure = req.smokingInfo.noSmokingDays * 2.5;
-  this.healthInfo.heartRhythm = req.smokingInfo.noSmokingDays * 2.5;
-  this.healthInfo.COinBloodDecreases = req.smokingInfo.noSmokingDays * 2.5;
-  this.healthInfo.physicalAndBodilyStrength =
-    req.smokingInfo.noSmokingDays * 2.5;
-  this.healthInfo.lungCapacity = req.smokingInfo.noSmokingDays * 0.5;
-  this.healthInfo.irritatingCough = req.smokingInfo.noSmokingDays * 0.4;
-  this.healthInfo.stressTolerance = req.smokingInfo.noSmokingDays * 0.4;
-  this.healthInfo.riskofheartAttack = req.smokingInfo.noSmokingDays * 0.3;
-  this.healthInfo.riskofKidneyCancer = req.smokingInfo.noSmokingDays * 0.3;
-  this.healthInfo.riskofThroatCancer = req.smokingInfo.noSmokingDays * 0.3;
-  this.healthInfo.riskofLungeCancer = req.smokingInfo.noSmokingDays * 0.3;
-  this.healthInfo.riskofStroke = req.smokingInfo.noSmokingDays * 0.3;
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
+    1
+  );
+  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
+    1
+  );
+  this.healthInfo.COinBloodDecreases = (
+    req.smokingInfo.noSmokingDays * 2.5
+  ).toFixed(1);
+  this.healthInfo.physicalAndBodilyStrength = (
+    req.smokingInfo.noSmokingDays * 2.5
+  ).toFixed(1);
+  this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
+    1
+  );
+  this.healthInfo.irritatingCough = (
+    req.smokingInfo.noSmokingDays * 0.4
+  ).toFixed(1);
+  this.healthInfo.stressTolerance = (
+    req.smokingInfo.noSmokingDays * 0.4
+  ).toFixed(1);
+  this.healthInfo.riskofheartAttack = (
+    req.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofKidneyCancer = (
+    req.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofThroatCancer = (
+    req.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofLungeCancer = (
+    req.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofStroke = (req.smokingInfo.noSmokingDays * 0.3).toFixed(
+    1
+  );
 
   if (this.healthInfo.bloodPressure > 100) {
     this.healthInfo.bloodPressure = 100;
