@@ -11,10 +11,9 @@ exports.getUsers = (req, res, next) => {
 exports.getUserHealth = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      return user.calculateHealth(user);
-    })
-    .then((user) => {
-      res.status(201).json({ user });
+      return user
+        .calculateHealth(user)
+        .then((healthCalc) => res.status(201).json({ user: healthCalc }));
     })
     .catch((err) => {
       if (!err.statusCode) {
