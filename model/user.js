@@ -132,17 +132,17 @@ userShema.methods.calculateCosts = function (req) {
 };
 
 userShema.methods.calculateHealth = function (req) {
-  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 2.7).toFixed(
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(
     1
   );
-  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
+  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(
     1
   );
   this.healthInfo.COinBloodDecreases = (
-    req.smokingInfo.noSmokingDays * 2.3
+    req.smokingInfo.noSmokingDays * 1.3
   ).toFixed(1);
   this.healthInfo.physicalAndBodilyStrength = (
-    req.smokingInfo.noSmokingDays * 2.1
+    req.smokingInfo.noSmokingDays * 1.2
   ).toFixed(1);
   this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
     1
