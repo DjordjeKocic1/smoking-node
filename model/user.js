@@ -29,6 +29,7 @@ const userShema = new Schema({
     riskofThroatCancer: Number,
     riskofKidneyCancer: Number,
     riskofStroke: Number,
+    avgHealth: Number,
   },
   smokingInfo: {
     isQuiting: Boolean,
@@ -206,6 +207,20 @@ userShema.methods.calculateHealth = function (req) {
     this.healthInfo.riskofLungeCancer = 100;
     this.healthInfo.riskofStroke = 100;
   }
+
+  this.healthInfo.avgHealth = (
+    (this.healthInfo.bloodPressure +
+      this.healthInfo.heartRhythm +
+      this.healthInfo.COinBloodDecreases +
+      this.healthInfo.lungCapacity +
+      this.healthInfo.physicalAndBodilyStrength +
+      this.healthInfo.riskofheartAttack +
+      this.healthInfo.stressTolerance +
+      this.healthInfo.riskofLungeCancer +
+      this.healthInfo.riskofThroatCancer +
+      this.healthInfo.riskofStroke) /
+    10
+  ).toFixed(1);
 
   return this.save();
 };
