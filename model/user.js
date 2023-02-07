@@ -134,14 +134,14 @@ userShema.methods.calculateHealth = function (req) {
   this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
     1
   );
-  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 2.4).toFixed(
+  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 2.5).toFixed(
     1
   );
   this.healthInfo.COinBloodDecreases = (
-    req.smokingInfo.noSmokingDays * 2.3
+    req.smokingInfo.noSmokingDays * 2.5
   ).toFixed(1);
   this.healthInfo.physicalAndBodilyStrength = (
-    req.smokingInfo.noSmokingDays * 2.2
+    req.smokingInfo.noSmokingDays * 2.5
   ).toFixed(1);
   this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
     1
