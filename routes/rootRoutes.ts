@@ -1,7 +1,8 @@
-const exporess = require("express");
-const userController = require("../controllers/userController");
-const categorieController = require("../controllers/categorieController");
-const { body } = require("express-validator");
+import { body } from "express-validator";
+import {categorieController} from "../controllers/categorieController";
+import exporess from "express";
+import {userController} from "../controllers/userController";
+
 const router = exporess.Router();
 
 //Users

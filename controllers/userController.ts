@@ -1,20 +1,20 @@
-const User = require("../model/user");
-const { validationResult } = require("express-validator");
+import User from "../model/user";
+import { validationResult } from "express-validator";
 
-exports.getUsers = (req, res, next) => {
-  User.find().then((users) => {
+const getUsers = (req: any, res: any) => {
+  User.find().then((users: any) => {
     res.status(200).json({ users });
   });
 };
 
-exports.getUserHealth = (req, res, next) => {
+const getUserHealth = (req: any, res: any, next: any) => {
   User.findById(req.params.id)
-    .then((user) => {
+    .then((user: any) => {
       return user
         .calculateHealth(user)
-        .then((healthCalc) => res.status(201).json({ user: healthCalc }));
+        .then((healthCalc: any) => res.status(201).json({ user: healthCalc }));
     })
-    .catch((err) => {
+    .catch((err: any) => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -22,10 +22,12 @@ exports.getUserHealth = (req, res, next) => {
     });
 };
 
-exports.createUser = (req, res, next) => {
+const createUser = (req: any, res: any, next: any) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const err = new Error("Validation failed, entered data is not correct!");
+    const err: any = new Error(
+      "Validation failed, entered data is not correct!"
+    );
     err.statusCode = 422;
     throw err; //thorw error will go to next error handling
   }
@@ -36,18 +38,18 @@ exports.createUser = (req, res, next) => {
     address: req.body.address,
     city: req.body.city,
   });
-  User.find().then((users) => {
-    let existingUser = users.find((user) => user.email == req.body.email);
+  User.find().then((users: any) => {
+    let existingUser = users.find((user: any) => user.email == req.body.email);
     if (!!existingUser) {
       return res.status(201).json({ user: existingUser });
     }
     user
       .save()
-      .then((user) => {
+      .then((user: any) => {
         console.log({ "User Created": user });
         res.status(201).json({ user });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (!err.statusCode) {
           err.statusCode = 500;
         }
@@ -56,16 +58,16 @@ exports.createUser = (req, res, next) => {
   });
 };
 
-exports.updateUser = (req, res, next) => {
+const updateUser = (req: any, res: any, next: any) => {
   if (req.body.consumptionInfo || req.body.savedInfo) {
     User.findById(req.params.id)
-      .then((user) => {
+      .then((user: any) => {
         return user.calculateCosts(req.body);
       })
-      .then((user) => {
+      .then((user: any) => {
         res.status(201).json({ user });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (!err.statusCode) {
           err.statusCode = 500;
         }
@@ -73,15 +75,22 @@ exports.updateUser = (req, res, next) => {
       });
   } else {
     User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      .then((user) => {
+      .then((user: any) => {
         console.log({ "User Updated": user });
         res.status(201).json({ user });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         if (!err.statusCode) {
           err.statusCode = 500;
         }
         next(err);
       });
   }
+};
+
+export const userController = {
+  getUsers,
+  getUserHealth,
+  createUser,
+  updateUser,
 };

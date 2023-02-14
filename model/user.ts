@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const calculations = require("../helpers/calcs");
+import {calculations} from "../helpers/calcs";
+import mongoose from "mongoose";
+
 const Schema = mongoose.Schema;
 
 const userShema = new Schema({
@@ -71,7 +72,7 @@ const userShema = new Schema({
   ],
 });
 
-userShema.methods.calculateCosts = function (req) {
+userShema.methods.calculateCosts = function (req:any) {
   if (req.savedInfo) {
     this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
     this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
@@ -131,7 +132,7 @@ userShema.methods.calculateCosts = function (req) {
   return this.save();
 };
 
-userShema.methods.calculateHealth = function (req) {
+userShema.methods.calculateHealth = function (req:any) {
   this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(
     1
   );
@@ -225,4 +226,4 @@ userShema.methods.calculateHealth = function (req) {
   return this.save();
 };
 
-module.exports = mongoose.model("User", userShema);
+export default mongoose.model("User", userShema);

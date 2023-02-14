@@ -1,12 +1,12 @@
-const Categorie = require("../model/categories");
+import Categorie from "../model/categories";
 
-exports.getCategories = (req, res, next) => {
+const getCategories = (req:any, res:any) => {
   Categorie.find().then((categories) => {
     res.status(200).json({ categories });
   });
 };
 
-exports.createCategories = (req, res, next) => {
+const createCategories = (req:any, res:any) => {
   const categorie = new Categorie({
     name: req.body.name,
   });
@@ -15,3 +15,8 @@ exports.createCategories = (req, res, next) => {
     .then((categorie) => res.status(201).json({ categorie }))
     .catch((error) => res.status(502).json({ error }));
 };
+
+
+export const categorieController = {
+  getCategories,createCategories
+}
