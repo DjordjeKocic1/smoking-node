@@ -1,9 +1,10 @@
+import { IUser } from "../types/types";
 import {calculations} from "../helpers/calcs";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const userShema = new Schema({
+const userShema = new Schema<IUser>({
   name: String,
   email: {
     type: String,
@@ -72,7 +73,7 @@ const userShema = new Schema({
   ],
 });
 
-userShema.methods.calculateCosts = function (req:any) {
+userShema.methods.calculateCosts = function (req:IUser) {
   if (req.savedInfo) {
     this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
     this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
@@ -133,9 +134,7 @@ userShema.methods.calculateCosts = function (req:any) {
 };
 
 userShema.methods.calculateHealth = function (req:any) {
-  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(
-    1
-  );
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5);
   this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(
     1
   );
@@ -226,4 +225,4 @@ userShema.methods.calculateHealth = function (req:any) {
   return this.save();
 };
 
-export default mongoose.model("User", userShema);
+export default mongoose.model<IUser>("User", userShema);

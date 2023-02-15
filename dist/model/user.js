@@ -129,7 +129,7 @@ userShema.methods.calculateCosts = function (req) {
     return this.save();
 };
 userShema.methods.calculateHealth = function (req) {
-    this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(1);
+    this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5);
     this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(1);
     this.healthInfo.COinBloodDecreases = (req.smokingInfo.noSmokingDays * 1.3).toFixed(1);
     this.healthInfo.physicalAndBodilyStrength = (req.smokingInfo.noSmokingDays * 1.2).toFixed(1);
