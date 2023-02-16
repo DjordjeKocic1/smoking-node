@@ -46,7 +46,7 @@ export interface IConsumptionInfo {
 }
 export interface IUser {
   name: string;
-  email: string | {};
+  email: string;
   address: string;
   city: string;
   image: string;

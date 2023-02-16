@@ -16,4 +16,4 @@ router.get("/user-health/:id", userController_1.userController.getUserHealth);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);
-module.exports = router;
+exports.default = router;

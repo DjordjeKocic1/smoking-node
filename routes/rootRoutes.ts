@@ -19,4 +19,4 @@ router.get("/categories", categorieController.getCategories);
 
 router.post("/categories", categorieController.createCategories);
 
-module.exports = router;
+export default router;

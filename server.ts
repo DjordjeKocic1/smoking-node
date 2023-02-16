@@ -2,6 +2,7 @@ import { ErrorMsg } from "./types/types";
 import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
+import router from "./routes/rootRoutes";
 import { v4 as uuidv4 } from "uuid";
 
 const dotenv = require("dotenv").config();
@@ -21,7 +22,7 @@ const storage = multer.diskStorage({
 app.use(express.json());
 app.use(multer({ storage: storage }).single("image"));
 
-app.use("/send-user-info", require("./routes/rootRoutes"));
+app.use("/send-user-info", router);
 
 app.use((error:ErrorMsg, req:any, res:any) => {
   const status = error.statusCode || 500;

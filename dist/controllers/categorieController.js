@@ -8,6 +8,9 @@ const categories_1 = __importDefault(require("../model/categories"));
 const getCategories = (req, res) => {
     categories_1.default.find().then((categories) => {
         res.status(200).json({ categories });
+    }).catch((error) => {
+        console.log('Categories Get Error:', error);
+        res.status(502).json({ error });
     });
 };
 const createCategories = (req, res) => {
@@ -17,7 +20,9 @@ const createCategories = (req, res) => {
     categorie
         .save()
         .then((categorie) => res.status(201).json({ categorie }))
-        .catch((error) => res.status(502).json({ error }));
+        .catch((error) => {
+        res.status(502).json({ error });
+    });
 };
 exports.categorieController = {
     getCategories, createCategories

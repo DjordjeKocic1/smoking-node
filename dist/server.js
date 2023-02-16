@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const multer_1 = __importDefault(require("multer"));
+const rootRoutes_1 = __importDefault(require("./routes/rootRoutes"));
 const uuid_1 = require("uuid");
 const dotenv = require("dotenv").config();
 const port = process.env.PORT || 8000;
@@ -20,7 +21,7 @@ const storage = multer_1.default.diskStorage({
 });
 app.use(express_1.default.json());
 app.use((0, multer_1.default)({ storage: storage }).single("image"));
-app.use("/send-user-info", require("./routes/rootRoutes"));
+app.use("/send-user-info", rootRoutes_1.default);
 app.use((error, req, res) => {
     const status = error.statusCode || 500;
     const message = error.message;
@@ -32,4 +33,4 @@ mongoose_1.default
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
 })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log("Db error:", err));

@@ -43,7 +43,7 @@ const createUser = (req: Request<{}, {}, IUser>, res: Response, next: NextFuncti
     err.statusCode = 422;
     throw err; //thorw error will go to next error handling
   }
-  const user = new User({
+  const user = new User<IUser>({
     name: req.body.name,
     email: req.body.email,
     image: req.body.image,

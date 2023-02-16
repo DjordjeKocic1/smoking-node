@@ -1,19 +1,21 @@
-const cigDailyCosts = (req: any): number => {
+import { IConsumptionInfo } from "../types/types";
+
+const cigDailyCosts = (req: IConsumptionInfo): number => {
   return (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay;
 };
 
-const cigMontlyCost = (req: any): number => {
+const cigMontlyCost = (req: IConsumptionInfo): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 30
   );
 };
 
-const cigYearlyCost = (req: any): number => {
+const cigYearlyCost = (req: IConsumptionInfo): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 365
   );
 };
-const cig5YearCost = (req: any): number => {
+const cig5YearCost = (req: IConsumptionInfo): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) *
     req.cigarettesDay *
@@ -22,7 +24,7 @@ const cig5YearCost = (req: any): number => {
   );
 };
 
-const cig10YearCost = (req: any): number => {
+const cig10YearCost = (req: IConsumptionInfo): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) *
     req.cigarettesDay *
@@ -31,7 +33,7 @@ const cig10YearCost = (req: any): number => {
   );
 };
 
-const cigAvoidedCost = (req: any, avoided: any): number => {
+const cigAvoidedCost = (req: IConsumptionInfo, avoided: any): number => {
   return (req.packCigarettesPrice / req.cigarettesInPack) * avoided;
 };
 

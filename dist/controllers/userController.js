@@ -6,9 +6,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
-const getUsers = (req, res) => {
-    user_1.default.find().then((users) => {
+const getUsers = (req, res, next) => {
+    user_1.default.find()
+        .then((users) => {
         res.status(200).json({ users });
+    })
+        .catch((err) => {
+        console.log('Get Users Error:', err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     });
 };
 const getUserHealth = (req, res, next) => {
@@ -19,6 +27,7 @@ const getUserHealth = (req, res, next) => {
             .then((healthCalc) => res.status(201).json({ user: healthCalc }));
     })
         .catch((err) => {
+        console.log('Get Users Health Error:', err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -35,7 +44,7 @@ const createUser = (req, res, next) => {
     const user = new user_1.default({
         name: req.body.name,
         email: req.body.email,
-        image: req.body.picture,
+        image: req.body.image,
         address: req.body.address,
         city: req.body.city,
     });
@@ -51,6 +60,7 @@ const createUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
+            console.log('Create User Error:', err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
@@ -68,6 +78,7 @@ const updateUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
+            console.log('Update User Error:', err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
@@ -81,6 +92,7 @@ const updateUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
+            console.log('Update User Error:', err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
