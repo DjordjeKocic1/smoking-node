@@ -47,8 +47,8 @@ export interface IConsumptionInfo {
 export interface IUser {
   name: string;
   email: string | {};
-  address:string,
-  city:string,
+  address: string;
+  city: string;
   image: string;
   userVerified?: boolean;
   userBasicInfo?: IUserBasicInfo;

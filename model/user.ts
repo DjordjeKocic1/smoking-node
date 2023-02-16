@@ -134,7 +134,7 @@ userShema.methods.calculateCosts = function (req:IUser) {
 };
 
 userShema.methods.calculateHealth = function (req:any) {
-  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5);
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(1);
   this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(
     1
   );

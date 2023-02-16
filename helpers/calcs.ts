@@ -1,19 +1,19 @@
-const cigDailyCosts = (req: any) => {
+const cigDailyCosts = (req: any): number => {
   return (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay;
 };
 
-const cigMontlyCost = (req: any) => {
+const cigMontlyCost = (req: any): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 30
   );
 };
 
-const cigYearlyCost = (req: any) => {
+const cigYearlyCost = (req: any): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) * req.cigarettesDay * 365
   );
 };
-const cig5YearCost = (req: any) => {
+const cig5YearCost = (req: any): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) *
     req.cigarettesDay *
@@ -22,7 +22,7 @@ const cig5YearCost = (req: any) => {
   );
 };
 
-const cig10YearCost = (req: any) => {
+const cig10YearCost = (req: any): number => {
   return (
     (req.packCigarettesPrice / req.cigarettesInPack) *
     req.cigarettesDay *
@@ -31,7 +31,7 @@ const cig10YearCost = (req: any) => {
   );
 };
 
-const cigAvoidedCost = (req: any, avoided: any) => {
+const cigAvoidedCost = (req: any, avoided: any): number => {
   return (req.packCigarettesPrice / req.cigarettesInPack) * avoided;
 };
 

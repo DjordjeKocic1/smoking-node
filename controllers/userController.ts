@@ -4,9 +4,9 @@ import { IUser } from "../types/types";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const getUsers = (req: Request, res: Response, next: NextFunction) => {
+const getUsers = (req: Request, res: Response<{users:IUser[]}>, next: NextFunction) => {
   User.find()
-    .then((users: IUser[]) => {
+    .then((users:IUser[]) => {
       res.status(200).json({ users });
     })
     .catch((err: any) => {
@@ -18,12 +18,12 @@ const getUsers = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getUserHealth = (req: Request, res: Response, next: NextFunction) => {
+const getUserHealth = (req: Request<{id:string}>, res: Response, next: NextFunction) => {
   User.findById(req.params.id)
-    .then((user: any) => {
+    .then((user:any) => {
       return user
         .calculateHealth(user)
-        .then((healthCalc: any) => res.status(201).json({ user: healthCalc }));
+        .then((healthCalc: IUser) => res.status(201).json({ user: healthCalc }));
     })
     .catch((err: any) => {
       console.log('Get Users Health Error:', err);
@@ -34,7 +34,7 @@ const getUserHealth = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const createUser = (req: Request, res: Response, next: NextFunction) => {
+const createUser = (req: Request<{}, {}, IUser>, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const err: any = new Error(
@@ -43,23 +43,23 @@ const createUser = (req: Request, res: Response, next: NextFunction) => {
     err.statusCode = 422;
     throw err; //thorw error will go to next error handling
   }
-  const user = new User<IUser>({
+  const user = new User({
     name: req.body.name,
     email: req.body.email,
-    image: req.body.picture,
+    image: req.body.image,
     address: req.body.address,
     city: req.body.city,
   });
-  User.find().then((users: any) => {
+  User.find().then((users:IUser[]) => {
     let existingUser = users.find(
       (user: IUser) => user.email == req.body.email
-    );
+    )
     if (!!existingUser) {
       return res.status(201).json({ user: existingUser });
     }
     user
       .save()
-      .then((user: IUser) => {
+      .then((user:IUser) => {
         console.log({ "User Created": user });
         res.status(201).json({ user });
       })
@@ -73,10 +73,10 @@ const createUser = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const updateUser = (req: Request, res: Response, next: NextFunction) => {
+const updateUser = (req: Request<{id:string},{},IUser>, res: Response, next: NextFunction) => {
   if (req.body.consumptionInfo || req.body.savedInfo) {
     User.findById(req.params.id)
-      .then((user: any) => {
+      .then((user:any) => {
         return user.calculateCosts(req.body);
       })
       .then((user: IUser) => {
@@ -91,7 +91,7 @@ const updateUser = (req: Request, res: Response, next: NextFunction) => {
       });
   } else {
     User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      .then((user: any) => {
+      .then((user) => {
         console.log({ "User Updated": user });
         res.status(201).json({ user });
       })
