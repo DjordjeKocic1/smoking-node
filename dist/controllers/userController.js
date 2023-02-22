@@ -12,7 +12,7 @@ const getUsers = (req, res, next) => {
         res.status(200).json({ users });
     })
         .catch((err) => {
-        console.log('Get Users Error:', err);
+        console.log("Get Users Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -23,11 +23,11 @@ const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
         return user
-            .calculateHealth(user)
+            .calculateHealth(user, req.body)
             .then((healthCalc) => res.status(201).json({ user: healthCalc }));
     })
         .catch((err) => {
-        console.log('Get Users Health Error:', err);
+        console.log("Get Users Health Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -60,7 +60,7 @@ const createUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
-            console.log('Create User Error:', err);
+            console.log("Create User Error:", err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
@@ -78,7 +78,7 @@ const updateUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
-            console.log('Update User Error:', err);
+            console.log("Update User Error:", err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }
@@ -92,7 +92,7 @@ const updateUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
-            console.log('Update User Error:', err);
+            console.log("Update User Error:", err);
             if (!err.statusCode) {
                 err.statusCode = 500;
             }

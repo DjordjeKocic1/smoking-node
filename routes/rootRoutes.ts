@@ -1,7 +1,7 @@
 import { body } from "express-validator";
-import {categorieController} from "../controllers/categorieController";
+import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
-import {userController} from "../controllers/userController";
+import { userController } from "../controllers/userController";
 
 const router = exporess.Router();
 
@@ -12,7 +12,7 @@ router.post("/create-user", body("email").isEmail(), userController.createUser);
 
 router.put("/update-user/:id", userController.updateUser);
 
-router.get("/user-health/:id", userController.getUserHealth);
+router.post("/user-health/:id", userController.getUserHealth);
 
 // Categories
 router.get("/categories", categorieController.getCategories);

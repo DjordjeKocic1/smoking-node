@@ -1,16 +1,20 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from "express";
 
 import { IUser } from "../types/types";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const getUsers = (req: Request, res: Response<{users:IUser[]}>, next: NextFunction) => {
+const getUsers = (
+  req: Request,
+  res: Response<{ users: IUser[] }>,
+  next: NextFunction
+) => {
   User.find()
-    .then((users:IUser[]) => {
+    .then((users: IUser[]) => {
       res.status(200).json({ users });
     })
     .catch((err: any) => {
-      console.log('Get Users Error:', err);
+      console.log("Get Users Error:", err);
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -18,15 +22,21 @@ const getUsers = (req: Request, res: Response<{users:IUser[]}>, next: NextFuncti
     });
 };
 
-const getUserHealth = (req: Request<{id:string}>, res: Response, next: NextFunction) => {
+const getUserHealth = (
+  req: Request<{ id: string }>,
+  res: Response,
+  next: NextFunction
+) => {
   User.findById(req.params.id)
-    .then((user:any) => {
+    .then((user: any) => {
       return user
-        .calculateHealth(user)
-        .then((healthCalc: IUser) => res.status(201).json({ user: healthCalc }));
+        .calculateHealth(user, req.body)
+        .then((healthCalc: IUser) =>
+          res.status(201).json({ user: healthCalc })
+        );
     })
     .catch((err: any) => {
-      console.log('Get Users Health Error:', err);
+      console.log("Get Users Health Error:", err);
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -34,7 +44,11 @@ const getUserHealth = (req: Request<{id:string}>, res: Response, next: NextFunct
     });
 };
 
-const createUser = (req: Request<{}, {}, IUser>, res: Response, next: NextFunction) => {
+const createUser = (
+  req: Request<{}, {}, IUser>,
+  res: Response,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const err: any = new Error(
@@ -50,21 +64,21 @@ const createUser = (req: Request<{}, {}, IUser>, res: Response, next: NextFuncti
     address: req.body.address,
     city: req.body.city,
   });
-  User.find().then((users:IUser[]) => {
+  User.find().then((users: IUser[]) => {
     let existingUser = users.find(
       (user: IUser) => user.email == req.body.email
-    )
+    );
     if (!!existingUser) {
       return res.status(201).json({ user: existingUser });
     }
     user
       .save()
-      .then((user:IUser) => {
+      .then((user: IUser) => {
         console.log({ "User Created": user });
         res.status(201).json({ user });
       })
       .catch((err: any) => {
-        console.log('Create User Error:', err);
+        console.log("Create User Error:", err);
         if (!err.statusCode) {
           err.statusCode = 500;
         }
@@ -73,17 +87,21 @@ const createUser = (req: Request<{}, {}, IUser>, res: Response, next: NextFuncti
   });
 };
 
-const updateUser = (req: Request<{id:string},{},IUser>, res: Response, next: NextFunction) => {
+const updateUser = (
+  req: Request<{ id: string }, {}, IUser>,
+  res: Response,
+  next: NextFunction
+) => {
   if (req.body.consumptionInfo || req.body.savedInfo) {
     User.findById(req.params.id)
-      .then((user:any) => {
+      .then((user: any) => {
         return user.calculateCosts(req.body);
       })
       .then((user: IUser) => {
         res.status(201).json({ user });
       })
       .catch((err: any) => {
-        console.log('Update User Error:', err);
+        console.log("Update User Error:", err);
         if (!err.statusCode) {
           err.statusCode = 500;
         }
@@ -96,7 +114,7 @@ const updateUser = (req: Request<{id:string},{},IUser>, res: Response, next: Nex
         res.status(201).json({ user });
       })
       .catch((err: any) => {
-        console.log('Update User Error:', err);
+        console.log("Update User Error:", err);
         if (!err.statusCode) {
           err.statusCode = 500;
         }
