@@ -134,40 +134,40 @@ userShema.methods.calculateCosts = function (req: IUser) {
 };
 
 userShema.methods.calculateHealth = function (req: any) {
-  this.healthInfo.bloodPressure = (
-    this.smokingInfo.noSmokingDays * 1.5
-  ).toFixed(1);
-  this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(
+  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(
+    1
+  );
+  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(
     1
   );
   this.healthInfo.COinBloodDecreases = (
-    this.smokingInfo.noSmokingDays * 1.3
+    req.smokingInfo.noSmokingDays * 1.3
   ).toFixed(1);
   this.healthInfo.physicalAndBodilyStrength = (
-    this.smokingInfo.noSmokingDays * 1.2
+    req.smokingInfo.noSmokingDays * 1.2
   ).toFixed(1);
-  this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(
+  this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
     1
   );
   this.healthInfo.irritatingCough = (
-    this.smokingInfo.noSmokingDays * 0.4
+    req.smokingInfo.noSmokingDays * 0.4
   ).toFixed(1);
   this.healthInfo.stressTolerance = (
-    this.smokingInfo.noSmokingDays * 0.4
+    req.smokingInfo.noSmokingDays * 0.4
   ).toFixed(1);
   this.healthInfo.riskofheartAttack = (
-    this.smokingInfo.noSmokingDays * 0.3
+    req.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofKidneyCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
+    req.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofThroatCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
+    req.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofLungeCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
+    req.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
-  this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(
+  this.healthInfo.riskofStroke = (req.smokingInfo.noSmokingDays * 0.3).toFixed(
     1
   );
 
