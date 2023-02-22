@@ -133,17 +133,7 @@ userShema.methods.calculateCosts = function (req: IUser) {
   return this.save();
 };
 
-userShema.methods.calculateHealth = function (req: any, request: any) {
-  const msDiff =
-    new Date().getTime() -
-    new Date(request.smokingInfo.dateOfQuiting).getTime();
-
-  this.smokingInfo.noSmokingDays = Math.floor(msDiff / (1000 * 60 * 60 * 24));
-
-  this.smokingInfo.dateOfQuiting = request.smokingInfo.dateOfQuiting;
-
-  this.smokingInfo.isQuiting = request.smokingInfo.isQuiting;
-
+userShema.methods.calculateHealth = function (req: any) {
   this.healthInfo.bloodPressure = (
     this.smokingInfo.noSmokingDays * 1.5
   ).toFixed(1);

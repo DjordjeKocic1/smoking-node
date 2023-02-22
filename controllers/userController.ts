@@ -30,7 +30,7 @@ const getUserHealth = (
   User.findById(req.params.id)
     .then((user: any) => {
       return user
-        .calculateHealth(user, req.body)
+        .calculateHealth(user)
         .then((healthCalc: IUser) =>
           res.status(201).json({ user: healthCalc })
         );

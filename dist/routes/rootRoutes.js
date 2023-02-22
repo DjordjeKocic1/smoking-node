@@ -12,7 +12,7 @@ const router = express_1.default.Router();
 router.get("/users", userController_1.userController.getUsers);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail(), userController_1.userController.createUser);
 router.put("/update-user/:id", userController_1.userController.updateUser);
-router.post("/user-health/:id", userController_1.userController.getUserHealth);
+router.get("/user-health/:id", userController_1.userController.getUserHealth);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);
