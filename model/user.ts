@@ -1,10 +1,10 @@
 import { IUser } from "../types/types";
-import {calculations} from "../helpers/calcs";
+import { calculations } from "../helpers/calcs";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const userShema = new Schema<IUser>({
+const userShema = new Schema({
   name: String,
   email: {
     type: String,
@@ -73,7 +73,7 @@ const userShema = new Schema<IUser>({
   ],
 });
 
-userShema.methods.calculateCosts = function (req:IUser) {
+userShema.methods.calculateCosts = function (req: IUser) {
   if (req.savedInfo) {
     this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
     this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
@@ -133,39 +133,46 @@ userShema.methods.calculateCosts = function (req:IUser) {
   return this.save();
 };
 
-userShema.methods.calculateHealth = function (req:any) {
-  this.healthInfo.bloodPressure = (req.smokingInfo.noSmokingDays * 1.5).toFixed(1);
-  this.healthInfo.heartRhythm = (req.smokingInfo.noSmokingDays * 1.4).toFixed(
+userShema.methods.calculateHealth = function (req: any) {
+  const msDiff =
+    new Date().getTime() - new Date(this.smokingInfo.dateOfQuiting).getTime();
+
+  this.smokingInfo.noSmokingDays = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+
+  this.healthInfo.bloodPressure = (
+    this.smokingInfo.noSmokingDays * 1.5
+  ).toFixed(1);
+  this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(
     1
   );
   this.healthInfo.COinBloodDecreases = (
-    req.smokingInfo.noSmokingDays * 1.3
+    this.smokingInfo.noSmokingDays * 1.3
   ).toFixed(1);
   this.healthInfo.physicalAndBodilyStrength = (
-    req.smokingInfo.noSmokingDays * 1.2
+    this.smokingInfo.noSmokingDays * 1.2
   ).toFixed(1);
-  this.healthInfo.lungCapacity = (req.smokingInfo.noSmokingDays * 0.5).toFixed(
+  this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(
     1
   );
   this.healthInfo.irritatingCough = (
-    req.smokingInfo.noSmokingDays * 0.4
+    this.smokingInfo.noSmokingDays * 0.4
   ).toFixed(1);
   this.healthInfo.stressTolerance = (
-    req.smokingInfo.noSmokingDays * 0.4
+    this.smokingInfo.noSmokingDays * 0.4
   ).toFixed(1);
   this.healthInfo.riskofheartAttack = (
-    req.smokingInfo.noSmokingDays * 0.3
+    this.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofKidneyCancer = (
-    req.smokingInfo.noSmokingDays * 0.3
+    this.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofThroatCancer = (
-    req.smokingInfo.noSmokingDays * 0.3
+    this.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
   this.healthInfo.riskofLungeCancer = (
-    req.smokingInfo.noSmokingDays * 0.3
+    this.smokingInfo.noSmokingDays * 0.3
   ).toFixed(1);
-  this.healthInfo.riskofStroke = (req.smokingInfo.noSmokingDays * 0.3).toFixed(
+  this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(
     1
   );
 

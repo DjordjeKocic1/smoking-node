@@ -8,7 +8,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const multer_1 = __importDefault(require("multer"));
 const rootRoutes_1 = __importDefault(require("./routes/rootRoutes"));
 const uuid_1 = require("uuid");
-const dotenv = require("dotenv").config();
+require("dotenv").config();
 const port = process.env.PORT || 8000;
 const app = (0, express_1.default)();
 const storage = multer_1.default.diskStorage({

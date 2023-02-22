@@ -5,7 +5,8 @@ import multer from "multer";
 import router from "./routes/rootRoutes";
 import { v4 as uuidv4 } from "uuid";
 
-const dotenv = require("dotenv").config();
+require("dotenv").config();
+
 const port = process.env.PORT || 8000;
 
 const app = express();
@@ -24,7 +25,7 @@ app.use(multer({ storage: storage }).single("image"));
 
 app.use("/send-user-info", router);
 
-app.use((error:ErrorMsg, req:any, res:any) => {
+app.use((error: ErrorMsg, req: any, res: any) => {
   const status = error.statusCode || 500;
   const message = error.message;
   res.status(status).json({ message });
@@ -36,4 +37,4 @@ mongoose
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
   })
-  .catch((err) => console.log("Db error:",err));
+  .catch((err) => console.log("Db error:", err));
