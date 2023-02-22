@@ -135,7 +135,12 @@ userShema.methods.calculateCosts = function (req: IUser) {
 
 userShema.methods.calculateHealth = function (req: any) {
   const msDiff =
-    new Date().getTime() - new Date(new Date().toDateString()).getTime();
+    new Date().getTime() -
+    new Date(
+      !!this.smokingInfo.dateOfQuiting
+        ? this.smokingInfo.dateOfQuiting
+        : new Date().toDateString()
+    ).getTime();
 
   this.smokingInfo.noSmokingDays = Math.floor(msDiff / (1000 * 60 * 60 * 24));
 
