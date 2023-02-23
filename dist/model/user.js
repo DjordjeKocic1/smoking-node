@@ -66,6 +66,7 @@ const userShema = new Schema({
     },
     categories: [
         {
+            name: String,
             categorieId: {
                 type: Schema.Types.ObjectId,
                 ref: "Categorie",

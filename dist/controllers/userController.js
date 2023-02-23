@@ -6,19 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
-const getUsers = (req, res, next) => {
-    user_1.default.find()
-        .then((users) => {
-        res.status(200).json({ users });
-    })
-        .catch((err) => {
-        console.log("Get Users Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
-    });
-};
 const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
@@ -69,40 +56,37 @@ const createUser = (req, res, next) => {
     });
 };
 const updateUser = (req, res, next) => {
-    if (req.body.consumptionInfo || req.body.savedInfo) {
-        user_1.default.findById(req.params.id)
-            .then((user) => {
-            return user.calculateCosts(req.body);
-        })
-            .then((user) => {
+    user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        .then((user) => {
+        console.log({ "User Updated": user });
+        res.status(201).json({ user });
+    })
+        .catch((err) => {
+        console.log("Update User Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+const updateUserCosts = (req, res, next) => {
+    user_1.default.findById(req.params.id)
+        .then((user) => {
+        user.calculateCosts(req.body).then((user) => {
             res.status(201).json({ user });
-        })
-            .catch((err) => {
-            console.log("Update User Error:", err);
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
         });
-    }
-    else {
-        user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            .then((user) => {
-            console.log({ "User Updated": user });
-            res.status(201).json({ user });
-        })
-            .catch((err) => {
-            console.log("Update User Error:", err);
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
-        });
-    }
+    })
+        .catch((err) => {
+        console.log("Update User Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
 };
 exports.userController = {
-    getUsers,
     getUserHealth,
     createUser,
     updateUser,
+    updateUserCosts,
 };
