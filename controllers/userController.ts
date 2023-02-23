@@ -89,6 +89,7 @@ const updateUser = (
 };
 
 const updateUserCosts = (req: Request, res: Response, next: NextFunction) => {
+  console.log("Payload user update Costs", req.body);
   User.findById(req.params.id)
     .then((user: any) => {
       return user.calculateCosts(req.body);

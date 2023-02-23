@@ -70,11 +70,14 @@ const updateUser = (req, res, next) => {
     });
 };
 const updateUserCosts = (req, res, next) => {
+    console.log("Payload user update Costs", req.body);
     user_1.default.findById(req.params.id)
         .then((user) => {
-        user.calculateCosts(req.body).then((user) => {
-            res.status(201).json({ user });
-        });
+        return user.calculateCosts(req.body);
+    })
+        .then((user) => {
+        console.log("User Costs Updated", user);
+        res.status(201).json({ user });
     })
         .catch((err) => {
         console.log("Update User Error:", err);
