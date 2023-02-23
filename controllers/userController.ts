@@ -92,6 +92,7 @@ const updateUserCosts = (req: Request, res: Response, next: NextFunction) => {
   User.findById(req.params.id)
     .then((user: any) => {
       user.calculateCosts(req.body).then((user: IUser) => {
+        console.log({ "User Costs Updated": user });
         res.status(201).json({ user });
       });
     })
