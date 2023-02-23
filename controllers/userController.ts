@@ -91,10 +91,11 @@ const updateUser = (
 const updateUserCosts = (req: Request, res: Response, next: NextFunction) => {
   User.findById(req.params.id)
     .then((user: any) => {
-      user.calculateCosts(req.body).then((user: IUser) => {
-        console.log({ "User Costs Updated": user });
-        res.status(201).json({ user });
-      });
+      return user.calculateCosts(req.body);
+    })
+    .then((user: IUser) => {
+      console.log("User Costs Updated", user);
+      res.status(201).json({ user });
     })
     .catch((err: any) => {
       console.log("Update User Error:", err);
