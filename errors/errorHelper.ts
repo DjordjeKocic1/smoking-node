@@ -12,6 +12,15 @@ export const checkExistMentoring = (msg: string) =>
       }
     });
   });
+
+export const checkExistMentor = (msg: string) =>
+  body("email").custom((value) => {
+    return Mentor.findOne({ email: value }).then((mentor) => {
+      if (!mentor) {
+        return Promise.reject(msg);
+      }
+    });
+  });
 // end
 
 // Tasks error handling

@@ -1,4 +1,5 @@
 import {
+  checkExistMentor,
   checkExistMentoring,
   checkMentoringUserIDExist,
   checkUserIDExist,
@@ -23,7 +24,10 @@ router.get("/user-health/:id", userController.getUserHealth);
 //Mentor
 router.post(
   "/create-mentor",
-  [checkExistMentoring("You already mentoring")],
+  [
+    checkExistMentoring("You already mentoring"),
+    checkExistMentor("This mentor doesnt exist"),
+  ],
   mentorController.createMentor
 );
 router.put("/update-mentor/:id", mentorController.updateMentor);
