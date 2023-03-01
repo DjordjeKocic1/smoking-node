@@ -45,6 +45,7 @@ export interface IConsumptionInfo {
   cigarettesAvoidedCost: number;
 }
 export interface IUser {
+  _id?: string;
   name: string;
   email: string;
   address: string;
@@ -59,4 +60,21 @@ export interface IUser {
   calculateHealth?: any;
   calculateCosts?: any;
   categories?: [];
+}
+
+export interface IMentor {
+  name: string;
+  email: string;
+  accepted: boolean;
+  mentoringUser: IUser[];
+}
+
+export interface IConsumationPayload {
+  cigarettesDay: number;
+  cigarettesInPack: number;
+  packCigarettesPrice: number;
+  cigarettesAvoided: number;
+}
+export interface ICostsPayload {
+  consumptionInfo: IConsumationPayload;
 }

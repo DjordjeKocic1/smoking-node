@@ -3,10 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const errorHelper_1 = require("../errors/errorHelper");
 const express_validator_1 = require("express-validator");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
+const mentorController_1 = require("../controllers/mentorController");
 const reportsController_1 = require("../controllers/reportsController");
+const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
 const router = express_1.default.Router();
 //Users
@@ -14,9 +17,24 @@ router.post("/create-user", (0, express_validator_1.body)("email").isEmail(), us
 router.put("/update-user/:id", userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", userController_1.userController.updateUserCosts);
 router.get("/user-health/:id", userController_1.userController.getUserHealth);
+//Mentor
+router.post("/create-mentor", [(0, errorHelper_1.checkExistMentoring)("You already mentoring")], mentorController_1.mentorController.createMentor);
+router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);
+//Tasks
+router.post("/create-task", [
+    (0, express_validator_1.body)("userId")
+        .isLength({ min: 12, max: 24 })
+        .withMessage("Must be at least 12 and max 24 chars"),
+    (0, express_validator_1.body)("mentorId")
+        .isLength({ min: 12, max: 24 })
+        .withMessage("Must be at least 12 and max 24 chars"),
+    (0, errorHelper_1.checkUserIDExist)("User of that ID doesnt exists"),
+], taskController_1.taskController.createTask);
+router.put("/update-task/:id", taskController_1.taskController.updateTask);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
+router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
 exports.default = router;

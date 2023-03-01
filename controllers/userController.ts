@@ -1,6 +1,6 @@
+import { ICostsPayload, IUser } from "../types/types";
 import { NextFunction, Request, Response } from "express";
 
-import { IUser } from "../types/types";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
@@ -39,7 +39,7 @@ const createUser = (
     err.statusCode = 422;
     throw err; //thorw error will go to next error handling
   }
-  const user = new User<IUser>({
+  const user = new User({
     name: req.body.name,
     email: req.body.email,
     image: req.body.image,
@@ -88,7 +88,11 @@ const updateUser = (
     });
 };
 
-const updateUserCosts = (req: Request, res: Response, next: NextFunction) => {
+const updateUserCosts = (
+  req: Request<{ id: string }, {}, ICostsPayload>,
+  res: Response,
+  next: NextFunction
+) => {
   User.findById(req.params.id)
     .then((user: any) => {
       return user.calculateCosts(req.body);
