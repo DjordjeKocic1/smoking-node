@@ -69,6 +69,13 @@ export interface IMentor {
   mentoringUser: IUser[];
 }
 
+export interface ITask {
+  toDo: string;
+  done: boolean;
+  userId: string;
+  mentorId: string;
+}
+
 export interface IConsumationPayload {
   cigarettesDay: number;
   cigarettesInPack: number;
@@ -77,4 +84,18 @@ export interface IConsumationPayload {
 }
 export interface ICostsPayload {
   consumptionInfo: IConsumationPayload;
+}
+
+export interface IMentorPayload {
+  name: string;
+  email: string;
+  accepted: boolean;
+  user: IUser;
+}
+
+export interface ITaskPayload {
+  toDo: string;
+  done: boolean;
+  userId: string;
+  mentorId: string;
 }

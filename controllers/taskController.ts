@@ -1,9 +1,14 @@
+import { ITask, ITaskPayload } from "../types/types";
 import { NextFunction, Request, Response } from "express";
 
 import Task from "../model/task";
 import { validationResult } from "express-validator";
 
-const createTask = (req: Request, res: Response, next: NextFunction) => {
+const createTask = (
+  req: Request<{}, {}, ITaskPayload>,
+  res: Response<{ error?: string; task?: ITask }>,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -33,12 +38,12 @@ const createTask = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const updateTask = (
-  req: Request<{ id: string }, {}, {}>,
-  res: Response,
+  req: Request<{ id: string }, {}, ITaskPayload>,
+  res: Response<{ task: ITask }>,
   next: NextFunction
 ) => {
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then((task) => {
+    .then((task: any) => {
       console.log({ "task Updated": task });
       res.status(201).json({ task });
     })

@@ -19,7 +19,7 @@ const createMentor = (req, res, next) => {
         const mentor = new mentor_1.default({
             name: req.body.name,
             email: req.body.email,
-            accepted: false,
+            accepted: req.body.user,
             mentoringUser: user,
         });
         mentor

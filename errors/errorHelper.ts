@@ -1,4 +1,3 @@
-import { IUser } from "../types/types";
 import Mentor from "../model/mentor";
 import Task from "../model/task";
 import User from "../model/user";

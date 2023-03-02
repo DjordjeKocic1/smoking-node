@@ -1,7 +1,6 @@
 import {
   checkExistMentor,
   checkExistMentoring,
-  checkMentoringUserIDExist,
   checkUserIDExist,
 } from "../errors/errorHelper";
 

@@ -1,11 +1,15 @@
-import { IMentor, IUser } from "../types/types";
+import { IMentor, IMentorPayload, IUser } from "../types/types";
 import { NextFunction, Request, Response } from "express";
 
 import Mentor from "../model/mentor";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const createMentor = (req: Request, res: Response, next: NextFunction) => {
+const createMentor = (
+  req: Request<{}, {}, IMentorPayload>,
+  res: Response<{ error?: string; mentor?: IMentor }>,
+  next: NextFunction
+) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -19,7 +23,7 @@ const createMentor = (req: Request, res: Response, next: NextFunction) => {
     const mentor = new Mentor({
       name: req.body.name,
       email: req.body.email,
-      accepted: false,
+      accepted: req.body.user,
       mentoringUser: user,
     });
 
@@ -39,7 +43,11 @@ const createMentor = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const updateMentor = (req: Request, res: Response, next: NextFunction) => {
+const updateMentor = (
+  req: Request<{ id: string }, {}, IMentorPayload>,
+  res: Response<{ mentor: IMentor }>,
+  next: NextFunction
+) => {
   Mentor.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((mentor: any) => {
       console.log({ "Mentor Updated": mentor });
