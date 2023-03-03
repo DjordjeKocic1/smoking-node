@@ -18,6 +18,7 @@ const createMentor = (
 
   User.findOne({ email: req.body.user.email }).then((user: any) => {
     const mentor = new Mentor({
+      name:req.body.name,
       email: req.body.email,
       accepted: false,
       mentoringUser: user,
