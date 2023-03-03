@@ -17,13 +17,9 @@ const createMentor = (
   }
 
   User.findOne({ email: req.body.user.email }).then((user: any) => {
-    if (!user) {
-      return res.status(422).json({ error: "user doesnt exist" });
-    }
     const mentor = new Mentor({
-      name: req.body.name,
       email: req.body.email,
-      accepted: req.body.user,
+      accepted: false,
       mentoringUser: user,
     });
 

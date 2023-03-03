@@ -1,6 +1,6 @@
 import {
-  checkExistMentor,
   checkExistMentoring,
+  checkExistUserEmail,
   checkUserIDExist,
 } from "../errors/errorHelper";
 
@@ -25,7 +25,7 @@ router.post(
   "/create-mentor",
   [
     checkExistMentoring("You already mentoring"),
-    checkExistMentor("This mentor doesnt exist"),
+    checkExistUserEmail("This USER doesnt exist"),
   ],
   mentorController.createMentor
 );

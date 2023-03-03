@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkMentoringUserIDExist = exports.checkUserIDExist = exports.checkExistMentor = exports.checkExistMentoring = void 0;
+exports.checkMentoringUserIDExist = exports.checkUserIDExist = exports.checkExistUserEmail = exports.checkExistMentoring = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
@@ -16,14 +16,14 @@ const checkExistMentoring = (msg) => (0, express_validator_1.body)("email").cust
     });
 });
 exports.checkExistMentoring = checkExistMentoring;
-const checkExistMentor = (msg) => (0, express_validator_1.body)("email").custom((value) => {
-    return mentor_1.default.findOne({ email: value }).then((mentor) => {
-        if (!mentor) {
+const checkExistUserEmail = (msg) => (0, express_validator_1.body)("email").custom((value) => {
+    return user_1.default.findOne({ email: value }).then((user) => {
+        if (!user) {
             return Promise.reject(msg);
         }
     });
 });
-exports.checkExistMentor = checkExistMentor;
+exports.checkExistUserEmail = checkExistUserEmail;
 // end
 // Tasks error handling
 const checkUserIDExist = (msg) => (0, express_validator_1.body)("userId").custom((value) => {

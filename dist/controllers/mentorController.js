@@ -13,13 +13,9 @@ const createMentor = (req, res, next) => {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
     user_1.default.findOne({ email: req.body.user.email }).then((user) => {
-        if (!user) {
-            return res.status(422).json({ error: "user doesnt exist" });
-        }
         const mentor = new mentor_1.default({
-            name: req.body.name,
             email: req.body.email,
-            accepted: req.body.user,
+            accepted: false,
             mentoringUser: user,
         });
         mentor

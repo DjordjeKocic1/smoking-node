@@ -12,10 +12,10 @@ export const checkExistMentoring = (msg: string) =>
     });
   });
 
-export const checkExistMentor = (msg: string) =>
+export const checkExistUserEmail = (msg: string) =>
   body("email").custom((value) => {
-    return Mentor.findOne({ email: value }).then((mentor) => {
-      if (!mentor) {
+    return User.findOne({ email: value }).then((user) => {
+      if (!user) {
         return Promise.reject(msg);
       }
     });
