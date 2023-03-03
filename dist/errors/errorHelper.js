@@ -25,7 +25,6 @@ const checkExistUserEmail = (msg) => (0, express_validator_1.body)("email").cust
 });
 exports.checkExistUserEmail = checkExistUserEmail;
 const checkMentoringYourSelf = (msg) => (0, express_validator_1.body)("email").custom((value, { req }) => {
-    console.log(req.body.user.email == value);
     if (req.body.user.email == value) {
         return Promise.reject(msg);
     }

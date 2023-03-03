@@ -23,8 +23,6 @@ export const checkExistUserEmail = (msg: string) =>
 
 export const checkMentoringYourSelf = (msg: string) =>
   body("email").custom((value, { req }) => {
-    console.log(req.body.user.email == value);
-
     if (req.body.user.email == value) {
       return Promise.reject(msg);
     } else {
