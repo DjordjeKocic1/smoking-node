@@ -9,7 +9,7 @@ const express_validator_1 = require("express-validator");
 const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
-        return user
+        user
             .calculateHealth()
             .then((healthCalc) => res.status(201).json({ user: healthCalc }));
     })
