@@ -5,11 +5,15 @@ import Mentor from "../model/mentor";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const getMentor = (req: Request, res: Response, next: NextFunction) => {
+const getMentor = (
+  req: Request<{ id: string }>,
+  res: Response<{ error?: string; mentor?: IMentor }>,
+  next: NextFunction
+) => {
   Mentor.find()
-    .then((mentors: any[]) => {
+    .then((mentors: IMentor[]) => {
       let arr = mentors.find(
-        (mentor: any) => mentor.mentoringUser[0]._id == req.params.id
+        (mentor: IMentor) => mentor.mentoringUser[0]._id == req.params.id
       );
       if (!arr) {
         return res.status(422).json({ error: "no menter with that ID" });
