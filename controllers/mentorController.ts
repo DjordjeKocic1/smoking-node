@@ -13,7 +13,9 @@ const getMentor = (
   Mentor.find()
     .then((mentors: IMentor[]) => {
       let arr: any = mentors.find(
-        (mentor: IMentor) => mentor.mentoringUser[0]._id == req.params.id
+        (mentor: IMentor) =>
+          mentor.mentoringUser[0]._id == req.params.id ||
+          mentor.mentorId == req.params.id
       );
       if (!arr) {
         return res.status(422).json({ error: "no mentor with that ID" });

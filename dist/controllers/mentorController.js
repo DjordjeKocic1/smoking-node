@@ -10,7 +10,8 @@ const express_validator_1 = require("express-validator");
 const getMentor = (req, res, next) => {
     mentor_1.default.find()
         .then((mentors) => {
-        let arr = mentors.find((mentor) => mentor.mentoringUser[0]._id == req.params.id);
+        let arr = mentors.find((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
+            mentor.mentorId == req.params.id);
         if (!arr) {
             return res.status(422).json({ error: "no mentor with that ID" });
         }

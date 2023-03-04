@@ -66,7 +66,7 @@ export interface IMentor {
   name: string;
   email: string;
   accepted: boolean;
-  userId: string;
+  mentorId: string;
   mentoringUser: IUser[];
 }
 
