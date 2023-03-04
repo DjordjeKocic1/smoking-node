@@ -12,9 +12,30 @@ const getMentor = (req, res, next) => {
         .then((mentors) => {
         let arr = mentors.find((mentor) => mentor.mentoringUser[0]._id == req.params.id);
         if (!arr) {
-            return res.status(422).json({ error: "no menter with that ID" });
+            return res.status(422).json({ error: "no mentor with that ID" });
         }
-        res.status(201).json({ mentor: arr });
+        if (!!arr.mentorId) {
+            return res.status(201).json({ mentor: arr });
+        }
+        //Promise below will be called ONLY if mentorId doesnt exist in arr variable
+        user_1.default.findOne({ email: arr.email })
+            .then((user) => {
+            if (!user) {
+                return res
+                    .status(422)
+                    .json({ error: "User with that email is not in database" });
+            }
+            mentor_1.default.findByIdAndUpdate(arr._id, { mentorId: user._id }, { new: true }).then((mentor) => {
+                res.status(201).json({ mentor });
+            });
+        })
+            .catch((err) => {
+            console.log("Find User Mentor Error:", err);
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
     })
         .catch((err) => {
         console.log("Find Mentor Error:", err);

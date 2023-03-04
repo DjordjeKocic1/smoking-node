@@ -9,6 +9,11 @@ const mentorSchema = new Schema({
     name: String,
     email: String,
     accepted: Boolean,
+    mentorId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        req: true,
+    },
     mentoringUser: [
         {
             name: String,

@@ -63,9 +63,10 @@ export interface IUser {
 }
 
 export interface IMentor {
-  name:string;
+  name: string;
   email: string;
   accepted: boolean;
+  userId: string;
   mentoringUser: IUser[];
 }
 

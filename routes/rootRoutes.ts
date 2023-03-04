@@ -27,7 +27,7 @@ router.post(
   "/create-mentor",
   [
     checkExistMentoring("You already mentoring"),
-    checkExistUserEmail("This USER doesnt exist"),
+    checkExistUserEmail("This user doesnt exist"),
     checkMentoringYourSelf("You can not mentor your self"),
   ],
   mentorController.createMentor

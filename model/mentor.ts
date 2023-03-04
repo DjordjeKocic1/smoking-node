@@ -4,9 +4,14 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const mentorSchema = new Schema({
-  name:String,
+  name: String,
   email: String,
   accepted: Boolean,
+  mentorId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    req: true,
+  },
   mentoringUser: [
     {
       name: String,
