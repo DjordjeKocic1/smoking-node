@@ -22,6 +22,7 @@ router.put("/update-user-costs/:id", userController.updateUserCosts);
 router.get("/user-health/:id", userController.getUserHealth);
 
 //Mentor
+router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
   [
