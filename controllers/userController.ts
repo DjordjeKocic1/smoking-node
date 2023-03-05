@@ -11,11 +11,9 @@ const getUserHealth = (
 ) => {
   User.findById(req.params.id)
     .then((user: any) => {
-      console.log("User", user);
-
+      console.log("User BEFORE GETHEALTH", user);
       user.calculateHealth(user).then((healthCalc: IUser) => {
-        console.log("User calculated", healthCalc);
-
+        console.log("User GETHEALTH", healthCalc);
         res.status(201).json({ user: healthCalc });
       });
     })
@@ -76,6 +74,8 @@ const updateUser = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("REQ BODY :", req.body);
+
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
       console.log({ "User Updated": user });

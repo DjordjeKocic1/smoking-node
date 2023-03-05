@@ -9,9 +9,9 @@ const express_validator_1 = require("express-validator");
 const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
-        console.log("User", user);
+        console.log("User BEFORE GETHEALTH", user);
         user.calculateHealth(user).then((healthCalc) => {
-            console.log("User calculated", healthCalc);
+            console.log("User GETHEALTH", healthCalc);
             res.status(201).json({ user: healthCalc });
         });
     })
@@ -58,6 +58,7 @@ const createUser = (req, res, next) => {
     });
 };
 const updateUser = (req, res, next) => {
+    console.log("REQ BODY :", req.body);
     user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((user) => {
         console.log({ "User Updated": user });
