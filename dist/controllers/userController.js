@@ -9,9 +9,11 @@ const express_validator_1 = require("express-validator");
 const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
-        user
-            .calculateHealth()
-            .then((healthCalc) => res.status(201).json({ user: healthCalc }));
+        console.log("User", user);
+        user.calculateHealth().then((healthCalc) => {
+            console.log("User calculated", healthCalc);
+            res.status(201).json({ user: healthCalc });
+        });
     })
         .catch((err) => {
         console.log("Get Users Health Error:", err);

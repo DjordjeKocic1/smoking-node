@@ -11,11 +11,13 @@ const getUserHealth = (
 ) => {
   User.findById(req.params.id)
     .then((user: any) => {
-      user
-        .calculateHealth()
-        .then((healthCalc: IUser) =>
-          res.status(201).json({ user: healthCalc })
-        );
+      console.log("User", user);
+
+      user.calculateHealth().then((healthCalc: IUser) => {
+        console.log("User calculated", healthCalc);
+
+        res.status(201).json({ user: healthCalc });
+      });
     })
     .catch((err: any) => {
       console.log("Get Users Health Error:", err);
