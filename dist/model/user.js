@@ -132,12 +132,15 @@ userShema.methods.calculateCosts = function (req) {
     }
     return this.save();
 };
-userShema.methods.calculateHealth = function () {
+userShema.methods.calculateHealth = function (user) {
     const msDiff = new Date().getTime() -
         new Date(!!this.smokingInfo.dateOfQuiting
             ? this.smokingInfo.dateOfQuiting
             : new Date().toDateString()).getTime();
-    this.smokingInfo.noSmokingDays = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+    this.smokingInfo.noSmokingDays =
+        !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
+            ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
+            : 0;
     this.healthInfo.bloodPressure = (this.smokingInfo.noSmokingDays * 1.5).toFixed(1);
     this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(1);
     this.healthInfo.COinBloodDecreases = (this.smokingInfo.noSmokingDays * 1.3).toFixed(1);

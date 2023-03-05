@@ -13,7 +13,7 @@ const getUserHealth = (
     .then((user: any) => {
       console.log("User", user);
 
-      user.calculateHealth().then((healthCalc: IUser) => {
+      user.calculateHealth(user).then((healthCalc: IUser) => {
         console.log("User calculated", healthCalc);
 
         res.status(201).json({ user: healthCalc });

@@ -137,7 +137,7 @@ userShema.methods.calculateCosts = function (req: IUser) {
   return this.save();
 };
 
-userShema.methods.calculateHealth = function () {
+userShema.methods.calculateHealth = function (user: any) {
   const msDiff =
     new Date().getTime() -
     new Date(
@@ -146,7 +146,10 @@ userShema.methods.calculateHealth = function () {
         : new Date().toDateString()
     ).getTime();
 
-  this.smokingInfo.noSmokingDays = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+  this.smokingInfo.noSmokingDays =
+    !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
+      ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
+      : 0;
 
   this.healthInfo.bloodPressure = (
     this.smokingInfo.noSmokingDays * 1.5
