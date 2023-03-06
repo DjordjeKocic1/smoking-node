@@ -6,6 +6,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.notificationController = void 0;
 const notification_1 = __importDefault(require("../model/notification"));
 const express_validator_1 = require("express-validator");
+const getNotificationsByUserID = (req, res, next) => {
+    if (!req.params.id) {
+        return res.status(422).json({ error: "user id doesnt exist" });
+    }
+    notification_1.default.find()
+        .then((notifications) => {
+        let nots = notifications.filter((notification) => notification.userId == req.params.id);
+        res.status(201).json({ notification: nots });
+    })
+        .catch((err) => {
+        console.log("Create Notificaiton Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
 const createNotification = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -52,4 +69,5 @@ const updateNotification = (req, res, next) => {
 exports.notificationController = {
     createNotification,
     updateNotification,
+    getNotificationsByUserID,
 };

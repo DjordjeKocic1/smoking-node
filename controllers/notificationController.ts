@@ -4,6 +4,30 @@ import { INotificaion } from "../types/types";
 import Notification from "../model/notification";
 import { validationResult } from "express-validator";
 
+const getNotificationsByUserID = (
+  req: Request<{ id: string }, {}, INotificaion>,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.params.id) {
+    return res.status(422).json({ error: "user id doesnt exist" });
+  }
+  Notification.find()
+    .then((notifications: INotificaion[]) => {
+      let nots = notifications.filter(
+        (notification: INotificaion) => notification.userId == req.params.id
+      );
+      res.status(201).json({ notification: nots });
+    })
+    .catch((err: any) => {
+      console.log("Create Notificaiton Error:", err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 const createNotification = (
   req: Request,
   res: Response,
@@ -62,4 +86,5 @@ const updateNotification = (
 export const notificationController = {
   createNotification,
   updateNotification,
+  getNotificationsByUserID,
 };

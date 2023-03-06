@@ -38,6 +38,7 @@ router.post("/create-task", [
 ], taskController_1.taskController.createTask);
 router.put("/update-task/:id", taskController_1.taskController.updateTask);
 //Notification
+router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("userId").isString().withMessage("UserId required"), notificationController_1.notificationController.createNotification);
 router.put("/update-notification/:id", (0, express_validator_1.body)("isRead")
     .isBoolean()

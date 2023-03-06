@@ -52,12 +52,15 @@ router.post(
 router.put("/update-task/:id", taskController.updateTask);
 
 //Notification
+router.get(
+  "/get-notification/:id",
+  notificationController.getNotificationsByUserID
+);
 router.post(
   "/create-notification",
   body("userId").isString().withMessage("UserId required"),
   notificationController.createNotification
 );
-
 router.put(
   "/update-notification/:id",
   body("isRead")
