@@ -70,6 +70,13 @@ export interface IMentor {
   mentoringUser: IUser[];
 }
 
+export interface INotificaion {
+  isMentoring: boolean;
+  isAchievement: boolean;
+  isRead: boolean;
+  userId: string;
+}
+
 export interface ITask {
   toDo: string;
   done: boolean;

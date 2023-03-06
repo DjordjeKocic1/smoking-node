@@ -8,6 +8,7 @@ const express_validator_1 = require("express-validator");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
 const mentorController_1 = require("../controllers/mentorController");
+const notificationController_1 = require("../controllers/notificationController");
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
@@ -36,6 +37,11 @@ router.post("/create-task", [
     (0, errorHelper_1.checkUserIDExist)("User of that ID doesnt exists"),
 ], taskController_1.taskController.createTask);
 router.put("/update-task/:id", taskController_1.taskController.updateTask);
+//Notification
+router.post("/create-notification", (0, express_validator_1.body)("userId").isString().withMessage("UserId required"), notificationController_1.notificationController.createNotification);
+router.put("/update-notification/:id", (0, express_validator_1.body)("isRead")
+    .isBoolean()
+    .withMessage("isRead need to be a boolean and it's required"), notificationController_1.notificationController.updateNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);

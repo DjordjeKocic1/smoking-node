@@ -1,0 +1,55 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.notificationController = void 0;
+const notification_1 = __importDefault(require("../model/notification"));
+const express_validator_1 = require("express-validator");
+const createNotification = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ error: errors.array()[0].msg });
+    }
+    const notification = new notification_1.default({
+        isMentoring: req.body.isMentoring,
+        isAchievement: req.body.isAchievement,
+        isRead: false,
+        userId: req.body.userId,
+    });
+    notification
+        .save()
+        .then((notification) => {
+        console.log("Create Notification:", notification);
+        res.status(201).json({ notification });
+    })
+        .catch((err) => {
+        console.log("Create Notificaiton Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+const updateNotification = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ error: errors.array()[0].msg });
+    }
+    notification_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        .then((notification) => {
+        console.log({ "Notification Updated": notification });
+        res.status(201).json({ notification });
+    })
+        .catch((err) => {
+        console.log("Update Notification Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+exports.notificationController = {
+    createNotification,
+    updateNotification,
+};

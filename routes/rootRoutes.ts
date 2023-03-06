@@ -9,6 +9,7 @@ import { body } from "express-validator";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
 import { mentorController } from "../controllers/mentorController";
+import { notificationController } from "../controllers/notificationController";
 import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
@@ -49,6 +50,21 @@ router.post(
   taskController.createTask
 );
 router.put("/update-task/:id", taskController.updateTask);
+
+//Notification
+router.post(
+  "/create-notification",
+  body("userId").isString().withMessage("UserId required"),
+  notificationController.createNotification
+);
+
+router.put(
+  "/update-notification/:id",
+  body("isRead")
+    .isBoolean()
+    .withMessage("isRead need to be a boolean and it's required"),
+  notificationController.updateNotification
+);
 
 // Categories
 router.get("/categories", categorieController.getCategories);

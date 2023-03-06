@@ -1,12 +1,12 @@
+import { INotificaion } from "../types/types";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const notificationSchema = new Schema({
-  message: String,
-  toEmail: String,
   isMentoring: Boolean,
   isAchievement: Boolean,
+  isRead: Boolean,
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -14,4 +14,4 @@ const notificationSchema = new Schema({
   },
 });
 
-export default mongoose.model("Notification", notificationSchema);
+export default mongoose.model<INotificaion>("Notification", notificationSchema);
