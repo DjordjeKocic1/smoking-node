@@ -11,7 +11,7 @@ const getMentor = (req, res, next) => {
     mentor_1.default.find()
         .then((mentors) => {
         let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id || mentor.mentorId == req.params.id);
-        res.status(201).json({ mentor: arr });
+        res.status(201).json({ mentor: arr[0] });
     })
         .catch((err) => {
         console.log("Find Mentor Error:", err);
