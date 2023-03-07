@@ -16,7 +16,7 @@ const getNotificationsByUserID = (
   Notification.find()
     .then((notifications: INotificaion[]) => {
       let nots = notifications.filter(
-        (notification: INotificaion) => notification.userId == req.params.id
+        (notification: INotificaion) => notification.userId == req.params.id && !notification.isRead
       );
       res.status(201).json({ notification: nots });
     })
