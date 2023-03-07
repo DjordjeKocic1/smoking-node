@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { INotificaion } from "../types/types";
 import Notification from "../model/notification";
+import User from "../model/user";
 import { validationResult } from "express-validator";
 
 const getNotificationsByUserID = (
@@ -39,18 +40,27 @@ const createNotification = (
     return res.status(422).json({ error: errors.array()[0].msg });
   }
 
-  const notification = new Notification({
-    isMentoring: req.body.isMentoring,
-    isAchievement: req.body.isAchievement,
-    isRead: false,
-    userId: req.body.userId,
-  });
-
-  notification
-    .save()
-    .then((notification: INotificaion) => {
-      console.log("Create Notification:", notification);
-      res.status(201).json({ notification });
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      const notification = new Notification({
+        isMentoring: req.body.isMentoring,
+        isAchievement: req.body.isAchievement,
+        isRead: false,
+        userId: user?._id,
+      });
+      notification
+        .save()
+        .then((notification: INotificaion) => {
+          console.log("Create Notification:", notification);
+          res.status(201).json({ notification });
+        })
+        .catch((err: any) => {
+          console.log("Create Notificaiton Error:", err);
+          if (!err.statusCode) {
+            err.statusCode = 500;
+          }
+          next(err);
+        });
     })
     .catch((err: any) => {
       console.log("Create Notificaiton Error:", err);

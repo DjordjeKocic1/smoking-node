@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.notificationController = void 0;
 const notification_1 = __importDefault(require("../model/notification"));
+const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
 const getNotificationsByUserID = (req, res, next) => {
     if (!req.params.id) {
@@ -28,17 +29,27 @@ const createNotification = (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ error: errors.array()[0].msg });
     }
-    const notification = new notification_1.default({
-        isMentoring: req.body.isMentoring,
-        isAchievement: req.body.isAchievement,
-        isRead: false,
-        userId: req.body.userId,
-    });
-    notification
-        .save()
-        .then((notification) => {
-        console.log("Create Notification:", notification);
-        res.status(201).json({ notification });
+    user_1.default.findOne({ email: req.body.email })
+        .then((user) => {
+        const notification = new notification_1.default({
+            isMentoring: req.body.isMentoring,
+            isAchievement: req.body.isAchievement,
+            isRead: false,
+            userId: user === null || user === void 0 ? void 0 : user._id,
+        });
+        notification
+            .save()
+            .then((notification) => {
+            console.log("Create Notification:", notification);
+            res.status(201).json({ notification });
+        })
+            .catch((err) => {
+            console.log("Create Notificaiton Error:", err);
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
     })
         .catch((err) => {
         console.log("Create Notificaiton Error:", err);

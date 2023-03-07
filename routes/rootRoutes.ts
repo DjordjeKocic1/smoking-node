@@ -58,7 +58,7 @@ router.get(
 );
 router.post(
   "/create-notification",
-  body("userId").isString().withMessage("UserId required"),
+  body("email").isEmail().withMessage("Email required"),
   notificationController.createNotification
 );
 router.put(

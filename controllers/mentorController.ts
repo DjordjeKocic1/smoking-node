@@ -72,6 +72,7 @@ const createMentor = (
     const mentor = new Mentor({
       name: req.body.name,
       email: req.body.email,
+      mentorId:req.body.mentorId,
       accepted: false,
       mentoringUser: user,
     });

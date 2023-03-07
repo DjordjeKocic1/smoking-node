@@ -97,6 +97,7 @@ export interface ICostsPayload {
 export interface IMentorPayload {
   name: string;
   email: string;
+  mentorId:string;
   accepted: boolean;
   user: IUser;
 }
