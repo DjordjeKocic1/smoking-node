@@ -13,7 +13,7 @@ const getNotificationsByUserID = (req, res, next) => {
     }
     notification_1.default.find()
         .then((notifications) => {
-        let nots = notifications.filter((notification) => notification.userId == req.params.id && !notification.isRead);
+        let nots = notifications.filter((notification) => notification.userId == req.params.id);
         res.status(201).json({ notification: nots });
     })
         .catch((err) => {
