@@ -11,7 +11,7 @@ const getNotificationsByUserID = (req, res, next) => {
     if (!req.params.id) {
         return res.status(422).json({ error: "user id doesnt exist" });
     }
-    notification_1.default.find()
+    notification_1.default.find({ isRead: false })
         .then((notifications) => {
         let nots = notifications.filter((notification) => notification.userId == req.params.id);
         res.status(201).json({ notification: nots });
@@ -77,8 +77,16 @@ const updateNotification = (req, res, next) => {
         next(err);
     });
 };
+const updateAllNotifications = (req, res, next) => {
+    notification_1.default.updateMany({}, { $set: { isRead: true } }).then((notification) => {
+        return notification_1.default.find({ isRead: false });
+    }).then((notifcation) => {
+        res.status(201).json({ notifcation });
+    });
+};
 exports.notificationController = {
     createNotification,
     updateNotification,
     getNotificationsByUserID,
+    updateAllNotifications
 };

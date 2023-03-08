@@ -68,7 +68,10 @@ router.put(
     .withMessage("isRead need to be a boolean and it's required"),
   notificationController.updateNotification
 );
-
+router.put(
+  "/update-all-notifcations",
+  notificationController.updateAllNotifications
+)
 // Categories
 router.get("/categories", categorieController.getCategories);
 router.post("/categories", categorieController.createCategories);
