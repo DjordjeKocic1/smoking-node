@@ -5,12 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mentorController = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
+const notification_1 = __importDefault(require("../model/notification"));
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
 const getMentor = (req, res, next) => {
     mentor_1.default.find()
         .then((mentors) => {
-        let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id || mentor.mentorId == req.params.id);
+        let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
+            mentor.mentorId == req.params.id);
         res.status(201).json({ mentor: arr[0] });
     })
         .catch((err) => {
@@ -40,7 +42,17 @@ const createMentor = (req, res, next) => {
                 .save()
                 .then((mentor) => {
                 console.log("Create Mentor:", mentor);
-                res.status(201).json({ mentor });
+                const notification = new notification_1.default({
+                    isAchievement: false,
+                    isTask: false,
+                    isMentoring: true,
+                    isRead: false,
+                    userId: mentor.mentorId,
+                });
+                notification.save().then((not) => {
+                    console.log("Create Notification:", not);
+                    res.status(201).json({ mentor });
+                });
             })
                 .catch((err) => {
                 console.log("Create Mentor Error:", err);

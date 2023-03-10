@@ -2,6 +2,7 @@ import { IMentor, IMentorPayload, IUser } from "../types/types";
 import { NextFunction, Request, Response } from "express";
 
 import Mentor from "../model/mentor";
+import Notification from "../model/notification";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
@@ -12,8 +13,12 @@ const getMentor = (
 ) => {
   Mentor.find()
     .then((mentors: IMentor[]) => {
-      let arr = mentors.filter((mentor:IMentor) => mentor.mentoringUser[0]._id == req.params.id || mentor.mentorId == req.params.id)
-      res.status(201).json({mentor:arr[0]})
+      let arr = mentors.filter(
+        (mentor: IMentor) =>
+          mentor.mentoringUser[0]._id == req.params.id ||
+          mentor.mentorId == req.params.id
+      );
+      res.status(201).json({ mentor: arr[0] });
     })
     .catch((err: any) => {
       console.log("Find Mentor Error:", err);
@@ -42,14 +47,24 @@ const createMentor = (
           name: req.body.name.trim(),
           email: req.body.email,
           accepted: false,
-          mentorId:userMentor?._id,
+          mentorId: userMentor?._id,
           mentoringUser: user,
         });
         mentor
           .save()
           .then((mentor: IMentor) => {
             console.log("Create Mentor:", mentor);
-            res.status(201).json({ mentor });
+            const notification = new Notification({
+              isAchievement: false,
+              isTask: false,
+              isMentoring: true,
+              isRead: false,
+              userId: mentor.mentorId,
+            });
+            notification.save().then((not) => {
+              console.log("Create Notification:", not);
+              res.status(201).json({ mentor });
+            });
           })
           .catch((err: any) => {
             console.log("Create Mentor Error:", err);
