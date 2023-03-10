@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const notificationSchema = new Schema({
   isMentoring: Boolean,
   isAchievement: Boolean,
+  isTask:Boolean,
   isRead: Boolean,
   userId: {
     type: Schema.Types.ObjectId,

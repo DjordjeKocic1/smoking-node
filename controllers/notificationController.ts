@@ -45,6 +45,7 @@ const createNotification = (
       const notification = new Notification({
         isMentoring: req.body.isMentoring,
         isAchievement: req.body.isAchievement,
+        isTask:req.body.isTask,
         isRead: false,
         userId: user?._id,
       });
@@ -63,7 +64,7 @@ const createNotification = (
         });
     })
     .catch((err: any) => {
-      console.log("Create Notificaiton Error:", err);
+      console.log("Find USER for Notificaiton Error:", err);
       if (!err.statusCode) {
         err.statusCode = 500;
       }

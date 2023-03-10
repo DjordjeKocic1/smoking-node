@@ -73,6 +73,7 @@ export interface IMentor {
 export interface INotificaion {
   isMentoring: boolean;
   isAchievement: boolean;
+  isTask:boolean;
   isRead: boolean;
   userId: string;
 }
