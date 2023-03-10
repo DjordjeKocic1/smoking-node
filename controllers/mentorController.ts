@@ -13,12 +13,26 @@ const getMentor = (
 ) => {
   Mentor.find()
     .then((mentors: IMentor[]) => {
-      let arr = mentors.filter(
+      let arr: any = mentors.filter(
         (mentor: IMentor) =>
           mentor.mentoringUser[0]._id == req.params.id ||
           mentor.mentorId == req.params.id
       );
-      res.status(201).json({ mentor: arr[0] });
+      User.findOne({ email: arr[0].mentoringUser[0].email }).then((user) => {
+        let mentorTrans = arr.map((mentor: IMentor[]) => {
+          return {
+            ...mentor,
+            mentoringUser: user,
+          };
+        });
+
+        res.status(201).json({
+          mentor: {
+            ...mentorTrans[0]._doc,
+            mentoringUser: [mentorTrans[0].mentoringUser],
+          },
+        });
+      });
     })
     .catch((err: any) => {
       console.log("Find Mentor Error:", err);
