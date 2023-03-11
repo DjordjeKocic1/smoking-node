@@ -13,11 +13,14 @@ const getMentor = (req, res, next) => {
         .then((mentors) => {
         let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
             mentor.mentorId == req.params.id);
+        if (arr.length == 0) {
+            return res.status(200).json({ mentor: null });
+        }
         user_1.default.findOne({ email: arr[0].mentoringUser[0].email }).then((user) => {
             let mentorTrans = arr.map((mentor) => {
                 return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
             });
-            res.status(201).json({
+            res.status(200).json({
                 mentor: Object.assign(Object.assign({}, mentorTrans[0]._doc), { mentoringUser: [mentorTrans[0].mentoringUser] }),
             });
         });

@@ -18,6 +18,9 @@ const getMentor = (
           mentor.mentoringUser[0]._id == req.params.id ||
           mentor.mentorId == req.params.id
       );
+      if (arr.length == 0) {
+        return res.status(200).json({ mentor: null });
+      }
       User.findOne({ email: arr[0].mentoringUser[0].email }).then((user) => {
         let mentorTrans = arr.map((mentor: IMentor[]) => {
           return {
@@ -26,7 +29,7 @@ const getMentor = (
           };
         });
 
-        res.status(201).json({
+        res.status(200).json({
           mentor: {
             ...mentorTrans[0]._doc,
             mentoringUser: [mentorTrans[0].mentoringUser],
