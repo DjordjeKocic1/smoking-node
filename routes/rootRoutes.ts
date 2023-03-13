@@ -36,6 +36,7 @@ router.post(
 router.put("/update-mentor/:id", mentorController.updateMentor);
 
 //Tasks
+router.get("/get-task/:id", taskController.getTasks);
 router.post(
   "/create-task",
   [
@@ -71,7 +72,7 @@ router.put(
 router.put(
   "/update-all-notifcations",
   notificationController.updateAllNotifications
-)
+);
 // Categories
 router.get("/categories", categorieController.getCategories);
 router.post("/categories", categorieController.createCategories);

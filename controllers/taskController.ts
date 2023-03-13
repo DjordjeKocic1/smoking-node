@@ -4,6 +4,32 @@ import { NextFunction, Request, Response } from "express";
 import Task from "../model/task";
 import { validationResult } from "express-validator";
 
+const getTasks = (
+  req: Request<{ id: string }, {}, ITaskPayload>,
+  res: Response<{ error?: string; task?: any }>,
+  next: NextFunction
+) => {
+  Task.find({ done: false })
+    .then((tasks: ITask[]) => {
+      let arr: any = tasks.filter(
+        (task: ITask) =>
+          task.mentorId == req.params.id || task.userId == req.params.id
+      );
+      if (arr.length == 0) {
+        return res.status(200).json({ task: null });
+      }
+      console.log("Get Error:", arr);
+      res.status(200).json({ task: arr });
+    })
+    .catch((err: any) => {
+      console.log("Get task Error:", err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 const createTask = (
   req: Request<{}, {}, ITaskPayload>,
   res: Response<{ error?: string; task?: ITask }>,
@@ -17,7 +43,7 @@ const createTask = (
 
   const task = new Task({
     toDo: req.body.toDo,
-    done: req.body.done,
+    done: false,
     userId: req.body.userId,
     mentorId: req.body.mentorId,
   });
@@ -59,4 +85,5 @@ const updateTask = (
 export const taskController = {
   createTask,
   updateTask,
+  getTasks,
 };

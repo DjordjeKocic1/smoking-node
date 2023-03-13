@@ -27,6 +27,7 @@ router.post("/create-mentor", [
 ], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);
 //Tasks
+router.get("/get-task/:id", taskController_1.taskController.getTasks);
 router.post("/create-task", [
     (0, express_validator_1.body)("userId")
         .isLength({ min: 12, max: 24 })
