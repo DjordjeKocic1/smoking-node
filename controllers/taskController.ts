@@ -1,6 +1,7 @@
-import { ITask, ITaskPayload } from "../types/types";
+import { INotificaion, ITask, ITaskPayload } from "../types/types";
 import { NextFunction, Request, Response } from "express";
 
+import Notification from "../model/notification";
 import Task from "../model/task";
 import { validationResult } from "express-validator";
 
@@ -52,7 +53,17 @@ const createTask = (
     .save()
     .then((task: any) => {
       console.log("Create task:", task);
-      res.status(201).json({ task });
+      const notification = new Notification({
+        isAchievement: false,
+        isTask: false,
+        isMentoring: true,
+        isRead: false,
+        userId: task.userId,
+      });
+      notification.save().then((notificaiton:INotificaion) => {
+        console.log("Create Notification:", notificaiton);
+        res.status(201).json({ task });
+      })
     })
     .catch((err: any) => {
       console.log("Create task Error:", err);
