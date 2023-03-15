@@ -55,8 +55,8 @@ const createTask = (
       console.log("Create task:", task);
       const notification = new Notification({
         isAchievement: false,
-        isTask: false,
-        isMentoring: true,
+        isTask: true,
+        isMentoring: false,
         isRead: false,
         userId: task.userId,
       });
