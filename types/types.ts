@@ -73,7 +73,7 @@ export interface IMentor {
 export interface INotificaion {
   isMentoring: boolean;
   isAchievement: boolean;
-  isTask:boolean;
+  isTask: boolean;
   isRead: boolean;
   userId: string;
 }
@@ -81,6 +81,7 @@ export interface INotificaion {
 export interface ITask {
   toDo: string;
   done: boolean;
+  comment: string;
   userId: string;
   mentorId: string;
 }
@@ -98,7 +99,7 @@ export interface ICostsPayload {
 export interface IMentorPayload {
   name: string;
   email: string;
-  mentorId:string;
+  mentorId: string;
   accepted: boolean;
   user: IUser;
 }
@@ -106,6 +107,7 @@ export interface IMentorPayload {
 export interface ITaskPayload {
   toDo: string;
   done: boolean;
+  comment: string;
   userId: string;
   mentorId: string;
 }

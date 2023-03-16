@@ -45,6 +45,7 @@ const createTask = (
   const task = new Task({
     toDo: req.body.toDo,
     done: false,
+    comment: req.body.comment,
     userId: req.body.userId,
     mentorId: req.body.mentorId,
   });
@@ -60,10 +61,10 @@ const createTask = (
         isRead: false,
         userId: task.userId,
       });
-      notification.save().then((notificaiton:INotificaion) => {
+      notification.save().then((notificaiton: INotificaion) => {
         console.log("Create Notification:", notificaiton);
         res.status(201).json({ task });
-      })
+      });
     })
     .catch((err: any) => {
       console.log("Create task Error:", err);

@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const taskSchema = new Schema({
   toDo: String,
   done: Boolean,
+  comment: String,
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",

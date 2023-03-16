@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskController = void 0;
+const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
@@ -32,6 +33,7 @@ const createTask = (req, res, next) => {
     const task = new task_1.default({
         toDo: req.body.toDo,
         done: false,
+        comment: req.body.comment,
         userId: req.body.userId,
         mentorId: req.body.mentorId,
     });
@@ -39,7 +41,17 @@ const createTask = (req, res, next) => {
         .save()
         .then((task) => {
         console.log("Create task:", task);
-        res.status(201).json({ task });
+        const notification = new notification_1.default({
+            isAchievement: false,
+            isTask: true,
+            isMentoring: false,
+            isRead: false,
+            userId: task.userId,
+        });
+        notification.save().then((notificaiton) => {
+            console.log("Create Notification:", notificaiton);
+            res.status(201).json({ task });
+        });
     })
         .catch((err) => {
         console.log("Create task Error:", err);
