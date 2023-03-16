@@ -12,7 +12,7 @@ const getTasks = (req, res, next) => {
         .then((tasks) => {
         let arr = tasks.filter((task) => task.mentorId == req.params.id || task.userId == req.params.id);
         if (arr.length == 0) {
-            return res.status(200).json({ task: null });
+            return res.status(200).json({ task: [] });
         }
         console.log("Get Error:", arr);
         res.status(200).json({ task: arr });
