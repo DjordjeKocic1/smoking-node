@@ -10,7 +10,7 @@ const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
     task_1.default.find({ done: false })
         .then((tasks) => {
-        let arr = tasks.filter((task) => task.mentorId == req.params.id || task.userId == req.params.id);
+        let arr = tasks.filter((task) => task.userId == req.params.id);
         if (arr.length == 0) {
             return res.status(200).json({ task: [] });
         }

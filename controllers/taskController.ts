@@ -13,8 +13,7 @@ const getTasks = (
   Task.find({ done: false })
     .then((tasks: ITask[]) => {
       let arr: any = tasks.filter(
-        (task: ITask) =>
-          task.mentorId == req.params.id || task.userId == req.params.id
+        (task: ITask) => task.userId == req.params.id
       );
       if (arr.length == 0) {
         return res.status(200).json({ task: [] });
