@@ -80,7 +80,7 @@ export interface INotificaion {
 
 export interface ITask {
   toDo: string;
-  done: boolean;
+  status: string;
   comment: string;
   userId: string;
   mentorId: string;
@@ -106,7 +106,7 @@ export interface IMentorPayload {
 
 export interface ITaskPayload {
   toDo: string;
-  done: boolean;
+  status: string;
   comment: string;
   userId: string;
   mentorId: string;

@@ -7,7 +7,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const taskSchema = new Schema({
     toDo: String,
-    done: Boolean,
+    status: String,
     comment: String,
     userId: {
         type: Schema.Types.ObjectId,

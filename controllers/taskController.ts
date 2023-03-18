@@ -42,7 +42,7 @@ const createTask = (
 
   const task = new Task({
     toDo: req.body.toDo,
-    done: false,
+    status: "",
     comment: req.body.comment,
     userId: req.body.userId,
     mentorId: req.body.mentorId,

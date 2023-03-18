@@ -31,7 +31,7 @@ const createTask = (req, res, next) => {
     }
     const task = new task_1.default({
         toDo: req.body.toDo,
-        done: false,
+        status: "",
         comment: req.body.comment,
         userId: req.body.userId,
         mentorId: req.body.mentorId,
