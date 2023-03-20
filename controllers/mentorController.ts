@@ -120,8 +120,28 @@ const updateMentor = (
     });
 };
 
+const deleteMentor = (
+  req: Request<{ id: string }, {}, {}>,
+  res: Response<{ success: any }>,
+  next: NextFunction
+) => {
+  Mentor.deleteOne({ _id: req.params.id })
+    .then((task: any) => {
+      console.log({ "mentor delete": task });
+      res.status(204).json({ success: "ok" });
+    })
+    .catch((err: any) => {
+      console.log("delete mentor Error:", err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 export const mentorController = {
   createMentor,
   updateMentor,
   getMentor,
+  deleteMentor,
 };

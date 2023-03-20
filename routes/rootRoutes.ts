@@ -34,6 +34,7 @@ router.post(
   mentorController.createMentor
 );
 router.put("/update-mentor/:id", mentorController.updateMentor);
+router.delete("/delete-mentor/:id", mentorController.deleteMentor);
 
 //Tasks
 router.get("/get-task/:id", taskController.getTasks);
@@ -51,6 +52,7 @@ router.post(
   taskController.createTask
 );
 router.put("/update-task/:id", taskController.updateTask);
+router.delete("/delete-task/:id", taskController.deleteTask);
 
 //Notification
 router.get(

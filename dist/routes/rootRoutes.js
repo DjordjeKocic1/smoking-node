@@ -26,6 +26,7 @@ router.post("/create-mentor", [
     (0, errorHelper_1.checkMentoringYourSelf)("You can not mentor your self"),
 ], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);
+router.delete("/delete-mentor/:id", mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", taskController_1.taskController.getTasks);
 router.post("/create-task", [
@@ -38,6 +39,7 @@ router.post("/create-task", [
     (0, errorHelper_1.checkUserIDExist)("User of that ID doesnt exists"),
 ], taskController_1.taskController.createTask);
 router.put("/update-task/:id", taskController_1.taskController.updateTask);
+router.delete("/delete-task/:id", taskController_1.taskController.deleteTask);
 //Notification
 router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);

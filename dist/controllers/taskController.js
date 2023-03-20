@@ -12,7 +12,7 @@ const getTasks = (req, res, next) => {
         .then((tasks) => {
         let arr = tasks.filter((task) => task.userId == req.params.id);
         if (arr.length == 0) {
-            return res.status(200).json({ task: [] });
+            return res.status(200).json({ success: "ok", task: [] });
         }
         res.status(200).json({ task: arr });
     })
@@ -49,7 +49,7 @@ const createTask = (req, res, next) => {
         });
         notification.save().then((notificaiton) => {
             console.log("Create Notification:", notificaiton);
-            res.status(201).json({ task });
+            res.status(201).json({ success: "ok", task });
         });
     })
         .catch((err) => {
@@ -64,10 +64,24 @@ const updateTask = (req, res, next) => {
     task_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((task) => {
         console.log({ "task Updated": task });
-        res.status(201).json({ task });
+        res.status(201).json({ success: "ok", task });
     })
         .catch((err) => {
         console.log("Update task Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
+    });
+};
+const deleteTask = (req, res, next) => {
+    task_1.default.deleteOne({ _id: req.params.id })
+        .then((task) => {
+        console.log({ "task delete": task });
+        res.status(204).json({ success: "ok" });
+    })
+        .catch((err) => {
+        console.log("delete task Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -78,4 +92,5 @@ exports.taskController = {
     createTask,
     updateTask,
     getTasks,
+    deleteTask,
 };

@@ -7,7 +7,7 @@ import { validationResult } from "express-validator";
 
 const getTasks = (
   req: Request<{ id: string }, {}, ITaskPayload>,
-  res: Response<{ error?: string; task?: any }>,
+  res: Response<{ success?: string; error?: string; task?: any }>,
   next: NextFunction
 ) => {
   Task.find({ done: false })
@@ -16,7 +16,7 @@ const getTasks = (
         (task: ITask) => task.userId == req.params.id
       );
       if (arr.length == 0) {
-        return res.status(200).json({ task: [] });
+        return res.status(200).json({ success: "ok", task: [] });
       }
       res.status(200).json({ task: arr });
     })
@@ -31,7 +31,7 @@ const getTasks = (
 
 const createTask = (
   req: Request<{}, {}, ITaskPayload>,
-  res: Response<{ error?: string; task?: ITask }>,
+  res: Response<{ success?: string; error?: string; task?: ITask }>,
   next: NextFunction
 ) => {
   const errors = validationResult(req);
@@ -61,7 +61,7 @@ const createTask = (
       });
       notification.save().then((notificaiton: INotificaion) => {
         console.log("Create Notification:", notificaiton);
-        res.status(201).json({ task });
+        res.status(201).json({ success: "ok", task });
       });
     })
     .catch((err: any) => {
@@ -75,16 +75,35 @@ const createTask = (
 
 const updateTask = (
   req: Request<{ id: string }, {}, ITaskPayload>,
-  res: Response<{ task: ITask }>,
+  res: Response<{ success: string; task: ITask }>,
   next: NextFunction
 ) => {
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((task: any) => {
       console.log({ "task Updated": task });
-      res.status(201).json({ task });
+      res.status(201).json({ success: "ok", task });
     })
     .catch((err: any) => {
       console.log("Update task Error:", err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+const deleteTask = (
+  req: Request<{ id: string }, {}, {}>,
+  res: Response<{ success: any }>,
+  next: NextFunction
+) => {
+  Task.deleteOne({ _id: req.params.id })
+    .then((task: any) => {
+      console.log({ "task delete": task });
+      res.status(204).json({ success: "ok" });
+    })
+    .catch((err: any) => {
+      console.log("delete task Error:", err);
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -96,4 +115,5 @@ export const taskController = {
   createTask,
   updateTask,
   getTasks,
+  deleteTask,
 };
