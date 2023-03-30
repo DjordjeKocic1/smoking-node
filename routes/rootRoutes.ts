@@ -71,9 +71,9 @@ router.put(
     .withMessage("isRead need to be a boolean and it's required"),
   notificationController.updateNotification
 );
-router.put(
-  "/update-all-notifcations",
-  notificationController.updateAllNotifications
+router.delete(
+  "/delete-notifcation/:id",
+  notificationController.deleteNotification
 );
 // Categories
 router.get("/categories", categorieController.getCategories);

@@ -78,16 +78,23 @@ const updateNotification = (req, res, next) => {
         next(err);
     });
 };
-const updateAllNotifications = (req, res, next) => {
-    notification_1.default.updateMany({}, { $set: { isRead: true } }).then((notification) => {
-        return notification_1.default.find({ isRead: false });
-    }).then((notifcation) => {
-        res.status(201).json({ notifcation });
+const deleteNotification = (req, res, next) => {
+    notification_1.default.findOneAndDelete({ _id: req.params.id })
+        .then((notification) => {
+        console.log({ "notification delete": notification });
+        res.status(201).json({ success: "ok" });
+    })
+        .catch((err) => {
+        console.log("delete notification Error:", err);
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     });
 };
 exports.notificationController = {
     createNotification,
     updateNotification,
     getNotificationsByUserID,
-    updateAllNotifications
+    deleteNotification,
 };

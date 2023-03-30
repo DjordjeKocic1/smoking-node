@@ -46,7 +46,7 @@ router.post("/create-notification", (0, express_validator_1.body)("email").isEma
 router.put("/update-notification/:id", (0, express_validator_1.body)("isRead")
     .isBoolean()
     .withMessage("isRead need to be a boolean and it's required"), notificationController_1.notificationController.updateNotification);
-router.put("/update-all-notifcations", notificationController_1.notificationController.updateAllNotifications);
+router.delete("/delete-notifcation/:id", notificationController_1.notificationController.deleteNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);

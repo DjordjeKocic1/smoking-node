@@ -13,7 +13,7 @@ const getNotificationsByUserID = (
   if (!req.params.id) {
     return res.status(422).json({ error: "user id doesnt exist" });
   }
-  Notification.find({isRead:false})
+  Notification.find({ isRead: false })
     .then((notifications: INotificaion[]) => {
       let nots = notifications.filter(
         (notification: INotificaion) => notification.userId == req.params.id
@@ -45,7 +45,7 @@ const createNotification = (
       const notification = new Notification({
         isMentoring: req.body.isMentoring,
         isAchievement: req.body.isAchievement,
-        isTask:req.body.isTask,
+        isTask: req.body.isTask,
         isRead: false,
         userId: user?._id,
       });
@@ -95,20 +95,27 @@ const updateNotification = (
     });
 };
 
-const updateAllNotifications = (
-  req: Request<{ id: string }, {}, INotificaion>,
-  res: Response,
+const deleteNotification = (
+  req: Request<{ id: string }, {}, {}>,
+  res: Response<{ success: any }>,
   next: NextFunction
 ) => {
-    Notification.updateMany({}, { $set: { isRead: true } }).then((notification) => {
-      return Notification.find({isRead:false})
-    }).then((notifcation:INotificaion[]) => {
-      res.status(201).json({notifcation})
+  Notification.findOneAndDelete({ _id: req.params.id })
+    .then((notification: any) => {
+      console.log({ "notification delete": notification });
+      res.status(201).json({ success: "ok" });
     })
-}
+    .catch((err: any) => {
+      console.log("delete notification Error:", err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 export const notificationController = {
   createNotification,
   updateNotification,
   getNotificationsByUserID,
-  updateAllNotifications
+  deleteNotification,
 };

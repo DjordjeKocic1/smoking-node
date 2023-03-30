@@ -125,10 +125,10 @@ const deleteMentor = (
   res: Response<{ success: any }>,
   next: NextFunction
 ) => {
-  Mentor.deleteOne({ _id: req.params.id })
-    .then((task: any) => {
-      console.log({ "mentor delete": task });
-      res.status(204).json({ success: "ok" });
+  Mentor.findOneAndDelete({ _id: req.params.id })
+    .then((mentor: any) => {
+      console.log({ "mentor delete": mentor });
+      res.status(201).json({ success: "ok" });
     })
     .catch((err: any) => {
       console.log("delete mentor Error:", err);

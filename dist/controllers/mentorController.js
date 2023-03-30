@@ -96,10 +96,10 @@ const updateMentor = (req, res, next) => {
     });
 };
 const deleteMentor = (req, res, next) => {
-    mentor_1.default.deleteOne({ _id: req.params.id })
-        .then((task) => {
-        console.log({ "mentor delete": task });
-        res.status(204).json({ success: "ok" });
+    mentor_1.default.findOneAndDelete({ _id: req.params.id })
+        .then((mentor) => {
+        console.log({ "mentor delete": mentor });
+        res.status(201).json({ success: "ok" });
     })
         .catch((err) => {
         console.log("delete mentor Error:", err);
