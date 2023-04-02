@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mentorController = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
+const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
 const getMentor = (req, res, next) => {
@@ -98,8 +99,11 @@ const updateMentor = (req, res, next) => {
 const deleteMentor = (req, res, next) => {
     mentor_1.default.findOneAndDelete({ _id: req.params.id })
         .then((mentor) => {
-        console.log({ "mentor delete": mentor });
-        res.status(201).json({ success: "ok" });
+        console.log({ "mentor deleted": mentor });
+        task_1.default.deleteMany({ mentorId: mentor.mentorId }).then(() => {
+            console.log("Tasks Deleted");
+            res.status(201).json({ success: "ok" });
+        });
     })
         .catch((err) => {
         console.log("delete mentor Error:", err);

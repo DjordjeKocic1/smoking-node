@@ -8,7 +8,7 @@ const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
-    task_1.default.find({ done: false })
+    task_1.default.find()
         .then((tasks) => {
         let arr = tasks.filter((task) => task.userId == req.params.id);
         if (arr.length == 0) {

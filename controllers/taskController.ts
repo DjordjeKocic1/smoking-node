@@ -10,7 +10,7 @@ const getTasks = (
   res: Response<{ success?: string; error?: string; task?: any }>,
   next: NextFunction
 ) => {
-  Task.find({ done: false })
+  Task.find()
     .then((tasks: ITask[]) => {
       let arr: any = tasks.filter(
         (task: ITask) => task.userId == req.params.id

@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 
 import Mentor from "../model/mentor";
 import Notification from "../model/notification";
+import Task from "../model/task";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
@@ -127,8 +128,11 @@ const deleteMentor = (
 ) => {
   Mentor.findOneAndDelete({ _id: req.params.id })
     .then((mentor: any) => {
-      console.log({ "mentor delete": mentor });
-      res.status(201).json({ success: "ok" });
+      console.log({ "mentor deleted": mentor });
+      Task.deleteMany({ mentorId: mentor.mentorId }).then(() => {
+        console.log("Tasks Deleted");
+        res.status(201).json({ success: "ok" });
+      });
     })
     .catch((err: any) => {
       console.log("delete mentor Error:", err);
