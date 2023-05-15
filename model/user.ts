@@ -72,9 +72,7 @@ const userShema = new Schema({
       },
     },
   ],
-  mentorNotification: {
-    fromEmail: String,
-  },
+  notificationToken: String,
 });
 
 userShema.methods.calculateCosts = function (req: IUser) {

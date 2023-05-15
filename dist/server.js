@@ -22,7 +22,7 @@ const storage = multer_1.default.diskStorage({
 app.use(express_1.default.json());
 app.use((0, multer_1.default)({ storage: storage }).single("image"));
 app.use("/send-user-info", rootRoutes_1.default);
-app.use((error, req, res) => {
+app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
     res.status(status).json({ message });

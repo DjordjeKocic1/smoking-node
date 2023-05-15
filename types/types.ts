@@ -1,5 +1,5 @@
 export interface ErrorMsg {
-  statusCode: string | number;
+  statusCode: number;
   message: string;
 }
 
@@ -60,6 +60,7 @@ export interface IUser {
   calculateHealth?: any;
   calculateCosts?: any;
   categories?: [];
+  notificationToken:string;
 }
 
 export interface IMentor {

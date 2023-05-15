@@ -53,7 +53,6 @@ const createMentor = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).json({ error: errors.array()[0].msg });
   }
@@ -129,10 +128,14 @@ const deleteMentor = (
   Mentor.findOneAndDelete({ _id: req.params.id })
     .then((mentor: any) => {
       console.log({ "mentor deleted": mentor });
-      Task.deleteMany({ mentorId: mentor.mentorId }).then(() => {
-        console.log("Tasks Deleted");
-        res.status(201).json({ success: "ok" });
-      });
+      return mentor;
+    })
+    .then((mentor) => {
+      return Task.deleteMany({ mentorId: mentor.mentorId });
+    })
+    .then((result) => {
+      console.log({ "task deleted": result });
+      res.status(200).json({ success: "ok" });
     })
     .catch((err: any) => {
       console.log("delete mentor Error:", err);

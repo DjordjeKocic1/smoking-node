@@ -1,5 +1,6 @@
+import express, { NextFunction, Request, Response } from "express";
+
 import { ErrorMsg } from "./types/types";
-import express from "express";
 import mongoose from "mongoose";
 import multer from "multer";
 import router from "./routes/rootRoutes";
@@ -25,8 +26,8 @@ app.use(multer({ storage: storage }).single("image"));
 
 app.use("/send-user-info", router);
 
-app.use((error: ErrorMsg, req: any, res: any) => {
-  const status = error.statusCode || 500;
+app.use((error: ErrorMsg, req: Request<{}>, res: Response<{message:string}>,next:NextFunction) => {
+  const status:number = error.statusCode || 500;
   const message = error.message;
   res.status(status).json({ message });
 });

@@ -6,7 +6,7 @@ import Task from "../model/task";
 import { validationResult } from "express-validator";
 
 const getTasks = (
-  req: Request<{ id: string }, {}, ITaskPayload>,
+  req: Request<{ id: string }>,
   res: Response<{ success?: string; error?: string; task?: any }>,
   next: NextFunction
 ) => {
