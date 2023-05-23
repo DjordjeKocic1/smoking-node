@@ -11,20 +11,18 @@ const getUserHealth = (
 ) => {
   User.findById(req.params.id)
     .then((user: any) => {
-      if(!user){
-        const error:any= new Error("User is not there")
+      if (!user) {
+        const error: any = new Error("User is not there");
         error.statusCode = 422;
-        error.message = "User not found!"
+        error.message = "User not found!";
         console.log("Error user getUserHealth", error.stack);
-        throw error
+        throw error;
       }
-      if(!!req.body.notificationToken) {
-       return User.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      }
-      return user
+      return user.calculateHealth(user);
     })
-    .then(userData => {
-      res.status(200).json({ user: userData });
+    .then((healthCalc: any) => {
+      console.log("User GETHEALTH", healthCalc);
+      res.status(201).json({ user: healthCalc });
     })
     .catch((err: any) => {
       if (!err.statusCode) {

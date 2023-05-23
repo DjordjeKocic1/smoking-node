@@ -16,13 +16,11 @@ const getUserHealth = (req, res, next) => {
             console.log("Error user getUserHealth", error.stack);
             throw error;
         }
-        if (!!req.body.notificationToken) {
-            return user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        }
-        return user;
+        return user.calculateHealth(user);
     })
-        .then(userData => {
-        res.status(200).json({ user: userData });
+        .then((healthCalc) => {
+        console.log("User GETHEALTH", healthCalc);
+        res.status(201).json({ user: healthCalc });
     })
         .catch((err) => {
         if (!err.statusCode) {
