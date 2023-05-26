@@ -12,6 +12,11 @@ const mentorSchema = new Schema({
     ref: "User",
     req: true,
   },
+  mentoringUserId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    req: true,
+  },
   mentoringUser: [
     {
       name: String,

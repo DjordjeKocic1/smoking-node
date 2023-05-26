@@ -64,10 +64,12 @@ export interface IUser {
 }
 
 export interface IMentor {
+  _id?: string;
   name: string;
   email: string;
   accepted: boolean;
   mentorId: string;
+  mentoringUserId:string;
   mentoringUser: IUser[];
 }
 
@@ -111,4 +113,10 @@ export interface ITaskPayload {
   comment: string;
   userId: string;
   mentorId: string;
+}
+
+export interface INotificaionMessage {
+  to:string;
+  title:string;
+  body:string;
 }

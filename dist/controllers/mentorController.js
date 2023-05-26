@@ -8,6 +8,7 @@ const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
+const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
 const getMentor = (req, res, next) => {
     mentor_1.default.find()
@@ -47,22 +48,41 @@ const createMentor = (req, res, next) => {
                 email: req.body.email,
                 accepted: false,
                 mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
+                mentoringUserId: user === null || user === void 0 ? void 0 : user._id,
                 mentoringUser: user,
             });
             mentor
                 .save()
                 .then((mentor) => {
-                console.log("Create Mentor:", mentor);
-                const notification = new notification_1.default({
-                    isAchievement: false,
-                    isTask: false,
-                    isMentoring: true,
-                    isRead: false,
-                    userId: mentor.mentorId,
-                });
-                notification.save().then((not) => {
-                    console.log("Create Notification:", not);
-                    res.status(201).json({ mentor });
+                if (!userMentor.notificationToken) {
+                    return res.status(201).json({ mentor });
+                }
+                notifications_1.expoNotification
+                    .sendPushNotification({
+                    to: userMentor.notificationToken,
+                    title: "Mentor",
+                    body: "New mentor request 🔧",
+                })
+                    .then(() => {
+                    const notification = new notification_1.default({
+                        isAchievement: false,
+                        isTask: false,
+                        isMentoring: true,
+                        isRead: false,
+                        userId: mentor.mentorId,
+                    });
+                    notification.save().then((not) => {
+                        console.log("Create Notification:", not);
+                        console.log("Created Mentor:", mentor);
+                        res.status(201).json({ mentor });
+                    });
+                })
+                    .catch((err) => {
+                    console.log("Expo Notification Token:", err);
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
                 });
             })
                 .catch((err) => {
@@ -75,7 +95,7 @@ const createMentor = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log("Create Mentor Error:", err);
+        console.log("User Mentor Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -85,8 +105,27 @@ const createMentor = (req, res, next) => {
 const updateMentor = (req, res, next) => {
     mentor_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((mentor) => {
-        console.log({ "Mentor Updated": mentor });
-        res.status(201).json({ mentor });
+        user_1.default.findOne({ _id: mentor.mentoringUserId }).then((user) => {
+            if (!(user === null || user === void 0 ? void 0 : user.notificationToken)) {
+                return res.status(201).json({ mentor });
+            }
+            notifications_1.expoNotification
+                .sendPushNotification({
+                to: user.notificationToken,
+                title: "Mentor",
+                body: `Mentor (${mentor.email}) accepted your request ✅`,
+            })
+                .then(() => {
+                res.status(201).json({ mentor });
+            })
+                .catch((err) => {
+                console.log("Expo Notification Token:", err);
+                if (!err.statusCode) {
+                    err.statusCode = 500;
+                }
+                next(err);
+            });
+        });
     })
         .catch((err) => {
         console.log("Update Mentor Error:", err);

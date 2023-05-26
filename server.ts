@@ -2,9 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
 import mongoose from "mongoose";
-import multer from "multer";
 import router from "./routes/rootRoutes";
-import { v4 as uuidv4 } from "uuid";
 
 require("dotenv").config();
 
@@ -12,25 +10,22 @@ const port = process.env.PORT || 8000;
 
 const app = express();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "images");
-  },
-  filename: function (req, file, cb) {
-    cb(null, uuidv4());
-  },
-});
-
 app.use(express.json());
-app.use(multer({ storage: storage }).single("image"));
 
 app.use("/send-user-info", router);
 
-app.use((error: ErrorMsg, req: Request<{}>, res: Response<{message:string}>,next:NextFunction) => {
-  const status:number = error.statusCode || 500;
-  const message = error.message;
-  res.status(status).json({ message });
-});
+app.use(
+  (
+    error: ErrorMsg,
+    req: Request<{}>,
+    res: Response<{ message: string }>,
+    next: NextFunction
+  ) => {
+    const status: number = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ message });
+  }
+);
 
 mongoose
   .connect(process.env.MONGO_URI as string)

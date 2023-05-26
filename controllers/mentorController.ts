@@ -5,6 +5,7 @@ import Mentor from "../model/mentor";
 import Notification from "../model/notification";
 import Task from "../model/task";
 import User from "../model/user";
+import { expoNotification } from "../helpers/notifications/notifications";
 import { validationResult } from "express-validator";
 
 const getMentor = (
@@ -65,23 +66,42 @@ const createMentor = (
           email: req.body.email,
           accepted: false,
           mentorId: userMentor?._id,
+          mentoringUserId: user?._id,
           mentoringUser: user,
         });
         mentor
           .save()
           .then((mentor: IMentor) => {
-            console.log("Create Mentor:", mentor);
-            const notification = new Notification({
-              isAchievement: false,
-              isTask: false,
-              isMentoring: true,
-              isRead: false,
-              userId: mentor.mentorId,
-            });
-            notification.save().then((not) => {
-              console.log("Create Notification:", not);
-              res.status(201).json({ mentor });
-            });
+            if (!userMentor.notificationToken) {
+              return res.status(201).json({ mentor });
+            }
+            expoNotification
+              .sendPushNotification({
+                to: userMentor.notificationToken,
+                title: "Mentor",
+                body: "New mentor request 🔧",
+              })
+              .then(() => {
+                const notification = new Notification({
+                  isAchievement: false,
+                  isTask: false,
+                  isMentoring: true,
+                  isRead: false,
+                  userId: mentor.mentorId,
+                });
+                notification.save().then((not) => {
+                  console.log("Create Notification:", not);
+                  console.log("Created Mentor:", mentor);
+                  res.status(201).json({ mentor });
+                });
+              })
+              .catch((err) => {
+                console.log("Expo Notification Token:", err);
+                if (!err.statusCode) {
+                  err.statusCode = 500;
+                }
+                next(err);
+              });
           })
           .catch((err: any) => {
             console.log("Create Mentor Error:", err);
@@ -93,7 +113,7 @@ const createMentor = (
       });
     })
     .catch((err: any) => {
-      console.log("Create Mentor Error:", err);
+      console.log("User Mentor Error:", err);
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -108,8 +128,27 @@ const updateMentor = (
 ) => {
   Mentor.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((mentor: any) => {
-      console.log({ "Mentor Updated": mentor });
-      res.status(201).json({ mentor });
+      User.findOne({ _id: mentor.mentoringUserId }).then((user) => {
+        if (!user?.notificationToken) {
+          return res.status(201).json({ mentor });
+        }
+        expoNotification
+          .sendPushNotification({
+            to: user.notificationToken,
+            title: "Mentor",
+            body: `Mentor (${mentor.email}) accepted your request ✅`,
+          })
+          .then(() => {
+            res.status(201).json({ mentor });
+          })
+          .catch((err) => {
+            console.log("Expo Notification Token:", err);
+            if (!err.statusCode) {
+              err.statusCode = 500;
+            }
+            next(err);
+          });
+      });
     })
     .catch((err: any) => {
       console.log("Update Mentor Error:", err);

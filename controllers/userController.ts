@@ -21,8 +21,20 @@ const getUserHealth = (
       return user.calculateHealth(user);
     })
     .then((healthCalc: any) => {
-      console.log("User GETHEALTH", healthCalc);
-      res.status(201).json({ user: healthCalc });
+      if (!!req.body.notificationToken) {
+        User.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
+          (data: any) => {
+            res.status(201).json({
+              user: {
+                ...healthCalc._doc,
+                notificationToken: data.notificationToken,
+              },
+            });
+          }
+        );
+      } else {
+        res.status(201).json({ user: healthCalc });
+      }
     })
     .catch((err: any) => {
       if (!err.statusCode) {

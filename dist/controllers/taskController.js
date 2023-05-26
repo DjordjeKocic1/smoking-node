@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskController = void 0;
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
+const user_1 = __importDefault(require("../model/user"));
+const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
     task_1.default.find()
@@ -49,6 +51,27 @@ const createTask = (req, res, next) => {
         });
         notification.save().then((notificaiton) => {
             console.log("Create Notification:", notificaiton);
+            user_1.default.findOne({ _id: notificaiton.userId }).then((user) => {
+                if (!user.notificationToken) {
+                    return res.status(201).json({ success: "ok", task });
+                }
+                notifications_1.expoNotification
+                    .sendPushNotification({
+                    to: user.notificationToken,
+                    title: "Task",
+                    body: "You have a new task 📝",
+                })
+                    .then(() => {
+                    res.status(201).json({ success: "ok", task });
+                })
+                    .catch((err) => {
+                    console.log("Expo Notification Token:", err);
+                    if (!err.statusCode) {
+                        err.statusCode = 500;
+                    }
+                    next(err);
+                });
+            });
             res.status(201).json({ success: "ok", task });
         });
     })

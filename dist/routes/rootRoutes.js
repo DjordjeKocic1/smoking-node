@@ -21,8 +21,8 @@ router.get("/user-health/:id", userController_1.userController.getUserHealth);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [
-    (0, errorHelper_1.checkExistMentoring)("You already mentoring"),
-    (0, errorHelper_1.checkExistUserEmail)("This user doesnt exist"),
+    (0, errorHelper_1.checkAlreadyMentored)("You already send request"),
+    (0, errorHelper_1.checkUserExist)("This mentor user doesn't exist"),
     (0, errorHelper_1.checkMentoringYourSelf)("You can not mentor your self"),
 ], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);

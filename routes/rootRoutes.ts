@@ -1,7 +1,7 @@
 import {
-  checkExistMentoring,
-  checkExistUserEmail,
+  checkAlreadyMentored,
   checkMentoringYourSelf,
+  checkUserExist,
   checkUserIDExist,
 } from "../errors/errorHelper";
 
@@ -27,8 +27,8 @@ router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
   [
-    checkExistMentoring("You already mentoring"),
-    checkExistUserEmail("This user doesnt exist"),
+    checkAlreadyMentored("You already send request"),
+    checkUserExist("This mentor user doesn't exist"),
     checkMentoringYourSelf("You can not mentor your self"),
   ],
   mentorController.createMentor
