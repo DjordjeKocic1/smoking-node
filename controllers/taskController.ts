@@ -55,7 +55,6 @@ const createTask = (
     .then((task: any) => {
       console.log("Create task:", task);
       const notification = new Notification({
-        isAchievement: false,
         isTask: true,
         isMentoring: false,
         isRead: false,

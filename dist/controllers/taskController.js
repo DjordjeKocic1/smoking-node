@@ -43,7 +43,6 @@ const createTask = (req, res, next) => {
         .then((task) => {
         console.log("Create task:", task);
         const notification = new notification_1.default({
-            isAchievement: false,
             isTask: true,
             isMentoring: false,
             isRead: false,

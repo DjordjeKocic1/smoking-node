@@ -83,7 +83,6 @@ const createMentor = (
               })
               .then(() => {
                 const notification = new Notification({
-                  isAchievement: false,
                   isTask: false,
                   isMentoring: true,
                   isRead: false,

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errorHelper_1 = require("../errors/errorHelper");
+const achievementController_1 = require("../controllers/achievementController");
 const express_validator_1 = require("express-validator");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
@@ -50,6 +51,9 @@ router.delete("/delete-notifcation/:id", notificationController_1.notificationCo
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);
+// Achievements
+router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
+router.get("/get-achievements", achievementController_1.achievementController.getAchievemnts);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

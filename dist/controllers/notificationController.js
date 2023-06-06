@@ -33,7 +33,6 @@ const createNotification = (req, res, next) => {
         .then((user) => {
         const notification = new notification_1.default({
             isMentoring: req.body.isMentoring,
-            isAchievement: req.body.isAchievement,
             isTask: req.body.isTask,
             isRead: false,
             userId: user === null || user === void 0 ? void 0 : user._id,

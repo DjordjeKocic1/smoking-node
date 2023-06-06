@@ -65,7 +65,6 @@ const createMentor = (req, res, next) => {
                 })
                     .then(() => {
                     const notification = new notification_1.default({
-                        isAchievement: false,
                         isTask: false,
                         isMentoring: true,
                         isRead: false,

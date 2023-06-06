@@ -89,6 +89,15 @@ export interface ITask {
   mentorId: string;
 }
 
+export interface IAchievement {
+  _id:any;
+  name:string;
+  description:string;
+  categorie:string;
+  points:string;
+  type:string;
+}
+
 export interface IConsumationPayload {
   cigarettesDay: number;
   cigarettesInPack: number;

@@ -5,6 +5,7 @@ import {
   checkUserIDExist,
 } from "../errors/errorHelper";
 
+import { achievementController } from "../controllers/achievementController";
 import { body } from "express-validator";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
@@ -78,6 +79,10 @@ router.delete(
 // Categories
 router.get("/categories", categorieController.getCategories);
 router.post("/categories", categorieController.createCategories);
+
+// Achievements
+router.post("/create-achievement", achievementController.createAchievement);
+router.get("/get-achievements", achievementController.getAchievemnts);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);

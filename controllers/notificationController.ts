@@ -44,7 +44,6 @@ const createNotification = (
     .then((user) => {
       const notification = new Notification({
         isMentoring: req.body.isMentoring,
-        isAchievement: req.body.isAchievement,
         isTask: req.body.isTask,
         isRead: false,
         userId: user?._id,

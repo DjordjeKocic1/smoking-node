@@ -74,6 +74,16 @@ const userShema = new Schema({
             },
         },
     ],
+    achievements: [
+        {
+            name: String,
+            categorieId: {
+                type: Schema.Types.ObjectId,
+                ref: "Achievement",
+                req: true,
+            },
+        },
+    ],
     notificationToken: String,
 });
 userShema.methods.calculateCosts = function (req) {
