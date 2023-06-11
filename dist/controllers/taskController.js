@@ -83,8 +83,18 @@ const createTask = (req, res, next) => {
     });
 };
 const updateTask = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ error: errors.array()[0].msg });
+    }
     task_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((task) => {
+        if (req.body.status == "done") {
+            user_1.default.findOne({ _id: task.userId }).then((user) => {
+                user.tasks.push({ taskId: task._id, name: task.toDo });
+                user.save();
+            });
+        }
         console.log({ "task Updated": task });
         res.status(201).json({ success: "ok", task });
     })

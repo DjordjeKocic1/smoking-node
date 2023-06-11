@@ -7,7 +7,6 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const notificationSchema = new Schema({
     isMentoring: Boolean,
-    isAchievement: Boolean,
     isTask: Boolean,
     isRead: Boolean,
     userId: {

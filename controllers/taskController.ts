@@ -97,11 +97,23 @@ const createTask = (
 
 const updateTask = (
   req: Request<{ id: string }, {}, ITaskPayload>,
-  res: Response<{ success: string; task: ITask }>,
+  res: Response<{ success?: string; error?: string; task?: ITask }>,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ error: errors.array()[0].msg });
+  }
+
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((task: any) => {
+      if (req.body.status == "done") {
+        User.findOne({ _id: task.userId }).then((user: any) => {
+          user.tasks.push({ taskId: task._id, name: task.toDo });
+          user.save();
+        });
+      }
       console.log({ "task Updated": task });
       res.status(201).json({ success: "ok", task });
     })

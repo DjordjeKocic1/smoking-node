@@ -60,7 +60,8 @@ export interface IUser {
   calculateHealth?: any;
   calculateCosts?: any;
   categories?: [];
-  notificationToken:string;
+  notificationToken: string;
+  tasks: any;
 }
 
 export interface IMentor {
@@ -69,7 +70,7 @@ export interface IMentor {
   email: string;
   accepted: boolean;
   mentorId: string;
-  mentoringUserId:string;
+  mentoringUserId: string;
   mentoringUser: IUser[];
 }
 
@@ -90,12 +91,12 @@ export interface ITask {
 }
 
 export interface IAchievement {
-  _id:any;
-  name:string;
-  description:string;
-  categorie:string;
-  points:string;
-  type:string;
+  _id: any;
+  name: string;
+  description: string;
+  categorie: string;
+  points: string;
+  type: string;
 }
 
 export interface IConsumationPayload {
@@ -125,7 +126,7 @@ export interface ITaskPayload {
 }
 
 export interface INotificaionMessage {
-  to:string;
-  title:string;
-  body:string;
+  to: string;
+  title: string;
+  body: string;
 }

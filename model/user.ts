@@ -75,10 +75,19 @@ const userShema = new Schema({
   achievements: [
     {
       name: String,
-      categorieId: {
+      achievementId: {
         type: Schema.Types.ObjectId,
         ref: "Achievement",
         req: true,
+      },
+    },
+  ],
+  tasks: [
+    {
+      name: String,
+      taskId: {
+        type: Schema.Types.ObjectId,
+        ref: "Task",
       },
     },
   ],
