@@ -53,7 +53,7 @@ router.get("/categories", categorieController_1.categorieController.getCategorie
 router.post("/categories", categorieController_1.categorieController.createCategories);
 // Achievements
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
-router.get("/get-achievements", achievementController_1.achievementController.getAchievemnts);
+router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

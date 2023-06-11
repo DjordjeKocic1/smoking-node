@@ -97,6 +97,7 @@ export interface IAchievement {
   categorie: string;
   points: string;
   type: string;
+  tag: number;
 }
 
 export interface IConsumationPayload {

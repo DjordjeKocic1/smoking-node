@@ -82,7 +82,7 @@ router.post("/categories", categorieController.createCategories);
 
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
-router.get("/get-achievements", achievementController.getAchievemnts);
+router.get("/get-achievements/:userId", achievementController.getAchievemnts);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);

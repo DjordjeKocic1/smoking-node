@@ -11,7 +11,8 @@ const achievementShema = new Schema({
   description: String,
   categorie: String,
   points: String,
-  type:String,
+  type: String,
+  tag: Number,
 });
 
 export default mongoose.model<IAchievement>("Achievement", achievementShema);

@@ -14,5 +14,6 @@ const achievementShema = new Schema({
     categorie: String,
     points: String,
     type: String,
+    tag: Number,
 });
 exports.default = mongoose_1.default.model("Achievement", achievementShema);
