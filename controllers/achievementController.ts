@@ -44,7 +44,9 @@ const getAchievemnts = (req: Request, res: Response, next: NextFunction) => {
             return { ...achs._doc, holding: false };
         }
       });
-      res.status(200).json({ achievements: newAch });
+      res
+        .status(200)
+        .json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });
     });
   });
 };

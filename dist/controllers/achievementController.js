@@ -45,7 +45,9 @@ const getAchievemnts = (req, res, next) => {
                         return Object.assign(Object.assign({}, achs._doc), { holding: false });
                 }
             });
-            res.status(200).json({ achievements: newAch });
+            res
+                .status(200)
+                .json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });
         });
     });
 };
