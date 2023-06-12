@@ -13,7 +13,12 @@ const notificationController_1 = require("../controllers/notificationController"
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
+const path = require("path");
 const router = express_1.default.Router();
+//HTML
+router.get("/users-reports", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "../", "views", "notifications.html"));
+});
 //Users
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail(), userController_1.userController.createUser);
 router.put("/update-user/:id", userController_1.userController.updateUser);

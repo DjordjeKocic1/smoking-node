@@ -15,7 +15,13 @@ import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
 
+const path = require("path");
 const router = exporess.Router();
+
+//HTML
+router.get("/users-reports", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views", "notifications.html"));
+});
 
 //Users
 router.post("/create-user", body("email").isEmail(), userController.createUser);
