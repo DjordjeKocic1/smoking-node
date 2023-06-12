@@ -71,7 +71,6 @@ const createTask = (req, res, next) => {
                     next(err);
                 });
             });
-            res.status(201).json({ success: "ok", task });
         });
     })
         .catch((err) => {

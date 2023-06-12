@@ -44,6 +44,14 @@ const getAchievemnts = (req: Request, res: Response, next: NextFunction) => {
             return { ...achs._doc, holding: false };
         }
       });
+      if (newAch.length != 0) {
+        newAch.filter((v) => {
+          if (v.holding) {
+            user?.achievements.push({ name: v.name, achievementId: v._id });
+            user?.save();
+          }
+        });
+      }
       res
         .status(200)
         .json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });

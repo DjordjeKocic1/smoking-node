@@ -4,6 +4,17 @@ import { NextFunction, Request, Response } from "express";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
+const getUsers = (req: Request, res: Response) => {
+  User.find()
+    .then((users) => {
+      res.status(200).json({ users });
+    })
+    .catch((error) => {
+      console.log("users Get Error:", error);
+      res.status(502).json({ error });
+    });
+};
+
 const getUserHealth = (
   req: Request<{ id: string }>,
   res: Response,
@@ -129,6 +140,7 @@ const updateUserCosts = (
 };
 
 export const userController = {
+  getUsers,
   getUserHealth,
   createUser,
   updateUser,

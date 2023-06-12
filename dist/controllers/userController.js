@@ -6,6 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
+const getUsers = (req, res) => {
+    user_1.default.find()
+        .then((users) => {
+        res.status(200).json({ users });
+    })
+        .catch((error) => {
+        console.log("users Get Error:", error);
+        res.status(502).json({ error });
+    });
+};
 const getUserHealth = (req, res, next) => {
     user_1.default.findById(req.params.id)
         .then((user) => {
@@ -103,6 +113,7 @@ const updateUserCosts = (req, res, next) => {
     });
 };
 exports.userController = {
+    getUsers,
     getUserHealth,
     createUser,
     updateUser,

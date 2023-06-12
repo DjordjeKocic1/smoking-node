@@ -66,6 +66,7 @@ const createTask = (
           if (!user.notificationToken) {
             return res.status(201).json({ success: "ok", task });
           }
+
           expoNotification
             .sendPushNotification({
               to: user.notificationToken,
@@ -83,7 +84,6 @@ const createTask = (
               next(err);
             });
         });
-        res.status(201).json({ success: "ok", task });
       });
     })
     .catch((err: any) => {

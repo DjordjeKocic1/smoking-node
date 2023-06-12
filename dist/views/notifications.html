@@ -5,17 +5,87 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+    </style>
 </head>
 
 <body>
     <h1>Hello</h1>
+    <div class="users">
+        <table>
+            <thead>
+                <th>User</th>
+                <th>Last Seen</th>
+                <th>Send Notification</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         fetch(
-            "http://192.168.56.1:8000/send-user-info/user-health/646fd53d49d16873e0eec657"
+            "http://192.168.56.1:8000/send-user-info/users"
         )
             .then((res) => res.json())
-            .then((data) => console.log(data));
+            .then(({ users }) => {
+                let table = document.querySelector("table")
+                let tableHead = document.querySelector("thead")
+                let tableBody = document.querySelector("tbody")
+
+                tableBody.innerHTML = ""
+
+                for (const user of users) {
+                    const rowElement = document.createElement("tr")
+
+                    const cellElement = document.createElement("td")
+
+                    const cellElement2 = document.createElement("td")
+
+                    const cellElement3 = document.createElement("td")
+
+                    const cellElementDiv = document.createElement("div")
+                    cellElementDiv.setAttribute("userId", user.notificationToken)
+                    cellElementDiv.className = "userNotification"
+                    cellElementDiv.textContent = user.name;
+                    const cellElement3Btn = document.createElement("button")
+                    cellElement3Btn.textContent = "Push Notification"
+
+
+
+                    cellElement2.textContent = new Date(user.updatedAt).toLocaleDateString()
+
+                    cellElement.appendChild(cellElementDiv)
+                    cellElement3.appendChild(cellElement3Btn)
+
+                    rowElement.appendChild(cellElement)
+                    rowElement.appendChild(cellElement2)
+                    rowElement.appendChild(cellElement3)
+
+
+                    tableBody.appendChild(rowElement)
+                }
+
+            }).finally(() => {
+                const btn = document.querySelectorAll("button")
+                for (let i = 0; i < btn.length; i++) {
+                    btn[i].addEventListener("click", () => {
+                        let findUserNot = btn[i].parentElement.parentElement.querySelector(".userNotification").getAttribute("userid")
+
+                    })
+                }
+            })
     </script>
 </body>
 

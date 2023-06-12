@@ -62,6 +62,7 @@ export interface IUser {
   categories?: [];
   notificationToken: string;
   tasks: any;
+  achievements: any;
 }
 
 export interface IMentor {

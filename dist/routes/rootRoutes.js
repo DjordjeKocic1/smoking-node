@@ -20,6 +20,7 @@ router.get("/users-reports", (req, res, next) => {
     res.sendFile(path.join(__dirname, "../", "views", "notifications.html"));
 });
 //Users
+router.get("/users", userController_1.userController.getUsers);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail(), userController_1.userController.createUser);
 router.put("/update-user/:id", userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", userController_1.userController.updateUserCosts);

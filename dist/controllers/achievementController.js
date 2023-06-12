@@ -45,6 +45,14 @@ const getAchievemnts = (req, res, next) => {
                         return Object.assign(Object.assign({}, achs._doc), { holding: false });
                 }
             });
+            if (newAch.length != 0) {
+                newAch.filter((v) => {
+                    if (v.holding) {
+                        user === null || user === void 0 ? void 0 : user.achievements.push({ name: v.name, achievementId: v._id });
+                        user === null || user === void 0 ? void 0 : user.save();
+                    }
+                });
+            }
             res
                 .status(200)
                 .json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });
