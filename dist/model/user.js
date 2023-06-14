@@ -64,12 +64,7 @@ const userShema = new Schema({
         cigarettesAvoidedCost: Number,
         cigarettesAvoided: Number,
     },
-    games: [
-        {
-            name: String,
-            score: String,
-        },
-    ],
+    gameScore: Number,
     categories: [
         {
             name: String,

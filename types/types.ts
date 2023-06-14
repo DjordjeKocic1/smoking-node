@@ -63,6 +63,7 @@ export interface IUser {
   notificationToken: string;
   tasks: any;
   achievements: any;
+  gameScore: any;
 }
 
 export interface IMentor {
