@@ -7,9 +7,7 @@ import { validationResult } from "express-validator";
 const getUsers = (req: Request, res: Response) => {
   User.find()
     .then((users) => {
-      res
-        .status(200)
-        .json({ users: users.sort((a, b) => b.gameScore - a.gameScore) });
+      res.status(200).json({ users });
     })
     .catch((error) => {
       console.log("users Get Error:", error);

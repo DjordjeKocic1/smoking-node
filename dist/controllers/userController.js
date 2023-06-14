@@ -9,9 +9,7 @@ const express_validator_1 = require("express-validator");
 const getUsers = (req, res) => {
     user_1.default.find()
         .then((users) => {
-        res
-            .status(200)
-            .json({ users: users.sort((a, b) => b.gameScore - a.gameScore) });
+        res.status(200).json({ users });
     })
         .catch((error) => {
         console.log("users Get Error:", error);
