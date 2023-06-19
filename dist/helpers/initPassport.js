@@ -42,6 +42,6 @@ const formatGoogle = (profile) => {
     return {
         firstName: profile.given_name,
         lastName: profile.family_name,
-        email: profile.emaiL,
+        email: profile.email,
     };
 };
