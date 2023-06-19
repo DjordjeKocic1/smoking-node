@@ -18,6 +18,21 @@ app.use(express.json());
 
 app.use("/send-user-info", router);
 
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/auth/google" }),
+  (req: any, res) => {
+    res.redirect(
+      `istop://login?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`
+    );
+  }
+);
+
 app.use(
   (
     error: ErrorMsg,
@@ -32,24 +47,9 @@ app.use(
 );
 
 mongoose
-  .connect(process.env.MONGO_URI as string)
+  .connect(process.env.MONGO_URI_COPY as string)
   .then(() => {
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
   })
   .catch((err) => console.log("Db error:", err));
-
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/google" }),
-  (req: any, res) => {
-    res.redirect(
-      `istop://app/login?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`
-    );
-  }
-);
