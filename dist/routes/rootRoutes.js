@@ -10,14 +10,14 @@ const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
 const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
+const path_1 = __importDefault(require("path"));
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
-const path = require("path");
 const router = express_1.default.Router();
 //HTML
 router.get("/users-reports", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "../", "views", "notifications.html"));
+    res.sendFile(path_1.default.join(__dirname, "../", "views", "notifications.html"));
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);

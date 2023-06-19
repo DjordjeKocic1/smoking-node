@@ -4,15 +4,65 @@ import { ErrorMsg } from "./types/types";
 import mongoose from "mongoose";
 import router from "./routes/rootRoutes";
 
+const passport = require("passport");
+
 require("dotenv").config();
 
 const port = process.env.PORT || 8000;
 
 const app = express();
+const session = require("express-session");
+
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: true,
+    secret: "SECRET",
+  })
+);
 
 app.use(express.json());
 
 app.use("/send-user-info", router);
+
+app.use(passport.initialize());
+
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "https://auth.expo.io/@djole232/frontend",
+    },
+    function (accessToken: any, refreshToken: any, profile: any, done: any) {
+      console.log(profile);
+
+      return done(null, profile);
+    }
+  )
+);
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/error" }),
+  function (req, res) {
+    res.redirect("/users-reports");
+  }
+);
+
+passport.serializeUser(function (user: any, cb: any) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj: any, cb: any) {
+  cb(null, obj);
+});
 
 app.use(
   (

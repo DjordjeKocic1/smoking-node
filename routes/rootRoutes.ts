@@ -11,11 +11,11 @@ import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
 import { mentorController } from "../controllers/mentorController";
 import { notificationController } from "../controllers/notificationController";
+import path from "path";
 import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
 
-const path = require("path");
 const router = exporess.Router();
 
 //HTML
