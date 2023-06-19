@@ -26,7 +26,7 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect("OAuthLogin://?user=" + JSON.stringify(req.user));
+    res.redirect("exp://?user=" + JSON.stringify(req.user));
   }
 );
 

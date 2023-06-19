@@ -16,7 +16,7 @@ app.use(express_1.default.json());
 app.use("/send-user-info", rootRoutes_1.default);
 app.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
-    res.redirect("OAuthLogin://?user=" + JSON.stringify(req.user));
+    res.redirect("exp://?user=" + JSON.stringify(req.user));
 });
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
