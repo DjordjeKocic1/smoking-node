@@ -20,10 +20,11 @@ app.use(session({
 app.use(express_1.default.json());
 app.use("/send-user-info", rootRoutes_1.default);
 app.use(passport.initialize());
+app.use(passport.session());
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientID: "161017013722-lhov102hvkobcqgfuq39nbur0mgah7q3.apps.googleusercontent.com",
+    clientSecret: "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",
     callbackURL: "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
 }, function (accessToken, refreshToken, profile, done) {
     userProfile = profile;
