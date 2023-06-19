@@ -1,6 +1,6 @@
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-import "dotenv/config";
+require("dotenv").config();
 
 import { google } from "../helpers/passportStrategies";
 import passport from "passport";

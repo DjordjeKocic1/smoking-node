@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPassport = void 0;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+require("dotenv").config();
 const passportStrategies_1 = require("../helpers/passportStrategies");
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
