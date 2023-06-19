@@ -28,7 +28,7 @@ app.get(
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
     res.redirect(
-      `istop://Login?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`
+      `exp://192.168.0.11:19000/Login?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`
     );
   }
 );
