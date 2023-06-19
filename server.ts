@@ -9,6 +9,7 @@ import router from "./routes/rootRoutes";
 require("dotenv").config();
 
 const port = process.env.PORT || 8000;
+
 const app = express();
 
 initPassport(app);
@@ -26,7 +27,9 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect("exp://192.168.0.11:19000?user=" + JSON.stringify(req.user));
+    res.redirect(
+      `exp://192.168.0.11:19000/?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`
+    );
   }
 );
 

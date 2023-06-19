@@ -16,7 +16,7 @@ app.use(express_1.default.json());
 app.use("/send-user-info", rootRoutes_1.default);
 app.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
-    res.redirect("exp://192.168.0.11:19000?user=" + JSON.stringify(req.user));
+    res.redirect(`exp://192.168.0.11:19000/?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`);
 });
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
