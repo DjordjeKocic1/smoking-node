@@ -11,6 +11,7 @@ require("dotenv").config();
 const port = process.env.PORT || 8000;
 const app = (0, express_1.default)();
 const session = require("express-session");
+let userProfile;
 app.use(session({
     resave: false,
     saveUninitialized: true,
@@ -23,14 +24,14 @@ const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://auth.expo.io/@djole232/frontend",
+    callbackURL: "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
 }, function (accessToken, refreshToken, profile, done) {
-    console.log(profile);
+    userProfile = profile;
     return done(null, profile);
 }));
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/error" }), function (req, res) {
-    res.redirect("/users-reports");
+    res.status(200).json({ user: userProfile });
 });
 passport.serializeUser(function (user, cb) {
     cb(null, user);

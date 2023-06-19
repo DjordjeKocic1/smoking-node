@@ -13,6 +13,8 @@ const port = process.env.PORT || 8000;
 const app = express();
 const session = require("express-session");
 
+let userProfile: any;
+
 app.use(
   session({
     resave: false,
@@ -33,11 +35,11 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://auth.expo.io/@djole232/frontend",
+      callbackURL:
+        "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
     },
     function (accessToken: any, refreshToken: any, profile: any, done: any) {
-      console.log(profile);
-
+      userProfile = profile;
       return done(null, profile);
     }
   )
@@ -51,8 +53,8 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/error" }),
-  function (req, res) {
-    res.redirect("/users-reports");
+  function (req, res: any) {
+    res.status(200).json({ user: userProfile });
   }
 );
 
