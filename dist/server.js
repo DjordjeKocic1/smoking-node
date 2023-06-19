@@ -4,42 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const initPassport_1 = require("./helpers/initPassport");
 const mongoose_1 = __importDefault(require("mongoose"));
+const passport_1 = __importDefault(require("passport"));
 const rootRoutes_1 = __importDefault(require("./routes/rootRoutes"));
-const passport = require("passport");
 require("dotenv").config();
 const port = process.env.PORT || 8000;
 const app = (0, express_1.default)();
-const session = require("express-session");
-let userProfile;
-app.use(session({
-    resave: false,
-    saveUninitialized: true,
-    secret: "SECRET",
-}));
+(0, initPassport_1.initPassport)(app);
 app.use(express_1.default.json());
 app.use("/send-user-info", rootRoutes_1.default);
-app.use(passport.initialize());
-app.use(passport.session());
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-passport.use(new GoogleStrategy({
-    clientID: "161017013722-lhov102hvkobcqgfuq39nbur0mgah7q3.apps.googleusercontent.com",
-    clientSecret: "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",
-    callbackURL: "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
-}, function (accessToken, refreshToken, profile, done) {
-    userProfile = profile;
-    return done(null, profile);
-}));
-app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-app.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/error" }), function (req, res) {
-    res.status(200).json({ user: userProfile });
-});
-passport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-passport.deserializeUser(function (obj, cb) {
-    cb(null, obj);
-});
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
@@ -52,3 +26,7 @@ mongoose_1.default
     app.listen(port, () => console.log("Server Start"));
 })
     .catch((err) => console.log("Db error:", err));
+app.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
+app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
+    res.redirect(`istop://app/login?firstName=${req.user.firstName}/lastName=${req.user.lastName}/email=${req.user.email}`);
+});
