@@ -35,12 +35,12 @@ app.use(
   (
     error: ErrorMsg,
     req: Request<{}>,
-    res: Response<{ message: string }>,
+    res: Response<{ error: string }>,
     next: NextFunction
   ) => {
     const status: number = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ message });
+    res.status(status).json({ error: message });
   }
 );
 
@@ -50,4 +50,9 @@ mongoose
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
   })
-  .catch((err) => console.log("Db error:", err));
+  .catch((err) => {
+    let error = new Error(
+      "Something went wrong with a server. Please try again later."
+    );
+    throw error;
+  });

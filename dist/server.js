@@ -21,7 +21,7 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", { fai
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ message });
+    res.status(status).json({ error: message });
 });
 mongoose_1.default
     .connect(process.env.MONGO_URI)
@@ -29,4 +29,7 @@ mongoose_1.default
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
 })
-    .catch((err) => console.log("Db error:", err));
+    .catch((err) => {
+    let error = new Error("Something went wrong with a server. Please try again later.");
+    throw error;
+});
