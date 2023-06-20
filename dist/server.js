@@ -16,7 +16,7 @@ app.use("/send-user-info", rootRoutes_1.default);
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ message });
+    res.status(status).json({ error: message });
 });
 mongoose_1.default
     .connect(process.env.MONGO_URI)
