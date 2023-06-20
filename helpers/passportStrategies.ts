@@ -5,5 +5,5 @@ export const google = {
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   //todo: based on env, change url to localhost, dev or prod
   callbackURL:
-    "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
+    "/send-user-info/auth/google/callback",
 };
