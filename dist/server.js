@@ -24,7 +24,7 @@ app.use((error, req, res, next) => {
     res.status(status).json({ message });
 });
 mongoose_1.default
-    .connect(process.env.MONGO_URI_COPY)
+    .connect(process.env.MONGO_URI)
     .then(() => {
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));

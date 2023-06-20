@@ -45,7 +45,7 @@ app.use(
 );
 
 mongoose
-  .connect(process.env.MONGO_URI_COPY as string)
+  .connect(process.env.MONGO_URI as string)
   .then(() => {
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
