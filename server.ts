@@ -18,19 +18,6 @@ app.use(express.json());
 
 app.use("/send-user-info", router);
 
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/google" }),
-  (req: any, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
-  }
-);
-
 app.use(
   (
     error: ErrorMsg,
@@ -50,4 +37,8 @@ mongoose
     console.log("connect");
     app.listen(port, () => console.log("Server Start"));
   })
-  .catch((err) => console.log("Db error:", err));
+  .catch((err) => {
+    console.log("Db error:", err)
+    const errorMy = new Error("Something went wrong with a server, please try again later. We are sorry to keep you waiting.")
+    throw errorMy;
+  });

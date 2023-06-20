@@ -23,10 +23,8 @@ const getUserHealth = (
   User.findById(req.params.id)
     .then((user: any) => {
       if (!user) {
-        const error: any = new Error("User is not there");
+        const error: any = new Error("User not found");
         error.statusCode = 422;
-        error.message = "User not found!";
-        console.log("Error user getUserHealth", error.stack);
         throw error;
       }
       return user.calculateHealth(user);
@@ -62,9 +60,7 @@ const createUser = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const err: any = new Error(
-      "Validation failed, entered data is not correct!"
-    );
+    const err: any = new Error(errors.array()[0].msg)
     err.statusCode = 422;
     throw err; //thorw error will go to next error handling
   }

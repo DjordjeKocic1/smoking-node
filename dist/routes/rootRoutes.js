@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_validator_1 = require("express-validator");
 const errorHelper_1 = require("../errors/errorHelper");
 const achievementController_1 = require("../controllers/achievementController");
-const express_validator_1 = require("express-validator");
+const authController_1 = require("../controllers/authController");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
 const mentorController_1 = require("../controllers/mentorController");
@@ -21,16 +22,16 @@ router.get("/users-reports", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/create-user", (0, express_validator_1.body)("email").isEmail(), userController_1.userController.createUser);
+router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is required"), userController_1.userController.createUser);
 router.put("/update-user/:id", userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", userController_1.userController.updateUserCosts);
-router.get("/user-health/:id", userController_1.userController.getUserHealth);
+router.get("/user-health/:id", [(0, express_validator_1.param)("id")], userController_1.userController.getUserHealth);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [
-    (0, errorHelper_1.checkAlreadyMentored)("You already send request"),
+    (0, errorHelper_1.checkAlreadyMentored)("You already sent a request"),
     (0, errorHelper_1.checkUserExist)("This mentor user doesn't exist"),
-    (0, errorHelper_1.checkMentoringYourSelf)("You can not mentor your self"),
+    (0, errorHelper_1.checkMentoringYourSelf)("You can't mentor your self"),
 ], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:id", mentorController_1.mentorController.deleteMentor);
@@ -60,6 +61,9 @@ router.post("/categories", categorieController_1.categorieController.createCateg
 // Achievements
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
+//Google
+router.get("/auth/google", authController_1.authController.googleSignIn);
+router.get("/auth/google/callback", authController_1.authController.googleSignInCallback);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

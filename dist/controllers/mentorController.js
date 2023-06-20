@@ -38,7 +38,9 @@ const getMentor = (req, res, next) => {
 const createMentor = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ error: errors.array()[0].msg });
+        const err = new Error(errors.array()[0].msg);
+        err.statusCode = 422;
+        throw err; //thorw error will go to next error handling
     }
     user_1.default.findOne({ email: req.body.user.email })
         .then((user) => {

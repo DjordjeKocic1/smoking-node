@@ -19,7 +19,6 @@ const passportStrategies_1 = require("../helpers/passportStrategies");
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
 const initPassport = (app) => {
-    //init's the app session
     app.use((0, express_session_1.default)({
         resave: false,
         saveUninitialized: true,

@@ -1,3 +1,4 @@
+import { body, param } from "express-validator";
 import {
   checkAlreadyMentored,
   checkMentoringYourSelf,
@@ -6,7 +7,7 @@ import {
 } from "../errors/errorHelper";
 
 import { achievementController } from "../controllers/achievementController";
-import { body } from "express-validator";
+import { authController } from "../controllers/authController";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
 import { mentorController } from "../controllers/mentorController";
@@ -25,19 +26,19 @@ router.get("/users-reports", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.post("/create-user", body("email").isEmail(), userController.createUser);
+router.post("/create-user", body("email").isEmail().withMessage("Email is required"), userController.createUser);
 router.put("/update-user/:id", userController.updateUser);
 router.put("/update-user-costs/:id", userController.updateUserCosts);
-router.get("/user-health/:id", userController.getUserHealth);
+router.get("/user-health/:id",[param("id")], userController.getUserHealth);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
   [
-    checkAlreadyMentored("You already send request"),
+    checkAlreadyMentored("You already sent a request"),
     checkUserExist("This mentor user doesn't exist"),
-    checkMentoringYourSelf("You can not mentor your self"),
+    checkMentoringYourSelf("You can't mentor your self"),
   ],
   mentorController.createMentor
 );
@@ -90,6 +91,10 @@ router.post("/categories", categorieController.createCategories);
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController.getAchievemnts);
+
+//Google
+router.get("/auth/google", authController.googleSignIn);
+router.get("/auth/google/callback", authController.googleSignInCallback);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);

@@ -7,7 +7,6 @@ import passport from "passport";
 import session from "express-session";
 
 export const initPassport = (app: any) => {
-  //init's the app session
   app.use(
     session({
       resave: false,
