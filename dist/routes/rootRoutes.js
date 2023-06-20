@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const errorHelper_1 = require("../errors/errorHelper");
 const achievementController_1 = require("../controllers/achievementController");
-const authController_1 = require("../controllers/authController");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
 const mentorController_1 = require("../controllers/mentorController");
@@ -61,9 +60,6 @@ router.post("/categories", categorieController_1.categorieController.createCateg
 // Achievements
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
-//Google
-router.get("/auth/google", authController_1.authController.googleSignIn);
-router.get("/auth/google/callback", authController_1.authController.googleSignInCallback);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
