@@ -4,102 +4,98 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const userShema = new Schema(
-  {
-    name: String,
-    email: {
-      type: String,
-      required: true,
-    },
-    image: String,
-    userVerified: Boolean,
-    userBasicInfo: {
-      address: String,
-      city: String,
-      country: String,
-      flag: String,
-    },
-    healthInfo: {
-      bloodPressure: Number,
-      heartRhythm: Number,
-      COinBloodDecreases: Number,
-      lungCapacity: Number,
-      physicalAndBodilyStrength: Number,
-      riskofheartAttack: Number,
-      irritatingCough: Number,
-      stressTolerance: Number,
-      riskofLungeCancer: Number,
-      riskofThroatCancer: Number,
-      riskofKidneyCancer: Number,
-      riskofStroke: Number,
-      avgHealth: Number,
-    },
-    smokingInfo: {
-      isQuiting: Boolean,
-      dateOfQuiting: String,
-      noSmokingDays: Number,
-    },
-    consumptionInfo: {
-      cigarettesDay: Number,
-      packCigarettesPrice: Number,
-      cigarettesInPack: Number,
-      cigarettesAvoided: Number,
-      cigarettesDailyCost: Number,
-      cigarettesMontlyCost: Number,
-      cigarettesYearlyCost: Number,
-      cigarettes5YearCost: Number,
-      cigarettes10YearCost: Number,
-      cigarettesAvoidedCost: Number,
-    },
-    savedInfo: {
-      cigarettesDay: Number,
-      packCigarettesPrice: Number,
-      cigarettesInPack: Number,
-      cigarettesDailyCost: Number,
-      cigarettesMontlyCost: Number,
-      cigarettesYearlyCost: Number,
-      cigarettes5YearCost: Number,
-      cigarettes10YearCost: Number,
-      cigarettesAvoidedCost: Number,
-      cigarettesAvoided: Number,
-    },
-    gameScore: {
-      type: Number,
-      default: 0,
-    },
-    categories: [
-      {
-        name: String,
-        categorieId: {
-          type: Schema.Types.ObjectId,
-          ref: "Categorie",
-          req: true,
-        },
-      },
-    ],
-    achievements: [
-      {
-        name: String,
-        achievementId: {
-          type: Schema.Types.ObjectId,
-          ref: "Achievement",
-          req: true,
-        },
-      },
-    ],
-    tasks: [
-      {
-        name: String,
-        taskId: {
-          type: Schema.Types.ObjectId,
-          ref: "Task",
-        },
-      },
-    ],
-    notificationToken: String,
+const userShema = new Schema({
+  name: String,
+  email: {
+    type: String,
+    required: true,
   },
-  { timestamps: true }
-);
+  image: String,
+  userVerified: Boolean,
+  userBasicInfo: {
+    address: String,
+    city: String,
+    country: String,
+    flag: String,
+  },
+  healthInfo: {
+    bloodPressure: Number,
+    heartRhythm: Number,
+    COinBloodDecreases: Number,
+    lungCapacity: Number,
+    physicalAndBodilyStrength: Number,
+    riskofheartAttack: Number,
+    irritatingCough: Number,
+    stressTolerance: Number,
+    riskofLungeCancer: Number,
+    riskofThroatCancer: Number,
+    riskofKidneyCancer: Number,
+    riskofStroke: Number,
+    avgHealth: Number,
+  },
+  smokingInfo: {
+    isQuiting: Boolean,
+    dateOfQuiting: String,
+    noSmokingDays: Number,
+  },
+  consumptionInfo: {
+    cigarettesDay: Number,
+    packCigarettesPrice: Number,
+    cigarettesInPack: Number,
+    cigarettesAvoided: Number,
+    cigarettesDailyCost: Number,
+    cigarettesMontlyCost: Number,
+    cigarettesYearlyCost: Number,
+    cigarettes5YearCost: Number,
+    cigarettes10YearCost: Number,
+    cigarettesAvoidedCost: Number,
+  },
+  savedInfo: {
+    cigarettesDay: Number,
+    packCigarettesPrice: Number,
+    cigarettesInPack: Number,
+    cigarettesDailyCost: Number,
+    cigarettesMontlyCost: Number,
+    cigarettesYearlyCost: Number,
+    cigarettes5YearCost: Number,
+    cigarettes10YearCost: Number,
+    cigarettesAvoidedCost: Number,
+    cigarettesAvoided: Number,
+  },
+  gameScore: {
+    type: Number,
+    default: 0,
+  },
+  categories: [
+    {
+      name: String,
+      categorieId: {
+        type: Schema.Types.ObjectId,
+        ref: "Categorie",
+        req: true,
+      },
+    },
+  ],
+  achievements: [
+    {
+      name: String,
+      achievementId: {
+        type: Schema.Types.ObjectId,
+        ref: "Achievement",
+        req: true,
+      },
+    },
+  ],
+  tasks: [
+    {
+      name: String,
+      taskId: {
+        type: Schema.Types.ObjectId,
+        ref: "Task",
+      },
+    },
+  ],
+});
 
 userShema.methods.calculateCosts = function (req: IUser) {
   if (req.savedInfo) {

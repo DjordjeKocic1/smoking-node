@@ -17,6 +17,7 @@ const getUsers = (req, res, next) => {
     });
 };
 const getUserHealth = (req, res, next) => {
+    console.log("Body", req.body);
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         throw new errorHandler_1.http422Error(errors.array()[0].msg);
@@ -26,7 +27,6 @@ const getUserHealth = (req, res, next) => {
         return user.calculateHealth(user);
     })
         .then((healthCalc) => {
-        console.log("Body", req.body);
         if (!!req.body.notificationToken) {
             user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true }).then((data) => {
                 res.status(201).json({

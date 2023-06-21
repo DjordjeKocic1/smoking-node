@@ -97,8 +97,7 @@ const userShema = new Schema({
             },
         },
     ],
-    notificationToken: String,
-}, { timestamps: true });
+});
 userShema.methods.calculateCosts = function (req) {
     if (req.savedInfo) {
         this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;

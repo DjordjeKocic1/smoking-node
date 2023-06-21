@@ -20,6 +20,7 @@ const getUserHealth = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("Body", req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new http422Error(errors.array()[0].msg);
@@ -29,7 +30,6 @@ const getUserHealth = (
       return user.calculateHealth(user);
     })
     .then((healthCalc: any) => {
-      console.log("Body", req.body);
       if (!!req.body.notificationToken) {
         User.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
           (data: any) => {
