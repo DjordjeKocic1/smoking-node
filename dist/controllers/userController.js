@@ -21,8 +21,6 @@ const getUserHealth = (req, res, next) => {
     if (!errors.isEmpty()) {
         throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
-    console.log("Params", req.params);
-    console.log("Params", req.body);
     user_1.default.findById(req.params.id)
         .then((user) => {
         return user.calculateHealth(user);
