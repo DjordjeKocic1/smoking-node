@@ -39,9 +39,9 @@ router.put(
   checkIDParam(User),
   userController.updateUserCosts
 );
-router.get(
+router.post(
   "/user-health/:id",
-
+  checkIDParam(User),
   userController.getUserHealth
 );
 

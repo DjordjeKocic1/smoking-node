@@ -26,7 +26,7 @@ router.get("/users", userController_1.userController.getUsers);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.updateUserCosts);
-router.get("/user-health/:id", userController_1.userController.getUserHealth);
+router.post("/user-health/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.getUserHealth);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
