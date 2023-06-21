@@ -29,7 +29,7 @@ const getUserHealth = (
       return user.calculateHealth(user);
     })
     .then((healthCalc: any) => {
-      console.log("NOTIFICATION TOKEN", req.body.notificationToken);
+      console.log("NOTIFICATION TOKEN", req.body);
 
       if (!!req.body.notificationToken) {
         User.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
