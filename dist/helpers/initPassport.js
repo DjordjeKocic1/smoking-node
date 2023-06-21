@@ -30,7 +30,6 @@ const initPassport = (app) => {
 };
 exports.initPassport = initPassport;
 passport_1.default.use(new GoogleStrategy(passportStrategies_1.google, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(profile);
     done(null, formatGoogle(profile._json));
 })));
 // Serialize user into the sessions

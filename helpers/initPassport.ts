@@ -23,7 +23,6 @@ passport.use(
   new GoogleStrategy(
     google,
     async (accessToken: any, refreshToken: any, profile: any, done: any) => {
-      console.log(profile);
       done(null, formatGoogle(profile._json));
     }
   )

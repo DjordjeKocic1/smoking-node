@@ -30,15 +30,13 @@ const getUserHealth = (req, res, next) => {
         console.log("NOTIFICATION user id", req.params.id);
         if (!!req.body.notificationToken) {
             user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true }).then((data) => {
-                console.log("USER update with notificaiton", data.notificationToken);
                 res.status(201).json({
                     user: Object.assign(Object.assign({}, healthCalc._doc), { notificationToken: data.notificationToken }),
                 });
             });
+            return;
         }
-        else {
-            res.status(201).json({ user: healthCalc });
-        }
+        res.status(201).json({ user: healthCalc });
     })
         .catch(() => {
         next(new errorHandler_1.http500Error());
