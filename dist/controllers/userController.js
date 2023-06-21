@@ -60,7 +60,7 @@ const createUser = (req, res, next) => {
         user
             .save()
             .then((user) => {
-            console.log({ "User Created": user });
+            console.log("User Created", user);
             res.status(201).json({ user });
         })
             .catch((err) => {

@@ -75,7 +75,7 @@ const createUser = (
     user
       .save()
       .then((user: IUser) => {
-        console.log({ "User Created": user });
+        console.log("User Created", user);
         res.status(201).json({ user });
       })
       .catch((err) => {
