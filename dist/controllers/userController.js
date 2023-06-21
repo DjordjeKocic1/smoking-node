@@ -26,8 +26,10 @@ const getUserHealth = (req, res, next) => {
         return user.calculateHealth(user);
     })
         .then((healthCalc) => {
+        console.log("NOTIFICATION TOKEN", req.body.notificationToken);
         if (!!req.body.notificationToken) {
             user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true }).then((data) => {
+                console.log("USER update with notificaiton", data.notificationToken);
                 res.status(201).json({
                     user: Object.assign(Object.assign({}, healthCalc._doc), { notificationToken: data.notificationToken }),
                 });
