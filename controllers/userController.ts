@@ -20,11 +20,11 @@ const getUserHealth = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log("Body", req.body);
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new http422Error(errors.array()[0].msg);
   }
+  console.log("Params", req.params);
   User.findById(req.params.id)
     .then((user: any) => {
       return user.calculateHealth(user);

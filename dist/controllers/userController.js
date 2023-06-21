@@ -17,11 +17,11 @@ const getUsers = (req, res, next) => {
     });
 };
 const getUserHealth = (req, res, next) => {
-    console.log("Body", req.body);
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
         throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
+    console.log("Params", req.params);
     user_1.default.findById(req.params.id)
         .then((user) => {
         return user.calculateHealth(user);
