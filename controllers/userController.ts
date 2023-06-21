@@ -16,7 +16,7 @@ const getUsers = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getUserHealth = (
-  req: Request<{ id: string }>,
+  req: Request<{ id: string }, {}, { notificationToken: string }>,
   res: Response,
   next: NextFunction
 ) => {
@@ -30,7 +30,7 @@ const getUserHealth = (
     })
     .then((healthCalc: any) => {
       console.log("NOTIFICATION TOKEN", req.body);
-
+      console.log("NOTIFICATION user id", req.params.id);
       if (!!req.body.notificationToken) {
         User.findByIdAndUpdate(req.params.id, req.body, { new: true }).then(
           (data: any) => {
