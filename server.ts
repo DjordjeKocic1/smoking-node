@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
+import { http500Error } from "./errors/errorHandler";
 import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
 import passport from "passport";
@@ -27,7 +28,9 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+    res.redirect(
+      `exp://1doounm.djole232.19000.exp.direct/?email=${req.user.email}`
+    );
   }
 );
 
@@ -38,6 +41,7 @@ app.use(
     res: Response<{ error: string }>,
     next: NextFunction
   ) => {
+    console.log("Middleware error", error);
     const status: number = error.statusCode || 500;
     const message = error.message;
     res.status(status).json({ error: message });
@@ -47,12 +51,8 @@ app.use(
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
-    console.log("connect");
     app.listen(port, () => console.log("Server Start"));
   })
   .catch((err) => {
-    let error = new Error(
-      "Something went wrong with a server. Please try again later."
-    );
-    throw error;
+    throw new http500Error();
   });

@@ -1,17 +1,17 @@
 import { ICostsPayload, IUser } from "../types/types";
 import { NextFunction, Request, Response } from "express";
+import { http422Error, http500Error } from "../errors/errorHandler";
 
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const getUsers = (req: Request, res: Response) => {
+const getUsers = (req: Request, res: Response, next: NextFunction) => {
   User.find()
     .then((users) => {
       res.status(200).json({ users });
     })
-    .catch((error) => {
-      console.log("users Get Error:", error);
-      res.status(502).json({ error });
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -20,13 +20,12 @@ const getUserHealth = (
   res: Response,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
+  }
   User.findById(req.params.id)
     .then((user: any) => {
-      if (!user) {
-        const error: any = new Error("User not found");
-        error.statusCode = 422;
-        throw error;
-      }
       return user.calculateHealth(user);
     })
     .then((healthCalc: any) => {
@@ -45,11 +44,8 @@ const getUserHealth = (
         res.status(201).json({ user: healthCalc });
       }
     })
-    .catch((err: any) => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -60,9 +56,7 @@ const createUser = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const err: any = new Error(errors.array()[0].msg)
-    err.statusCode = 422;
-    throw err; //thorw error will go to next error handling
+    throw new http422Error(errors.array()[0].msg);
   }
   const user = new User({
     name: req.body.name,
@@ -84,12 +78,8 @@ const createUser = (
         console.log({ "User Created": user });
         res.status(201).json({ user });
       })
-      .catch((err: any) => {
-        console.log("Create User Error:", err);
-        if (!err.statusCode) {
-          err.statusCode = 500;
-        }
-        next(err);
+      .catch((err) => {
+        next(new http500Error());
       });
   });
 };
@@ -99,17 +89,17 @@ const updateUser = (
   res: Response,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
+  }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
       console.log({ "User Updated": user });
       res.status(201).json({ user });
     })
-    .catch((err: any) => {
-      console.log("Update User Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -118,6 +108,10 @@ const updateUserCosts = (
   res: Response,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
+  }
   User.findById(req.params.id)
     .then((user: any) => {
       return user.calculateCosts(req.body);
@@ -127,11 +121,7 @@ const updateUserCosts = (
       res.status(201).json({ user });
     })
     .catch((err: any) => {
-      console.log("Update User Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+      next(new http500Error());
     });
 };
 

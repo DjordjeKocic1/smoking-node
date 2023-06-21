@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
-const errorHelper_1 = require("../errors/errorHelper");
+const errorRoute_1 = require("../errors/errorRoute");
+const user_1 = __importDefault(require("../model/user"));
 const achievementController_1 = require("../controllers/achievementController");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
+const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
 const path_1 = __importDefault(require("path"));
@@ -21,30 +23,18 @@ router.get("/users-reports", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is required"), userController_1.userController.createUser);
-router.put("/update-user/:id", userController_1.userController.updateUser);
-router.put("/update-user-costs/:id", userController_1.userController.updateUserCosts);
-router.get("/user-health/:id", [(0, express_validator_1.param)("id")], userController_1.userController.getUserHealth);
+router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
+router.put("/update-user/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.updateUser);
+router.put("/update-user-costs/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.updateUserCosts);
+router.get("/user-health/:id", (0, errorRoute_1.checkIDParam)(user_1.default), userController_1.userController.getUserHealth);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
-router.post("/create-mentor", [
-    (0, errorHelper_1.checkAlreadyMentored)("You already sent a request"),
-    (0, errorHelper_1.checkUserExist)("This mentor user doesn't exist"),
-    (0, errorHelper_1.checkMentoringYourSelf)("You can't mentor your self"),
-], mentorController_1.mentorController.createMentor);
+router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:id", mentorController_1.mentorController.deleteMentor);
 //Tasks
-router.get("/get-task/:id", taskController_1.taskController.getTasks);
-router.post("/create-task", [
-    (0, express_validator_1.body)("userId")
-        .isLength({ min: 12, max: 24 })
-        .withMessage("Must be at least 12 and max 24 chars"),
-    (0, express_validator_1.body)("mentorId")
-        .isLength({ min: 12, max: 24 })
-        .withMessage("Must be at least 12 and max 24 chars"),
-    (0, errorHelper_1.checkUserIDExist)("User of that ID doesnt exists"),
-], taskController_1.taskController.createTask);
+router.get("/get-task/:id", (0, express_validator_1.param)("id"), taskController_1.taskController.getTasks);
+router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)()], taskController_1.taskController.createTask);
 router.put("/update-task/:id", taskController_1.taskController.updateTask);
 router.delete("/delete-task/:id", taskController_1.taskController.deleteTask);
 //Notification
@@ -63,4 +53,8 @@ router.get("/get-achievements/:userId", achievementController_1.achievementContr
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
+//404
+router.all("*", () => {
+    throw new errorHandler_1.http404Error();
+});
 exports.default = router;

@@ -44,11 +44,11 @@ exports.checkUserIDExist = checkUserIDExist;
 //id error
 const checkIDParam = (Model) => (0, express_validator_1.param)("id").custom((value) => {
     if (value.length != 24) {
-        return Promise.reject("ID length must be 24");
+        return Promise.reject(`ID [${value}] length is not 24 chars`);
     }
     return Model.findOne({ _id: value }).then((modalData) => {
         if (!modalData) {
-            return Promise.reject(`${Model.modelName} ID doesn't exist, please try again later.`);
+            return Promise.reject(`${Model.modelName} ID [${value}] doesn't exist, please try again later, it could be something wrong with a server. Thank you for your patient`);
         }
     });
 });

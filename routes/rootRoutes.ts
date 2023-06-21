@@ -1,14 +1,17 @@
 import { body, param } from "express-validator";
 import {
   checkAlreadyMentored,
+  checkIDParam,
   checkMentoringYourSelf,
   checkUserExist,
   checkUserIDExist,
-} from "../errors/errorHelper";
+} from "../errors/errorRoute";
 
+import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
+import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
 import { notificationController } from "../controllers/notificationController";
 import path from "path";
@@ -27,42 +30,34 @@ router.get("/users-reports", (req, res, next) => {
 router.get("/users", userController.getUsers);
 router.post(
   "/create-user",
-  body("email").isEmail().withMessage("Email is required"),
+  body("email").isEmail().withMessage("Email is invalid"),
   userController.createUser
 );
-router.put("/update-user/:id", userController.updateUser);
-router.put("/update-user-costs/:id", userController.updateUserCosts);
-router.get("/user-health/:id", [param("id")], userController.getUserHealth);
+router.put("/update-user/:id", checkIDParam(User), userController.updateUser);
+router.put(
+  "/update-user-costs/:id",
+  checkIDParam(User),
+  userController.updateUserCosts
+);
+router.get(
+  "/user-health/:id",
+  checkIDParam(User),
+  userController.getUserHealth
+);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
-  [
-    checkAlreadyMentored("You already sent a request"),
-    checkUserExist("This mentor user doesn't exist"),
-    checkMentoringYourSelf("You can't mentor your self"),
-  ],
+  [checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],
   mentorController.createMentor
 );
 router.put("/update-mentor/:id", mentorController.updateMentor);
 router.delete("/delete-mentor/:id", mentorController.deleteMentor);
 
 //Tasks
-router.get("/get-task/:id", taskController.getTasks);
-router.post(
-  "/create-task",
-  [
-    body("userId")
-      .isLength({ min: 12, max: 24 })
-      .withMessage("Must be at least 12 and max 24 chars"),
-    body("mentorId")
-      .isLength({ min: 12, max: 24 })
-      .withMessage("Must be at least 12 and max 24 chars"),
-    checkUserIDExist("User of that ID doesnt exists"),
-  ],
-  taskController.createTask
-);
+router.get("/get-task/:id", param("id"), taskController.getTasks);
+router.post("/create-task", [checkUserIDExist()], taskController.createTask);
 router.put("/update-task/:id", taskController.updateTask);
 router.delete("/delete-task/:id", taskController.deleteTask);
 
@@ -98,5 +93,10 @@ router.get("/get-achievements/:userId", achievementController.getAchievemnts);
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController.getAllUsersByCategorie);
+
+//404
+router.all("*", () => {
+  throw new http404Error();
+});
 
 export default router;

@@ -4,26 +4,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const errorHandler_1 = require("../errors/errorHandler");
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
     user_1.default.find()
         .then((users) => {
         res.status(200).json({ users });
     })
-        .catch((error) => {
-        console.log("users Get Error:", error);
-        res.status(502).json({ error });
+        .catch((err) => {
+        next(err);
     });
 };
 const getUserHealth = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+    }
     user_1.default.findById(req.params.id)
         .then((user) => {
-        if (!user) {
-            const error = new Error("User not found");
-            error.statusCode = 422;
-            throw error;
-        }
         return user.calculateHealth(user);
     })
         .then((healthCalc) => {
@@ -38,19 +37,14 @@ const getUserHealth = (req, res, next) => {
             res.status(201).json({ user: healthCalc });
         }
     })
-        .catch((err) => {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 const createUser = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const err = new Error(errors.array()[0].msg);
-        err.statusCode = 422;
-        throw err; //thorw error will go to next error handling
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
     const user = new user_1.default({
         name: req.body.name,
@@ -71,29 +65,29 @@ const createUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
-            console.log("Create User Error:", err);
-            if (!err.statusCode) {
-                err.statusCode = 500;
-            }
-            next(err);
+            next(new errorHandler_1.http500Error());
         });
     });
 };
 const updateUser = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+    }
     user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((user) => {
         console.log({ "User Updated": user });
         res.status(201).json({ user });
     })
-        .catch((err) => {
-        console.log("Update User Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 const updateUserCosts = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+    }
     user_1.default.findById(req.params.id)
         .then((user) => {
         return user.calculateCosts(req.body);
@@ -103,11 +97,7 @@ const updateUserCosts = (req, res, next) => {
         res.status(201).json({ user });
     })
         .catch((err) => {
-        console.log("Update User Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        next(new errorHandler_1.http500Error());
     });
 };
 exports.userController = {

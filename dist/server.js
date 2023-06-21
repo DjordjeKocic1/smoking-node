@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const errorHandler_1 = require("./errors/errorHandler");
 const initPassport_1 = require("./helpers/initPassport");
 const mongoose_1 = __importDefault(require("mongoose"));
 const passport_1 = __importDefault(require("passport"));
@@ -19,6 +20,7 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", { fai
     res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
 });
 app.use((error, req, res, next) => {
+    console.log("Middleware error", error);
     const status = error.statusCode || 500;
     const message = error.message;
     res.status(status).json({ error: message });
@@ -26,10 +28,8 @@ app.use((error, req, res, next) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
-    console.log("connect");
     app.listen(port, () => console.log("Server Start"));
 })
     .catch((err) => {
-    let error = new Error("Something went wrong with a server. Please try again later.");
-    throw error;
+    throw new errorHandler_1.http500Error();
 });
