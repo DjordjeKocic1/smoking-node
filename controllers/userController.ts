@@ -70,6 +70,7 @@ const createUser = (
       (user: IUser) => user.email == req.body.email
     );
     if (!!existingUser) {
+      console.log("Existing User", user.email);
       return res.status(201).json({ user: existingUser });
     }
     user

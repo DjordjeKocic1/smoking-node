@@ -55,6 +55,7 @@ const createUser = (req, res, next) => {
     user_1.default.find().then((users) => {
         let existingUser = users.find((user) => user.email == req.body.email);
         if (!!existingUser) {
+            console.log("Existing User", user.email);
             return res.status(201).json({ user: existingUser });
         }
         user
