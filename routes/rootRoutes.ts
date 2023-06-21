@@ -41,7 +41,7 @@ router.put(
 );
 router.get(
   "/user-health/:id",
-  checkIDParam(User),
+
   userController.getUserHealth
 );
 

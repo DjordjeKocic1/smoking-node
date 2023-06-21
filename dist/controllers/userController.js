@@ -17,10 +17,10 @@ const getUsers = (req, res, next) => {
     });
 };
 const getUserHealth = (req, res, next) => {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   throw new http422Error(errors.array()[0].msg);
+    // }
     console.log("Params", req.params);
     console.log("Params", req.body);
     user_1.default.findById(req.params.id)
