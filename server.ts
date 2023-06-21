@@ -28,9 +28,7 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect(
-      `exp://1doounm.djole232.19000.exp.direct/?email=${req.user.email}`
-    );
+    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
   }
 );
 
