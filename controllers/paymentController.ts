@@ -20,6 +20,10 @@ const paymentSheet = async (
     typescript: true,
   });
 
+  await stripe.customers.create({
+    description: "New customer",
+  });
+
   const customers = await stripe.customers.list();
 
   const customer = customers.data[0];
@@ -36,7 +40,7 @@ const paymentSheet = async (
   );
 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: 5,
+    amount: 500,
     currency: "usd",
     customer: customer.id,
     payment_method_types: ["card"],

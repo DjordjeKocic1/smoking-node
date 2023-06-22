@@ -24,6 +24,9 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         apiVersion: "2022-11-15",
         typescript: true,
     });
+    yield stripe.customers.create({
+        description: "New customer",
+    });
     const customers = yield stripe.customers.list();
     const customer = customers.data[0];
     if (!customer) {
@@ -33,7 +36,7 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     const ephemeralKey = yield stripe.ephemeralKeys.create({ customer: customer.id }, { apiVersion: "2022-11-15" });
     const paymentIntent = yield stripe.paymentIntents.create({
-        amount: 5,
+        amount: 500,
         currency: "usd",
         customer: customer.id,
         payment_method_types: ["card"],
