@@ -24,12 +24,6 @@ const paymentSheet = async (
 
   const customer = customers.data[0];
 
-  if (!customer) {
-    return res.send({
-      error: "You have no customer created",
-    });
-  }
-
   const ephemeralKey = await stripe.ephemeralKeys.create(
     { customer: customer.id },
     { apiVersion: "2022-11-15" }
