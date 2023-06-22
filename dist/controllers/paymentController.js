@@ -26,6 +26,11 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     });
     const customers = yield stripe.customers.list();
     const customer = customers.data[0];
+    if (!customer) {
+        return res.send({
+            error: "You have no customer created",
+        });
+    }
     const ephemeralKey = yield stripe.ephemeralKeys.create({ customer: customer.id }, { apiVersion: "2022-11-15" });
     const paymentIntent = yield stripe.paymentIntents.create({
         amount: 5,
