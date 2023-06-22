@@ -1,5 +1,6 @@
 import { INotificaion, ITask, ITaskPayload, IUser } from "../types/types";
 import { NextFunction, Request, Response } from "express";
+import { http422Error, http500Error } from "../errors/errorHandler";
 
 import Notification from "../model/notification";
 import Task from "../model/task";
@@ -12,6 +13,10 @@ const getTasks = (
   res: Response<{ success?: string; error?: string; task?: any }>,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
+  }
   Task.find()
     .then((tasks: ITask[]) => {
       let arr: any = tasks.filter(
@@ -22,12 +27,8 @@ const getTasks = (
       }
       res.status(200).json({ task: arr });
     })
-    .catch((err: any) => {
-      console.log("Get task Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -37,11 +38,9 @@ const createTask = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
-    return res.status(422).json({ error: errors.array()[0].msg });
+    throw new http422Error(errors.array()[0].msg);
   }
-
   const task = new Task({
     toDo: req.body.toDo,
     status: "",
@@ -53,7 +52,6 @@ const createTask = (
   task
     .save()
     .then((task: any) => {
-      console.log("Create task:", task);
       const notification = new Notification({
         isTask: true,
         isMentoring: false,
@@ -61,12 +59,10 @@ const createTask = (
         userId: task.userId,
       });
       notification.save().then((notificaiton: INotificaion) => {
-        console.log("Create Notification:", notificaiton);
         User.findOne({ _id: notificaiton.userId }).then((user: any) => {
           if (!user.notificationToken) {
             return res.status(201).json({ success: "ok", task });
           }
-
           expoNotification
             .sendPushNotification({
               to: user.notificationToken,
@@ -76,22 +72,14 @@ const createTask = (
             .then(() => {
               res.status(201).json({ success: "ok", task });
             })
-            .catch((err) => {
-              console.log("Expo Notification Token:", err);
-              if (!err.statusCode) {
-                err.statusCode = 500;
-              }
-              next(err);
+            .catch(() => {
+              next(new http500Error());
             });
         });
       });
     })
-    .catch((err: any) => {
-      console.log("Create task Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 

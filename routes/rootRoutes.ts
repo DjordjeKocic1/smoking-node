@@ -7,6 +7,9 @@ import {
   checkUserIDExist,
 } from "../errors/errorRoute";
 
+import Achievement from "../model/achievement";
+import Notification from "../model/notification";
+import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
 import { categorieController } from "../controllers/categorieController";
@@ -57,14 +60,19 @@ router.put("/update-mentor/:id", mentorController.updateMentor);
 router.delete("/delete-mentor/:id", mentorController.deleteMentor);
 
 //Tasks
-router.get("/get-task/:id", param("id"), taskController.getTasks);
-router.post("/create-task", [checkUserIDExist()], taskController.createTask);
-router.put("/update-task/:id", taskController.updateTask);
-router.delete("/delete-task/:id", taskController.deleteTask);
+router.get("/get-task/:id", checkIDParam(Task), taskController.getTasks);
+router.post("/create-task", checkUserIDExist(), taskController.createTask);
+router.put("/update-task/:id", checkIDParam(Task), taskController.updateTask);
+router.delete(
+  "/delete-task/:id",
+  checkIDParam(Task),
+  taskController.deleteTask
+);
 
 //Notification
 router.get(
   "/get-notification/:id",
+  checkIDParam(Notification),
   notificationController.getNotificationsByUserID
 );
 router.post(
@@ -74,22 +82,31 @@ router.post(
 );
 router.put(
   "/update-notification/:id",
-  body("isRead")
-    .isBoolean()
-    .withMessage("isRead need to be a boolean and it's required"),
+  [
+    checkIDParam(Notification),
+    body("isRead")
+      .isBoolean()
+      .withMessage("isRead need to be a boolean and it's required"),
+  ],
   notificationController.updateNotification
 );
 router.delete(
   "/delete-notifcation/:id",
+  checkIDParam(Notification),
   notificationController.deleteNotification
 );
+
 // Categories
 router.get("/categories", categorieController.getCategories);
 router.post("/categories", categorieController.createCategories);
 
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
-router.get("/get-achievements/:userId", achievementController.getAchievemnts);
+router.get(
+  "/get-achievements/:id",
+  checkIDParam(Achievement),
+  achievementController.getAchievemnts
+);
 
 //Payment
 router.get("/fetch-key", paymentController.keyGetStripe);

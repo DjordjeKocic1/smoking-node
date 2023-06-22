@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { http422Error, http500Error } from "../errors/errorHandler";
 
 import { INotificaion } from "../types/types";
 import Notification from "../model/notification";
@@ -10,8 +11,9 @@ const getNotificationsByUserID = (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.params.id) {
-    return res.status(422).json({ error: "user id doesnt exist" });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
   }
   Notification.find({ isRead: false })
     .then((notifications: INotificaion[]) => {
@@ -20,12 +22,8 @@ const getNotificationsByUserID = (
       );
       res.status(201).json({ notification: nots });
     })
-    .catch((err: any) => {
-      console.log("Create Notificaiton Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -54,20 +52,12 @@ const createNotification = (
           console.log("Create Notification:", notification);
           res.status(201).json({ notification });
         })
-        .catch((err: any) => {
-          console.log("Create Notificaiton Error:", err);
-          if (!err.statusCode) {
-            err.statusCode = 500;
-          }
-          next(err);
+        .catch(() => {
+          next(new http500Error());
         });
     })
-    .catch((err: any) => {
-      console.log("Find USER for Notificaiton Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 const updateNotification = (
@@ -78,19 +68,15 @@ const updateNotification = (
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(422).json({ error: errors.array()[0].msg });
+    throw new http422Error(errors.array()[0].msg);
   }
   Notification.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((notification) => {
       console.log({ "Notification Updated": notification });
       res.status(201).json({ notification });
     })
-    .catch((err: any) => {
-      console.log("Update Notification Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -99,17 +85,18 @@ const deleteNotification = (
   res: Response<{ success: any }>,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new http422Error(errors.array()[0].msg);
+  }
+
   Notification.findOneAndDelete({ _id: req.params.id })
     .then((notification: any) => {
       console.log({ "notification delete": notification });
       res.status(201).json({ success: "ok" });
     })
-    .catch((err: any) => {
-      console.log("delete notification Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 export const notificationController = {

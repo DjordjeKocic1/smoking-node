@@ -4,8 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.achievementController = void 0;
+const errorHandler_1 = require("../errors/errorHandler");
 const achievement_1 = __importDefault(require("../model/achievement"));
 const user_1 = __importDefault(require("../model/user"));
+const express_validator_1 = require("express-validator");
 const createAchievement = (req, res) => {
     const achievement = new achievement_1.default({
         name: req.body.name,
@@ -22,8 +24,14 @@ const createAchievement = (req, res) => {
     });
 };
 const getAchievemnts = (req, res, next) => {
-    achievement_1.default.find().then((achievements) => {
-        user_1.default.findOne({ _id: req.params.userId }).then((user) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+    }
+    achievement_1.default.find()
+        .then((achievements) => {
+        user_1.default.findOne({ _id: req.params.id })
+            .then((user) => {
             let newAch = achievements.map((achs) => {
                 switch (true) {
                     case (user === null || user === void 0 ? void 0 : user.consumptionInfo.cigarettesAvoided) >= achs.tag &&
@@ -55,8 +63,16 @@ const getAchievemnts = (req, res, next) => {
             }
             res
                 .status(200)
-                .json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });
+                .json({
+                achievements: newAch.sort((a, b) => b.holding - a.holding),
+            });
+        })
+            .catch(() => {
+            next(new errorHandler_1.http500Error());
         });
+    })
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 exports.achievementController = {

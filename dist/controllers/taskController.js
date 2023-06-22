@@ -4,12 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskController = void 0;
+const errorHandler_1 = require("../errors/errorHandler");
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+    }
     task_1.default.find()
         .then((tasks) => {
         let arr = tasks.filter((task) => task.userId == req.params.id);
@@ -18,18 +23,14 @@ const getTasks = (req, res, next) => {
         }
         res.status(200).json({ task: arr });
     })
-        .catch((err) => {
-        console.log("Get task Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 const createTask = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ error: errors.array()[0].msg });
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
     const task = new task_1.default({
         toDo: req.body.toDo,
@@ -41,7 +42,6 @@ const createTask = (req, res, next) => {
     task
         .save()
         .then((task) => {
-        console.log("Create task:", task);
         const notification = new notification_1.default({
             isTask: true,
             isMentoring: false,
@@ -49,7 +49,6 @@ const createTask = (req, res, next) => {
             userId: task.userId,
         });
         notification.save().then((notificaiton) => {
-            console.log("Create Notification:", notificaiton);
             user_1.default.findOne({ _id: notificaiton.userId }).then((user) => {
                 if (!user.notificationToken) {
                     return res.status(201).json({ success: "ok", task });
@@ -63,22 +62,14 @@ const createTask = (req, res, next) => {
                     .then(() => {
                     res.status(201).json({ success: "ok", task });
                 })
-                    .catch((err) => {
-                    console.log("Expo Notification Token:", err);
-                    if (!err.statusCode) {
-                        err.statusCode = 500;
-                    }
-                    next(err);
+                    .catch(() => {
+                    next(new errorHandler_1.http500Error());
                 });
             });
         });
     })
-        .catch((err) => {
-        console.log("Create task Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 const updateTask = (req, res, next) => {
