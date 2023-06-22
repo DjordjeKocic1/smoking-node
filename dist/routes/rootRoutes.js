@@ -52,7 +52,7 @@ router.post("/categories", categorieController_1.categorieController.createCateg
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
 //Payment
-router.post("/create-checkout-session", paymentController_1.paymentController.checkoutSession);
+router.get("/fetch-key", paymentController_1.paymentController.keyGetStripe);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

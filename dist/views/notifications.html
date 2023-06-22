@@ -23,14 +23,14 @@
 
 <body>
     <h1>Hello</h1>
-    <button onclick="djolence()">Submit</button>
-
+    <!-- <form action="/send-user-info/create-checkout-session" method="post">
+        <button type="submit">Submit</button>
+    </form> -->
+    <button>hello</button>
     <script>
         let btn = document.querySelector("button")
         btn.addEventListener("click", () => {
-            fetch("http://localhost:8000/send-user-info/create-checkout-session", {
-                method: 'POST',
-            }).then(r => r.json()).then(d => console.log(data))
+            fetch("/send-user-info/create-checkout-session", { method: 'post' })
         })
     </script>
 </body>

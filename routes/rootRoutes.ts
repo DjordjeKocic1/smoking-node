@@ -92,7 +92,7 @@ router.post("/create-achievement", achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController.getAchievemnts);
 
 //Payment
-router.post("/create-checkout-session", paymentController.checkoutSession);
+router.get("/fetch-key", paymentController.keyGetStripe);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
