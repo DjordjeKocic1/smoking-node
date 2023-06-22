@@ -15,6 +15,7 @@ import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
 import { notificationController } from "../controllers/notificationController";
 import path from "path";
+import { paymentController } from "../controllers/paymentController";
 import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
@@ -89,6 +90,9 @@ router.post("/categories", categorieController.createCategories);
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController.getAchievemnts);
+
+//Payment
+router.post("/create-checkout-session", paymentController.checkoutSession);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);

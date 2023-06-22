@@ -13,6 +13,7 @@ const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
 const path_1 = __importDefault(require("path"));
+const paymentController_1 = require("../controllers/paymentController");
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
@@ -50,6 +51,8 @@ router.post("/categories", categorieController_1.categorieController.createCateg
 // Achievements
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
 router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
+//Payment
+router.post("/create-checkout-session", paymentController_1.paymentController.checkoutSession);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
