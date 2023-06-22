@@ -53,6 +53,7 @@ router.post("/create-achievement", achievementController_1.achievementController
 router.get("/get-achievements/:userId", achievementController_1.achievementController.getAchievemnts);
 //Payment
 router.get("/fetch-key", paymentController_1.paymentController.keyGetStripe);
+router.post("/payment-sheet", paymentController_1.paymentController.paymentSheet);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

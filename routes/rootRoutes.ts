@@ -93,6 +93,7 @@ router.get("/get-achievements/:userId", achievementController.getAchievemnts);
 
 //Payment
 router.get("/fetch-key", paymentController.keyGetStripe);
+router.post("/payment-sheet", paymentController.paymentSheet);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
