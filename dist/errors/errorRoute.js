@@ -3,11 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkIDParam = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = void 0;
+exports.checkModelID = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
-const checkUserExist = () => (0, express_validator_1.body)("email").custom((value) => {
+const checkUserExist = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
+    if (!req.body.email) {
+        return Promise.reject("User doesn't exist.Please try again later.");
+    }
     return user_1.default.findOne({ email: value }).then((user) => {
         if (!user) {
             return Promise.reject("User with that email doesn't exist");
@@ -16,6 +19,9 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
 });
 exports.checkUserExist = checkUserExist;
 const checkAlreadyMentored = () => (0, express_validator_1.body)("user").custom((value) => {
+    if (!value) {
+        return Promise.reject("User doesn't exist.Please try again later.");
+    }
     return mentor_1.default.findOne({ mentoringUserId: value._id }).then((user) => {
         if (user) {
             return Promise.reject("Already sent a mentor request");
@@ -24,6 +30,9 @@ const checkAlreadyMentored = () => (0, express_validator_1.body)("user").custom(
 });
 exports.checkAlreadyMentored = checkAlreadyMentored;
 const checkMentoringYourSelf = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
+    if (!req.body.email) {
+        return Promise.reject("User doesn't exist.Please try again later.");
+    }
     if (req.body.user.email == value) {
         return Promise.reject("Can't mentor your self");
     }
@@ -41,8 +50,8 @@ const checkUserIDExist = () => (0, express_validator_1.body)("userId").custom((v
     });
 });
 exports.checkUserIDExist = checkUserIDExist;
-//id error
-const checkIDParam = (Model) => (0, express_validator_1.param)("id").custom((value) => {
+//Model ID error
+const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((value) => {
     if (value.length != 24) {
         return Promise.reject(`ID [${value}] length is not 24 chars`);
     }
@@ -52,4 +61,4 @@ const checkIDParam = (Model) => (0, express_validator_1.param)("id").custom((val
         }
     });
 });
-exports.checkIDParam = checkIDParam;
+exports.checkModelID = checkModelID;

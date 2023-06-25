@@ -85,7 +85,6 @@ const updateTask = (req, res, next) => {
                 user.save();
             });
         }
-        console.log({ "task Updated": task });
         res.status(201).json({ success: "ok", task });
     })
         .catch(() => {
@@ -95,7 +94,6 @@ const updateTask = (req, res, next) => {
 const deleteTask = (req, res, next) => {
     task_1.default.deleteOne({ _id: req.params.id })
         .then((task) => {
-        console.log({ "task delete": task });
         res.status(204).json({ success: "ok" });
     })
         .catch(() => {

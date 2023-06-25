@@ -70,13 +70,11 @@ const createUser = (
       (user: IUser) => user.email == req.body.email
     );
     if (!!existingUser) {
-      console.log("Existing User", user.email);
       return res.status(201).json({ user: existingUser });
     }
     user
       .save()
       .then((user: IUser) => {
-        console.log("User Created", user);
         res.status(201).json({ user });
       })
       .catch((err) => {
@@ -96,7 +94,6 @@ const updateUser = (
   }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
-      console.log({ "User Updated": user });
       res.status(201).json({ user });
     })
     .catch(() => {
@@ -118,7 +115,6 @@ const updateUserCosts = (
       return user.calculateCosts(req.body);
     })
     .then((user: IUser) => {
-      console.log("User Costs Updated", user);
       res.status(201).json({ user });
     })
     .catch((err: any) => {

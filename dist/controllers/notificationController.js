@@ -38,7 +38,6 @@ const createNotification = (req, res, next) => {
         notification
             .save()
             .then((notification) => {
-            console.log("Create Notification:", notification);
             res.status(201).json({ notification });
         })
             .catch(() => {
@@ -56,7 +55,6 @@ const updateNotification = (req, res, next) => {
     }
     notification_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((notification) => {
-        console.log({ "Notification Updated": notification });
         res.status(201).json({ notification });
     })
         .catch(() => {
@@ -66,11 +64,11 @@ const updateNotification = (req, res, next) => {
 const deleteNotification = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
+        console.log(errors.array());
         throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
     notification_1.default.findOneAndDelete({ _id: req.params.id })
         .then((notification) => {
-        console.log({ "notification delete": notification });
         res.status(201).json({ success: "ok" });
     })
         .catch(() => {

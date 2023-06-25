@@ -55,13 +55,11 @@ const createUser = (req, res, next) => {
     user_1.default.find().then((users) => {
         let existingUser = users.find((user) => user.email == req.body.email);
         if (!!existingUser) {
-            console.log("Existing User", user.email);
             return res.status(201).json({ user: existingUser });
         }
         user
             .save()
             .then((user) => {
-            console.log("User Created", user);
             res.status(201).json({ user });
         })
             .catch((err) => {
@@ -76,7 +74,6 @@ const updateUser = (req, res, next) => {
     }
     user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((user) => {
-        console.log({ "User Updated": user });
         res.status(201).json({ user });
     })
         .catch(() => {
@@ -93,7 +90,6 @@ const updateUserCosts = (req, res, next) => {
         return user.calculateCosts(req.body);
     })
         .then((user) => {
-        console.log("User Costs Updated", user);
         res.status(201).json({ user });
     })
         .catch((err) => {

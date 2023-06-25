@@ -4,7 +4,10 @@ import Mentor from "../model/mentor";
 import User from "../model/user";
 
 export const checkUserExist = () =>
-  body("email").custom((value) => {
+  body("email").custom((value, { req }) => {
+    if (!req.body.email) {
+      return Promise.reject("User doesn't exist.Please try again later.");
+    }
     return User.findOne({ email: value }).then((user) => {
       if (!user) {
         return Promise.reject("User with that email doesn't exist");
@@ -14,6 +17,9 @@ export const checkUserExist = () =>
 
 export const checkAlreadyMentored = () =>
   body("user").custom((value) => {
+    if (!value) {
+      return Promise.reject("User doesn't exist.Please try again later.");
+    }
     return Mentor.findOne({ mentoringUserId: value._id }).then((user) => {
       if (user) {
         return Promise.reject("Already sent a mentor request");
@@ -23,6 +29,9 @@ export const checkAlreadyMentored = () =>
 
 export const checkMentoringYourSelf = () =>
   body("email").custom((value, { req }) => {
+    if (!req.body.email) {
+      return Promise.reject("User doesn't exist.Please try again later.");
+    }
     if (req.body.user.email == value) {
       return Promise.reject("Can't mentor your self");
     } else {
@@ -40,9 +49,8 @@ export const checkUserIDExist = () =>
     });
   });
 
-//id error
-
-export const checkIDParam = (Model: any) =>
+//Model ID error
+export const checkModelID = (Model: any) =>
   param("id").custom((value) => {
     if (value.length != 24) {
       return Promise.reject(`ID [${value}] length is not 24 chars`);

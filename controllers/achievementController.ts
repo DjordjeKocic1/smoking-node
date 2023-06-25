@@ -30,7 +30,7 @@ const getAchievemnts = (req: Request, res: Response, next: NextFunction) => {
   Achievement.find()
     .then((achievements) => {
       User.findOne({ _id: req.params.id })
-        .then((user) => {
+        .then((user: any) => {
           let newAch = achievements.map((achs: any) => {
             switch (true) {
               case user?.consumptionInfo.cigarettesAvoided >= achs.tag &&
@@ -52,19 +52,24 @@ const getAchievemnts = (req: Request, res: Response, next: NextFunction) => {
                 return { ...achs._doc, holding: false };
             }
           });
+
           if (newAch.length != 0) {
-            newAch.filter((v) => {
+            let achievementHold = newAch.filter((v) => {
               if (v.holding) {
-                user?.achievements.push({ name: v.name, achievementId: v._id });
-                user?.save();
+                return v;
               }
             });
+            user.achievements = achievementHold;
+            user.save();
+
+            res
+              .status(200)
+              .json({
+                achievements: achievementHold.sort(
+                  (a, b) => b.holding - a.holding
+                ),
+              });
           }
-          res
-            .status(200)
-            .json({
-              achievements: newAch.sort((a, b) => b.holding - a.holding),
-            });
         })
         .catch(() => {
           next(new http500Error());

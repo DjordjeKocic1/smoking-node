@@ -174,36 +174,11 @@ userShema.methods.calculateHealth = function (user) {
     this.healthInfo.riskofThroatCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
     this.healthInfo.riskofLungeCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
     this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    if (this.healthInfo.bloodPressure > 100) {
-        this.healthInfo.bloodPressure = 100;
-    }
-    if (this.healthInfo.heartRhythm > 100) {
-        this.healthInfo.heartRhythm = 100;
-    }
-    if (this.healthInfo.COinBloodDecreases > 100) {
-        this.healthInfo.COinBloodDecreases = 100;
-    }
-    if (this.healthInfo.physicalAndBodilyStrength > 100) {
-        this.healthInfo.physicalAndBodilyStrength = 100;
-    }
-    if (this.healthInfo.lungCapacity > 100) {
-        this.healthInfo.lungCapacity = 100;
-    }
-    if (this.healthInfo.riskofheartAttack > 100) {
-        this.healthInfo.riskofheartAttack = 100;
-    }
-    if (this.healthInfo.irritatingCough > 100) {
-        this.healthInfo.irritatingCough = 100;
-    }
-    if (this.healthInfo.stressTolerance > 100) {
-        this.healthInfo.stressTolerance = 100;
-    }
-    if (this.healthInfo.riskofThroatCancer > 100) {
-        this.healthInfo.riskofThroatCancer = 100;
-        this.healthInfo.riskofKidneyCancer = 100;
-        this.healthInfo.riskofLungeCancer = 100;
-        this.healthInfo.riskofStroke = 100;
-    }
+    Object.keys(this.healthInfo).forEach((values) => {
+        if (this.healthInfo[values] > 100) {
+            this.healthInfo[values] = 100;
+        }
+    });
     this.healthInfo.avgHealth = ((this.healthInfo.bloodPressure +
         this.healthInfo.heartRhythm +
         this.healthInfo.COinBloodDecreases +

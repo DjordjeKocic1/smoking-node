@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.mentorController = void 0;
+const errorHandler_1 = require("../errors/errorHandler");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
@@ -28,7 +29,6 @@ const getMentor = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log("Find Mentor Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -38,9 +38,7 @@ const getMentor = (req, res, next) => {
 const createMentor = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        const err = new Error(errors.array()[0].msg);
-        err.statusCode = 422;
-        throw err; //thorw error will go to next error handling
+        throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
     user_1.default.findOne({ email: req.body.user.email })
         .then((user) => {
@@ -72,35 +70,21 @@ const createMentor = (req, res, next) => {
                         isRead: false,
                         userId: mentor.mentorId,
                     });
-                    notification.save().then((not) => {
-                        console.log("Create Notification:", not);
-                        console.log("Created Mentor:", mentor);
+                    notification.save().then(() => {
                         res.status(201).json({ mentor });
                     });
                 })
-                    .catch((err) => {
-                    console.log("Expo Notification Token:", err);
-                    if (!err.statusCode) {
-                        err.statusCode = 500;
-                    }
-                    next(err);
+                    .catch(() => {
+                    next(new errorHandler_1.http500Error());
                 });
             })
-                .catch((err) => {
-                console.log("Create Mentor Error:", err);
-                if (!err.statusCode) {
-                    err.statusCode = 500;
-                }
-                next(err);
+                .catch(() => {
+                next(new errorHandler_1.http500Error());
             });
         });
     })
-        .catch((err) => {
-        console.log("User Mentor Error:", err);
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch(() => {
+        next(new errorHandler_1.http500Error());
     });
 };
 const updateMentor = (req, res, next) => {
@@ -120,7 +104,6 @@ const updateMentor = (req, res, next) => {
                 res.status(201).json({ mentor });
             })
                 .catch((err) => {
-                console.log("Expo Notification Token:", err);
                 if (!err.statusCode) {
                     err.statusCode = 500;
                 }
@@ -129,7 +112,6 @@ const updateMentor = (req, res, next) => {
         });
     })
         .catch((err) => {
-        console.log("Update Mentor Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }
@@ -139,18 +121,15 @@ const updateMentor = (req, res, next) => {
 const deleteMentor = (req, res, next) => {
     mentor_1.default.findOneAndDelete({ _id: req.params.id })
         .then((mentor) => {
-        console.log({ "mentor deleted": mentor });
         return mentor;
     })
         .then((mentor) => {
         return task_1.default.deleteMany({ mentorId: mentor.mentorId });
     })
         .then((result) => {
-        console.log({ "task deleted": result });
         res.status(200).json({ success: "ok" });
     })
         .catch((err) => {
-        console.log("delete mentor Error:", err);
         if (!err.statusCode) {
             err.statusCode = 500;
         }

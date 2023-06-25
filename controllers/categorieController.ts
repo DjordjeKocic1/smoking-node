@@ -6,7 +6,6 @@ const getCategories = (req:Request, res:Response) => {
   Categorie.find().then((categories) => {
     res.status(200).json({ categories });
   }).catch((error) => {
-    console.log('Categories Get Error:',error);
     res.status(502).json({ error })
   });
 };

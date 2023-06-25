@@ -49,7 +49,6 @@ const createNotification = (
       notification
         .save()
         .then((notification: INotificaion) => {
-          console.log("Create Notification:", notification);
           res.status(201).json({ notification });
         })
         .catch(() => {
@@ -72,7 +71,6 @@ const updateNotification = (
   }
   Notification.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((notification) => {
-      console.log({ "Notification Updated": notification });
       res.status(201).json({ notification });
     })
     .catch(() => {
@@ -87,12 +85,13 @@ const deleteNotification = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(errors.array());
     throw new http422Error(errors.array()[0].msg);
+    
   }
 
   Notification.findOneAndDelete({ _id: req.params.id })
     .then((notification: any) => {
-      console.log({ "notification delete": notification });
       res.status(201).json({ success: "ok" });
     })
     .catch(() => {

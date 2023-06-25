@@ -54,18 +54,19 @@ const getAchievemnts = (req, res, next) => {
                 }
             });
             if (newAch.length != 0) {
-                newAch.filter((v) => {
+                let achievementHold = newAch.filter((v) => {
                     if (v.holding) {
-                        user === null || user === void 0 ? void 0 : user.achievements.push({ name: v.name, achievementId: v._id });
-                        user === null || user === void 0 ? void 0 : user.save();
+                        return v;
                     }
                 });
+                user.achievements = achievementHold;
+                user.save();
+                res
+                    .status(200)
+                    .json({
+                    achievements: achievementHold.sort((a, b) => b.holding - a.holding),
+                });
             }
-            res
-                .status(200)
-                .json({
-                achievements: newAch.sort((a, b) => b.holding - a.holding),
-            });
         })
             .catch(() => {
             next(new errorHandler_1.http500Error());

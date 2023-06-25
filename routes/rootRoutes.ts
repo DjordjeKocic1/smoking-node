@@ -1,17 +1,16 @@
-import { body, param } from "express-validator";
 import {
   checkAlreadyMentored,
-  checkIDParam,
   checkMentoringYourSelf,
+  checkModelID,
   checkUserExist,
   checkUserIDExist,
 } from "../errors/errorRoute";
 
-import Achievement from "../model/achievement";
 import Notification from "../model/notification";
 import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
+import { body } from "express-validator";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
 import { http404Error } from "../errors/errorHandler";
@@ -37,15 +36,15 @@ router.post(
   body("email").isEmail().withMessage("Email is invalid"),
   userController.createUser
 );
-router.put("/update-user/:id", checkIDParam(User), userController.updateUser);
+router.put("/update-user/:id", checkModelID(User), userController.updateUser);
 router.put(
   "/update-user-costs/:id",
-  checkIDParam(User),
+  checkModelID(User),
   userController.updateUserCosts
 );
 router.post(
   "/user-health/:id",
-  checkIDParam(User),
+  checkModelID(User),
   userController.getUserHealth
 );
 
@@ -60,19 +59,19 @@ router.put("/update-mentor/:id", mentorController.updateMentor);
 router.delete("/delete-mentor/:id", mentorController.deleteMentor);
 
 //Tasks
-router.get("/get-task/:id", checkIDParam(Task), taskController.getTasks);
+router.get("/get-task/:id", checkModelID(Task), taskController.getTasks);
 router.post("/create-task", checkUserIDExist(), taskController.createTask);
-router.put("/update-task/:id", checkIDParam(Task), taskController.updateTask);
+router.put("/update-task/:id", checkModelID(Task), taskController.updateTask);
 router.delete(
   "/delete-task/:id",
-  checkIDParam(Task),
+  checkModelID(Task),
   taskController.deleteTask
 );
 
 //Notification
 router.get(
   "/get-notification/:id",
-  checkIDParam(Notification),
+  checkModelID(Notification),
   notificationController.getNotificationsByUserID
 );
 router.post(
@@ -82,17 +81,12 @@ router.post(
 );
 router.put(
   "/update-notification/:id",
-  [
-    checkIDParam(Notification),
-    body("isRead")
-      .isBoolean()
-      .withMessage("isRead need to be a boolean and it's required"),
-  ],
+  [checkModelID(Notification)],
   notificationController.updateNotification
 );
 router.delete(
   "/delete-notifcation/:id",
-  checkIDParam(Notification),
+  checkModelID(Notification),
   notificationController.deleteNotification
 );
 
@@ -102,11 +96,7 @@ router.post("/categories", categorieController.createCategories);
 
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
-router.get(
-  "/get-achievements/:id",
-  checkIDParam(Achievement),
-  achievementController.getAchievemnts
-);
+router.get("/get-achievements/:id", achievementController.getAchievemnts);
 
 //Payment
 router.get("/fetch-key", paymentController.keyGetStripe);

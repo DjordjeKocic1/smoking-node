@@ -9,7 +9,6 @@ const getCategories = (req, res) => {
     categories_1.default.find().then((categories) => {
         res.status(200).json({ categories });
     }).catch((error) => {
-        console.log('Categories Get Error:', error);
         res.status(502).json({ error });
     });
 };
