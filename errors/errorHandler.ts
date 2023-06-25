@@ -38,7 +38,7 @@ export const http500Error = class HTTP500Error extends baseError {
     super(
       "SERVER ERROR",
       HttpStatusCode.INTERNAL_SERVER,
-      "We are sorry, something went wrong with a server. Please try again later."
+      "We are sorry, something went wrong. Please try again later."
     );
     Error.captureStackTrace(this);
   }

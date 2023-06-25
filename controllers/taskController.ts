@@ -105,12 +105,8 @@ const updateTask = (
       console.log({ "task Updated": task });
       res.status(201).json({ success: "ok", task });
     })
-    .catch((err: any) => {
-      console.log("Update task Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 
@@ -124,12 +120,8 @@ const deleteTask = (
       console.log({ "task delete": task });
       res.status(204).json({ success: "ok" });
     })
-    .catch((err: any) => {
-      console.log("delete task Error:", err);
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
-      next(err);
+    .catch(() => {
+      next(new http500Error());
     });
 };
 

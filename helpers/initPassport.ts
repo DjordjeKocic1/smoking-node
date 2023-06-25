@@ -28,10 +28,8 @@ passport.use(
   )
 );
 
-// Serialize user into the sessions
 passport.serializeUser((user, done) => done(null, user));
 
-// Deserialize user from the sessions
 passport.deserializeUser((user: any, done) => done(null, user));
 
 const formatGoogle = (profile: any) => {

@@ -32,9 +32,7 @@ exports.initPassport = initPassport;
 passport_1.default.use(new GoogleStrategy(passportStrategies_1.google, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     done(null, formatGoogle(profile._json));
 })));
-// Serialize user into the sessions
 passport_1.default.serializeUser((user, done) => done(null, user));
-// Deserialize user from the sessions
 passport_1.default.deserializeUser((user, done) => done(null, user));
 const formatGoogle = (profile) => {
     return {
