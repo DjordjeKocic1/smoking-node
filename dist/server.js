@@ -17,9 +17,9 @@ app.use(express_1.default.json());
 app.use("/send-user-info", rootRoutes_1.default);
 app.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+    res.redirect(`exp://1doounm.djole232.19000.exp.direct/?email=${req.user.email}`);
 });
-app.use((error, req, res, next) => {
+app.use((error, _req, res) => {
     console.log("Middleware error", error);
     const status = error.statusCode || 500;
     const message = error.message;
@@ -30,6 +30,6 @@ mongoose_1.default
     .then(() => {
     app.listen(port, () => console.log("Server Start"));
 })
-    .catch((err) => {
-    throw new errorHandler_1.http500Error();
+    .catch(() => {
+    throw new errorHandler_1.http500Error("Someting went wrong. Please try again");
 });

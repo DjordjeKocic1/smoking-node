@@ -22,7 +22,7 @@ const getUserHealth = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new http422Error(errors.array()[0].msg);
+    throw new http500Error(errors.array()[0].msg);
   }
   User.findById(req.params.id)
     .then((user: any) => {
@@ -44,8 +44,8 @@ const getUserHealth = (
       }
       res.status(201).json({ user: healthCalc });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -78,7 +78,7 @@ const createUser = (
         res.status(201).json({ user });
       })
       .catch((err) => {
-        next(new http500Error());
+        next(err);
       });
   });
 };
@@ -90,14 +90,14 @@ const updateUser = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new http422Error(errors.array()[0].msg);
+    throw new http500Error(errors.array()[0].msg);
   }
   User.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((user) => {
       res.status(201).json({ user });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -108,7 +108,7 @@ const updateUserCosts = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new http422Error(errors.array()[0].msg);
+    throw new http500Error(errors.array()[0].msg);
   }
   User.findById(req.params.id)
     .then((user: any) => {
@@ -117,8 +117,8 @@ const updateUserCosts = (
     .then((user: IUser) => {
       res.status(201).json({ user });
     })
-    .catch((err: any) => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 

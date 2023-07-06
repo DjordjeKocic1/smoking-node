@@ -13,18 +13,18 @@ const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
     }
     task_1.default.find()
         .then((tasks) => {
         let arr = tasks.filter((task) => task.userId == req.params.id);
         if (arr.length == 0) {
-            return res.status(200).json({ success: "ok", task: [] });
+            return res.status(200).json({ task: null });
         }
         res.status(200).json({ task: arr });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const createTask = (req, res, next) => {
@@ -62,14 +62,14 @@ const createTask = (req, res, next) => {
                     .then(() => {
                     res.status(201).json({ success: "ok", task });
                 })
-                    .catch(() => {
-                    next(new errorHandler_1.http500Error());
+                    .catch((err) => {
+                    next(err);
                 });
             });
         });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const updateTask = (req, res, next) => {
@@ -87,8 +87,8 @@ const updateTask = (req, res, next) => {
         }
         res.status(201).json({ success: "ok", task });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const deleteTask = (req, res, next) => {
@@ -96,8 +96,8 @@ const deleteTask = (req, res, next) => {
         .then((task) => {
         res.status(204).json({ success: "ok" });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 exports.taskController = {

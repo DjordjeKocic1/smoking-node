@@ -18,8 +18,8 @@ const getNotificationsByUserID = (req, res, next) => {
         let nots = notifications.filter((notification) => notification.userId == req.params.id);
         res.status(201).json({ notification: nots });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const createNotification = (req, res, next) => {
@@ -29,6 +29,9 @@ const createNotification = (req, res, next) => {
     }
     user_1.default.findOne({ email: req.body.email })
         .then((user) => {
+        if (!user) {
+            throw new errorHandler_1.http500Error("User doesn't exist");
+        }
         const notification = new notification_1.default({
             isMentoring: req.body.isMentoring,
             isTask: req.body.isTask,
@@ -40,12 +43,12 @@ const createNotification = (req, res, next) => {
             .then((notification) => {
             res.status(201).json({ notification });
         })
-            .catch(() => {
-            next(new errorHandler_1.http500Error());
+            .catch((err) => {
+            next(err);
         });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const updateNotification = (req, res, next) => {
@@ -57,22 +60,21 @@ const updateNotification = (req, res, next) => {
         .then((notification) => {
         res.status(201).json({ notification });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const deleteNotification = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        console.log(errors.array());
         throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
     notification_1.default.findOneAndDelete({ _id: req.params.id })
         .then((notification) => {
-        res.status(201).json({ success: "ok" });
+        res.status(204);
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 exports.notificationController = {

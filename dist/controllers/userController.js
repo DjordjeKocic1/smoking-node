@@ -19,7 +19,7 @@ const getUsers = (req, res, next) => {
 const getUserHealth = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
     }
     user_1.default.findById(req.params.id)
         .then((user) => {
@@ -36,8 +36,8 @@ const getUserHealth = (req, res, next) => {
         }
         res.status(201).json({ user: healthCalc });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const createUser = (req, res, next) => {
@@ -63,27 +63,27 @@ const createUser = (req, res, next) => {
             res.status(201).json({ user });
         })
             .catch((err) => {
-            next(new errorHandler_1.http500Error());
+            next(err);
         });
     });
 };
 const updateUser = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
     }
     user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((user) => {
         res.status(201).json({ user });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const updateUserCosts = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
     }
     user_1.default.findById(req.params.id)
         .then((user) => {
@@ -93,7 +93,7 @@ const updateUserCosts = (req, res, next) => {
         res.status(201).json({ user });
     })
         .catch((err) => {
-        next(new errorHandler_1.http500Error());
+        next(err);
     });
 };
 exports.userController = {

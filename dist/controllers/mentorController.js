@@ -19,20 +19,24 @@ const getMentor = (req, res, next) => {
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
-        user_1.default.findOne({ email: arr[0].mentoringUser[0].email }).then((user) => {
+        user_1.default.findOne({ email: arr[0].mentoringUser[0].email })
+            .then((user) => {
+            if (!user) {
+                throw new errorHandler_1.http500Error("No user found");
+            }
             let mentorTrans = arr.map((mentor) => {
                 return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
             });
             res.status(200).json({
                 mentor: Object.assign(Object.assign({}, mentorTrans[0]._doc), { mentoringUser: [mentorTrans[0].mentoringUser] }),
             });
+        })
+            .catch((err) => {
+            next(err);
         });
     })
-        .catch((err) => {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
-        next(err);
+        .catch((error) => {
+        next(error);
     });
 };
 const createMentor = (req, res, next) => {
@@ -44,7 +48,7 @@ const createMentor = (req, res, next) => {
         .then((user) => {
         user_1.default.findOne({ email: req.body.email }).then((userMentor) => {
             const mentor = new mentor_1.default({
-                name: req.body.name.trim(),
+                name: req.body.name,
                 email: req.body.email,
                 accepted: false,
                 mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
@@ -74,23 +78,31 @@ const createMentor = (req, res, next) => {
                         res.status(201).json({ mentor });
                     });
                 })
-                    .catch(() => {
-                    next(new errorHandler_1.http500Error());
+                    .catch((err) => {
+                    next(err);
                 });
             })
-                .catch(() => {
-                next(new errorHandler_1.http500Error());
+                .catch((err) => {
+                next(err);
             });
         });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 const updateMentor = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
+    }
     mentor_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then((mentor) => {
-        user_1.default.findOne({ _id: mentor.mentoringUserId }).then((user) => {
+        user_1.default.findOne({ _id: mentor.mentoringUserId })
+            .then((user) => {
+            if (!user) {
+                throw new errorHandler_1.http500Error("User doesn't exist");
+            }
             if (!(user === null || user === void 0 ? void 0 : user.notificationToken)) {
                 return res.status(201).json({ mentor });
             }
@@ -109,30 +121,26 @@ const updateMentor = (req, res, next) => {
                 }
                 next(err);
             });
+        })
+            .catch((err) => {
+            next(err);
         });
     })
         .catch((err) => {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
         next(err);
     });
 };
 const deleteMentor = (req, res, next) => {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (!errors.isEmpty()) {
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
+    }
     mentor_1.default.findOneAndDelete({ _id: req.params.id })
         .then((mentor) => {
-        return mentor;
-    })
-        .then((mentor) => {
-        return task_1.default.deleteMany({ mentorId: mentor.mentorId });
-    })
-        .then((result) => {
-        res.status(200).json({ success: "ok" });
+        task_1.default.deleteMany({ mentorId: mentor.mentorId });
+        res.status(204);
     })
         .catch((err) => {
-        if (!err.statusCode) {
-            err.statusCode = 500;
-        }
         next(err);
     });
 };

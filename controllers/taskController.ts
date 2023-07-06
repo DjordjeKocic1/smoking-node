@@ -15,7 +15,7 @@ const getTasks = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new http422Error(errors.array()[0].msg);
+    throw new http500Error(errors.array()[0].msg);
   }
   Task.find()
     .then((tasks: ITask[]) => {
@@ -23,12 +23,12 @@ const getTasks = (
         (task: ITask) => task.userId == req.params.id
       );
       if (arr.length == 0) {
-        return res.status(200).json({ success: "ok", task: [] });
+        return res.status(200).json({ task: null });
       }
       res.status(200).json({ task: arr });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -72,14 +72,14 @@ const createTask = (
             .then(() => {
               res.status(201).json({ success: "ok", task });
             })
-            .catch(() => {
-              next(new http500Error());
+            .catch((err) => {
+              next(err);
             });
         });
       });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -89,11 +89,9 @@ const updateTask = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).json({ error: errors.array()[0].msg });
   }
-
   Task.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then((task: any) => {
       if (req.body.status == "done") {
@@ -104,8 +102,8 @@ const updateTask = (
       }
       res.status(201).json({ success: "ok", task });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -118,8 +116,8 @@ const deleteTask = (
     .then((task: any) => {
       res.status(204).json({ success: "ok" });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 

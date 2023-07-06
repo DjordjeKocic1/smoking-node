@@ -22,8 +22,8 @@ const getNotificationsByUserID = (
       );
       res.status(201).json({ notification: nots });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -33,13 +33,15 @@ const createNotification = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).json({ error: errors.array()[0].msg });
   }
 
   User.findOne({ email: req.body.email })
     .then((user) => {
+      if (!user) {
+        throw new http500Error("User doesn't exist");
+      }
       const notification = new Notification({
         isMentoring: req.body.isMentoring,
         isTask: req.body.isTask,
@@ -51,12 +53,12 @@ const createNotification = (
         .then((notification: INotificaion) => {
           res.status(201).json({ notification });
         })
-        .catch(() => {
-          next(new http500Error());
+        .catch((err) => {
+          next(err);
         });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 const updateNotification = (
@@ -65,7 +67,6 @@ const updateNotification = (
   next: NextFunction
 ) => {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     throw new http422Error(errors.array()[0].msg);
   }
@@ -73,8 +74,8 @@ const updateNotification = (
     .then((notification) => {
       res.status(201).json({ notification });
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 
@@ -85,17 +86,14 @@ const deleteNotification = (
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log(errors.array());
     throw new http422Error(errors.array()[0].msg);
-    
   }
-
   Notification.findOneAndDelete({ _id: req.params.id })
     .then((notification: any) => {
-      res.status(201).json({ success: "ok" });
+      res.status(204);
     })
-    .catch(() => {
-      next(new http500Error());
+    .catch((err) => {
+      next(err);
     });
 };
 export const notificationController = {

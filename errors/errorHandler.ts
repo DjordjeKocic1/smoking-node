@@ -34,11 +34,11 @@ export const http404Error = class HTTP500Error extends baseError {
 };
 
 export const http500Error = class HTTP500Error extends baseError {
-  constructor() {
+  constructor(description:string) {
     super(
       "SERVER ERROR",
       HttpStatusCode.INTERNAL_SERVER,
-      "We are sorry, something went wrong. Please try again later."
+      description
     );
     Error.captureStackTrace(this);
   }

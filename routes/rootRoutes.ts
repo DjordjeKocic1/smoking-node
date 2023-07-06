@@ -1,11 +1,13 @@
 import {
   checkAlreadyMentored,
+  checkIdParams,
   checkMentoringYourSelf,
   checkModelID,
   checkUserExist,
   checkUserIDExist,
 } from "../errors/errorRoute";
 
+import Mentor from "../model/mentor";
 import Notification from "../model/notification";
 import Task from "../model/task";
 import User from "../model/user";
@@ -31,64 +33,28 @@ router.get("/users-reports", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.post(
-  "/create-user",
-  body("email").isEmail().withMessage("Email is invalid"),
-  userController.createUser
-);
-router.put("/update-user/:id", checkModelID(User), userController.updateUser);
-router.put(
-  "/update-user-costs/:id",
-  checkModelID(User),
-  userController.updateUserCosts
-);
-router.post(
-  "/user-health/:id",
-  checkModelID(User),
-  userController.getUserHealth
-);
+router.post("/user-health/:id",[checkIdParams(),checkModelID(User)],userController.getUserHealth);
+router.post("/create-user",body("email").isEmail().withMessage("Email is invalid"),userController.createUser);
+router.put("/update-user/:id", [checkIdParams(),checkModelID(User)], userController.updateUser);
+router.put("/update-user-costs/:id",[checkIdParams(),checkModelID(User)],userController.updateUserCosts);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);
-router.post(
-  "/create-mentor",
-  [checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],
-  mentorController.createMentor
-);
-router.put("/update-mentor/:id", mentorController.updateMentor);
-router.delete("/delete-mentor/:id", mentorController.deleteMentor);
+router.post("/create-mentor",[checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],mentorController.createMentor);
+router.put("/update-mentor/:id",[checkIdParams(),checkModelID(Mentor)], mentorController.updateMentor);
+router.delete("/delete-mentor/:id",[checkIdParams(),checkModelID(Mentor)], mentorController.deleteMentor);
 
 //Tasks
-router.get("/get-task/:id", checkModelID(Task), taskController.getTasks);
+router.get("/get-task/:id",checkIdParams(), taskController.getTasks);
 router.post("/create-task", checkUserIDExist(), taskController.createTask);
-router.put("/update-task/:id", checkModelID(Task), taskController.updateTask);
-router.delete(
-  "/delete-task/:id",
-  checkModelID(Task),
-  taskController.deleteTask
-);
+router.put("/update-task/:id", [checkIdParams(),checkModelID(Task)], taskController.updateTask);
+router.delete("/delete-task/:id",[checkIdParams(),checkModelID(Task)],taskController.deleteTask);
 
 //Notification
-router.get(
-  "/get-notification/:id",
-  checkModelID(Notification),
-  notificationController.getNotificationsByUserID
-);
-router.post(
-  "/create-notification",
-  body("email").isEmail().withMessage("Email required"),
-  notificationController.createNotification
-);
-router.put(
-  "/update-notification/:id",
-  [checkModelID(Notification)],
-  notificationController.updateNotification
-);
-router.delete(
-  "/delete-notifcation/:id",
-  checkModelID(Notification),
-  notificationController.deleteNotification
-);
+router.get("/get-notification/:id",checkIdParams(),notificationController.getNotificationsByUserID);
+router.post("/create-notification",body("email").isEmail().withMessage("Email required"),notificationController.createNotification);
+router.put("/update-notification/:id",[checkIdParams(),checkModelID(Notification)],notificationController.updateNotification);
+router.delete("/delete-notifcation/:id",[checkIdParams(),checkModelID(Notification)],notificationController.deleteNotification);
 
 // Categories
 router.get("/categories", categorieController.getCategories);
@@ -96,7 +62,7 @@ router.post("/categories", categorieController.createCategories);
 
 // Achievements
 router.post("/create-achievement", achievementController.createAchievement);
-router.get("/get-achievements/:id", achievementController.getAchievemnts);
+router.get("/get-achievements/:id",checkModelID(User), achievementController.getAchievemnts);
 
 //Payment
 router.get("/fetch-key", paymentController.keyGetStripe);

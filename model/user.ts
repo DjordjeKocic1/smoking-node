@@ -10,7 +10,7 @@ const userShema = new Schema(
     name: String,
     email: {
       type: String,
-      required: true,
+      required: true
     },
     image: String,
     userVerified: Boolean,

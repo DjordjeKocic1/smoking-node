@@ -3,10 +3,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = void 0;
+exports.checkModelID = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = exports.checkIdParams = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
+//common errors
+const checkIdParams = () => (0, express_validator_1.param)("id").custom((value) => {
+    if (value.length !== 24) {
+        return Promise.reject("Param Id is not valid");
+    }
+    else {
+        return Promise.resolve();
+    }
+});
+exports.checkIdParams = checkIdParams;
 const checkUserExist = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
     if (!req.body.email) {
         return Promise.reject("User doesn't exist.Please try again later.");
@@ -52,12 +62,9 @@ const checkUserIDExist = () => (0, express_validator_1.body)("userId").custom((v
 exports.checkUserIDExist = checkUserIDExist;
 //Model ID error
 const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((value) => {
-    if (value.length != 24) {
-        return Promise.reject(`ID [${value}] length is not 24 chars`);
-    }
     return Model.findOne({ _id: value }).then((modalData) => {
         if (!modalData) {
-            return Promise.reject(`${Model.modelName} ID [${value}] doesn't exist, please try again later, it could be something wrong with a server. Thank you for your patient`);
+            return Promise.reject(`${Model.modelName} doesn't exist, please try again, it could be something wrong with a server.`);
         }
     });
 });

@@ -26,7 +26,7 @@ const createAchievement = (req, res) => {
 const getAchievemnts = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        throw new errorHandler_1.http500Error(errors.array()[0].msg);
     }
     achievement_1.default.find()
         .then((achievements) => {
@@ -54,26 +54,17 @@ const getAchievemnts = (req, res, next) => {
                 }
             });
             if (newAch.length != 0) {
-                let achievementHold = newAch.filter((v) => {
-                    if (v.holding) {
-                        return v;
-                    }
-                });
-                user.achievements = achievementHold;
+                user.achievements = newAch;
                 user.save();
-                res
-                    .status(200)
-                    .json({
-                    achievements: achievementHold.sort((a, b) => b.holding - a.holding),
-                });
+                res.status(200).json({ achievements: newAch.sort((a, b) => b.holding - a.holding) });
             }
         })
-            .catch(() => {
-            next(new errorHandler_1.http500Error());
+            .catch((err) => {
+            next(err);
         });
     })
-        .catch(() => {
-        next(new errorHandler_1.http500Error());
+        .catch((err) => {
+        next(err);
     });
 };
 exports.achievementController = {

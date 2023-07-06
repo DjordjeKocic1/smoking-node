@@ -3,6 +3,16 @@ import { body, param } from "express-validator";
 import Mentor from "../model/mentor";
 import User from "../model/user";
 
+//common errors
+export const checkIdParams = () =>
+  param("id").custom((value) => {
+    if (value.length !== 24) {
+      return Promise.reject("Param Id is not valid");
+    } else {
+      return Promise.resolve();
+    }
+  }); 
+
 export const checkUserExist = () =>
   body("email").custom((value, { req }) => {
     if (!req.body.email) {
@@ -52,13 +62,10 @@ export const checkUserIDExist = () =>
 //Model ID error
 export const checkModelID = (Model: any) =>
   param("id").custom((value) => {
-    if (value.length != 24) {
-      return Promise.reject(`ID [${value}] length is not 24 chars`);
-    }
     return Model.findOne({ _id: value }).then((modalData: any) => {
       if (!modalData) {
         return Promise.reject(
-          `${Model.modelName} ID [${value}] doesn't exist, please try again later, it could be something wrong with a server. Thank you for your patient`
+          `${Model.modelName} doesn't exist, please try again, it could be something wrong with a server.`
         );
       }
     });
