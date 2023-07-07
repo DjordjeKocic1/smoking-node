@@ -5,7 +5,7 @@ import Stripe from "stripe";
 require("dotenv").config();
 
 const keyGetStripe = (req: Request, res: Response, next: NextFunction) => {
-  return res.send(process.env.STRIPE_KEY);
+  return res.send(process.env.STRIPE_KEY_LIVE);
 };
 
 const paymentSheet = async (
@@ -13,7 +13,7 @@ const paymentSheet = async (
   res: Response,
   next: NextFunction
 ) => {
-  const secret_key = process.env.STRIPE_SECRET;
+  const secret_key = process.env.STRIPE_SECRET_LIVE;
 
   const stripe = new Stripe(secret_key as string, {
     apiVersion: "2022-11-15",
@@ -21,7 +21,7 @@ const paymentSheet = async (
   });
 
   await stripe.customers.create({
-    description: "New customer",
+    description: !req.body.email ? "New customer" : req.body.email,
   });
 
   const customers = await stripe.customers.list();
