@@ -34,7 +34,7 @@ const getUserHealth = (
           (data: any) => {
             res.status(201).json({
               user: {
-                ...healthCalc._doc,
+                ...healthCalc.toObject(),
                 notificationToken: data.notificationToken,
               },
             });
