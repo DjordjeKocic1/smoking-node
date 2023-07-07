@@ -18,6 +18,7 @@ import exporess from "express";
 import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
 import { notificationController } from "../controllers/notificationController";
+import passport from "passport";
 import path from "path";
 import { paymentController } from "../controllers/paymentController";
 import { reportsController } from "../controllers/reportsController";
@@ -71,6 +72,19 @@ router.post("/payment-sheet", paymentController.paymentSheet);
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController.getAllUsersByCategorie);
+
+//Authenticate
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/auth/google" }),
+  (req: any, res) => {
+    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+  }
+);
 
 //404
 router.all("*", () => {

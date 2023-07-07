@@ -4,7 +4,6 @@ import { ErrorMsg } from "./types/types";
 import { http500Error } from "./errors/errorHandler";
 import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
-import passport from "passport";
 import router from "./routes/rootRoutes";
 
 require("dotenv").config();
@@ -17,20 +16,7 @@ initPassport(app);
 
 app.use(express.json());
 
-app.use("/send-user-info", router);
-
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/google" }),
-  (req: any, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
-  }
-);
+app.use("/", router);
 
 app.use((error: ErrorMsg, _req: Request, res: Response<{ error: string }>) => {
   console.log("Middleware error", error);

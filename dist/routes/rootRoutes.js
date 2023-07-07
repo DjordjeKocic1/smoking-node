@@ -15,6 +15,7 @@ const express_1 = __importDefault(require("express"));
 const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
+const passport_1 = __importDefault(require("passport"));
 const path_1 = __importDefault(require("path"));
 const paymentController_1 = require("../controllers/paymentController");
 const reportsController_1 = require("../controllers/reportsController");
@@ -58,6 +59,11 @@ router.post("/payment-sheet", paymentController_1.paymentController.paymentSheet
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
+//Authenticate
+router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
+    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+});
 //404
 router.all("*", () => {
     throw new errorHandler_1.http404Error();

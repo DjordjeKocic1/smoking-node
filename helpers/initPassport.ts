@@ -7,11 +7,12 @@ import passport from "passport";
 import session from "express-session";
 
 export const initPassport = (app: any) => {
+  const secretSession:string = <string> process.env.SESSION_SECRET
   app.use(
     session({
       resave: false,
       saveUninitialized: true,
-      secret: "SECRET",
+      secret: secretSession,
     })
   );
   //init passport

@@ -19,10 +19,11 @@ const passportStrategies_1 = require("../helpers/passportStrategies");
 const passport_1 = __importDefault(require("passport"));
 const express_session_1 = __importDefault(require("express-session"));
 const initPassport = (app) => {
+    const secretSession = process.env.SESSION_SECRET;
     app.use((0, express_session_1.default)({
         resave: false,
         saveUninitialized: true,
-        secret: "SECRET",
+        secret: secretSession,
     }));
     //init passport
     app.use(passport_1.default.initialize());
