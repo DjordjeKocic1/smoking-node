@@ -21,7 +21,7 @@ const paymentSheet = async (
   });
 
   await stripe.customers.create({
-    description: "New Customer",
+    description: !req.body.email ? "New customer" : req.body.email,
   });
 
   const customers = await stripe.customers.list();
@@ -43,9 +43,7 @@ const paymentSheet = async (
     amount: 500,
     currency: "usd",
     customer: customer.id,
-    automatic_payment_methods: {
-      enabled: true,
-    },
+    payment_method_types: ["card"],
   });
 
   return res.status(201).json({

@@ -25,7 +25,7 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         typescript: true,
     });
     yield stripe.customers.create({
-        description: "New Customer",
+        description: !req.body.email ? "New customer" : req.body.email,
     });
     const customers = yield stripe.customers.list();
     const customer = customers.data[0];
@@ -39,9 +39,7 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         amount: 500,
         currency: "usd",
         customer: customer.id,
-        automatic_payment_methods: {
-            enabled: true,
-        },
+        payment_method_types: ["card"],
     });
     return res.status(201).json({
         paymentIntent: paymentIntent.client_secret,
