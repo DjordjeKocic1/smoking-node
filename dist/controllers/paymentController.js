@@ -39,7 +39,9 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         amount: 500,
         currency: "usd",
         customer: customer.id,
-        payment_method_types: ["card"],
+        automatic_payment_methods: {
+            enabled: true,
+        },
     });
     return res.status(201).json({
         paymentIntent: paymentIntent.client_secret,
