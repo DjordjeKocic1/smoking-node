@@ -21,7 +21,7 @@ const paymentSheet = async (
   });
 
   await stripe.customers.create({
-    description: !req.body.email ? "New customer" : req.body.email,
+    description: "New Customer",
   });
 
   const customers = await stripe.customers.list();

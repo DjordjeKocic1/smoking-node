@@ -25,7 +25,7 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         typescript: true,
     });
     yield stripe.customers.create({
-        description: !req.body.email ? "New customer" : req.body.email,
+        description: "New Customer",
     });
     const customers = yield stripe.customers.list();
     const customer = customers.data[0];
