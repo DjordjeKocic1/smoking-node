@@ -17,7 +17,8 @@ const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
 const passport_1 = __importDefault(require("passport"));
 const path_1 = __importDefault(require("path"));
-const paymentController_1 = require("../controllers/paymentController");
+const stripeController_1 = require("../controllers/stripeController");
+const paypalController_1 = require("../controllers/paypalController");
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
@@ -54,8 +55,9 @@ router.post("/categories", categorieController_1.categorieController.createCateg
 router.post("/create-achievement", achievementController_1.achievementController.createAchievement);
 router.get("/get-achievements/:id", (0, errorRoute_1.checkModelID)(user_1.default), achievementController_1.achievementController.getAchievemnts);
 //Payment
-router.get("/fetch-key", paymentController_1.paymentController.keyGetStripe);
-router.post("/payment-sheet", paymentController_1.paymentController.paymentSheet);
+router.get("/fetch-key", stripeController_1.paymentController.keyGetStripe);
+router.post("/payment-sheet", stripeController_1.paymentController.paymentSheet);
+router.post("/paypal-pay", paypalController_1.paypalController.paypalPay);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);

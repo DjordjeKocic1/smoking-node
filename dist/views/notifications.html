@@ -30,7 +30,7 @@
     <script>
         let btn = document.querySelector("button")
         btn.addEventListener("click", () => {
-            fetch("/send-user-info/create-checkout-session", { method: 'post' })
+            fetch("/paypal-pay", { method: 'post' })
         })
     </script>
 </body>
