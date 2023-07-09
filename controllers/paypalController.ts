@@ -10,7 +10,7 @@ const paypalPay = (req: Request, res: Response, next: NextFunction) => {
     .then((order: any) => {
       for (let i = 0; i < order.links.length; i++) {
         if (order.links[i].rel === "approve") {
-          res.redirect(order.links[i].href);
+          res.json({ link: order.links[i].href });
         }
       }
     })
