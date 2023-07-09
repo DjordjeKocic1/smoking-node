@@ -1,59 +1,42 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paypalController = void 0;
-const paypal_rest_sdk_1 = __importDefault(require("paypal-rest-sdk"));
+const paypal = __importStar(require("../helpers/paypal-api"));
 require("dotenv").config();
-paypal_rest_sdk_1.default.configure({
-    mode: "sandbox",
-    client_id: process.env.PAYPAL_CLIENT_ID,
-    client_secret: process.env.PAYPAL_SECRET,
-});
 const paypalPay = (req, res, next) => {
-    const create_payment_json = {
-        intent: "sale",
-        payer: {
-            payment_method: "paypal",
-        },
-        redirect_urls: {
-            return_url: "http://192.168.56.1:8000/success",
-            cancel_url: "http://192.168.56.1:8000/cancel",
-        },
-        transactions: [
-            {
-                item_list: {
-                    items: [
-                        {
-                            name: "Mentoring",
-                            sku: "1",
-                            price: "5.00",
-                            currency: "USD",
-                            quantity: 1,
-                        },
-                    ],
-                },
-                amount: {
-                    currency: "USD",
-                    total: "5.00",
-                },
-                description: "Mentoring request",
-            },
-        ],
-    };
-    paypal_rest_sdk_1.default.payment.create(create_payment_json, function (error, payment) {
-        if (error) {
-            throw error;
-        }
-        else {
-            for (let i = 0; i < payment.links.length; i++) {
-                if (payment.links[i].rel === "approval_url") {
-                    res.redirect(payment.links[i].href);
-                }
+    paypal
+        .createOrder()
+        .then((order) => {
+        for (let i = 0; i < order.links.length; i++) {
+            if (order.links[i].rel === "approve") {
+                res.redirect(order.links[i].href);
             }
         }
-    });
+    })
+        .catch((err) => console.log(err));
 };
 exports.paypalController = {
     paypalPay,
