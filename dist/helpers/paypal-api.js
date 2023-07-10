@@ -19,7 +19,6 @@ const base = "https://api-m.sandbox.paypal.com";
 function createOrder() {
     return __awaiter(this, void 0, void 0, function* () {
         const accessToken = yield generateAccessToken();
-        console.log(accessToken);
         const url = `${base}/v2/checkout/orders`;
         const response = yield (0, node_fetch_1.default)(url, {
             method: "post",

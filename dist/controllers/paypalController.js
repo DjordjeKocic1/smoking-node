@@ -1,43 +1,89 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paypalController = void 0;
-const paypal = __importStar(require("../helpers/paypal-api"));
-require("dotenv").config();
+const paypal_rest_sdk_1 = __importDefault(require("paypal-rest-sdk"));
+const errorHandler_1 = require("../errors/errorHandler");
+const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
+paypal_rest_sdk_1.default.configure({
+    mode: "sandbox",
+    client_id: PAYPAL_CLIENT_ID,
+    client_secret: PAYPAL_SECRET,
+});
 const paypalPay = (req, res, next) => {
-    paypal
-        .createOrder()
-        .then((order) => {
-        for (let i = 0; i < order.links.length; i++) {
-            if (order.links[i].rel === "approve") {
-                res.json({ link: order.links[i].href });
+    const create_payment_json = {
+        intent: "sale",
+        payer: {
+            payment_method: "paypal",
+        },
+        redirect_urls: {
+            return_url: "exp://192.168.0.11:19000/?payment=success",
+            cancel_url: "exp://192.168.0.11:19000/?payment=cancel",
+        },
+        transactions: [
+            {
+                item_list: {
+                    items: [
+                        {
+                            name: "Mentoring",
+                            sku: "001",
+                            price: "5",
+                            currency: "USD",
+                            quantity: 1,
+                        },
+                    ],
+                },
+                amount: {
+                    currency: "USD",
+                    total: "5",
+                },
+                description: "Mentoring system",
+            },
+        ],
+    };
+    paypal_rest_sdk_1.default.payment.create(create_payment_json, function (error, payment) {
+        if (error) {
+            throw error;
+        }
+        else {
+            for (let i = 0; i < payment.links.length; i++) {
+                if (payment.links[i].rel === "approval_url") {
+                    res.json({ link: payment.links[i].href });
+                }
             }
         }
-    })
-        .catch((err) => console.log(err));
+    });
+};
+const paypalSuccess = (req, res, next) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+    const execute_payment_json = {
+        payer_id: payerId,
+        transactions: [
+            {
+                amount: {
+                    currency: "USD",
+                    total: "5.00",
+                },
+            },
+        ],
+    };
+    paypal_rest_sdk_1.default.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            throw new errorHandler_1.http500Error("Something went wrong when processing payment");
+        }
+        else {
+            res.json({ payment: "success" });
+        }
+    });
+};
+const paypalCancel = (req, res, next) => {
+    res.json({ payment: "cancel" });
 };
 exports.paypalController = {
     paypalPay,
+    paypalSuccess,
+    paypalCancel,
 };

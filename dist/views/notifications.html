@@ -33,7 +33,10 @@
     <script>
         let btn = document.querySelector("button")
         btn.addEventListener("click", () => {
-            axios.post("/paypal-pay")
+            axios.post("/paypal-pay").then(r => {
+                console.log(r.data);
+                window.location.href = r.data.link
+            })
         })
     </script>
 </body>
