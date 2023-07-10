@@ -18,8 +18,8 @@ const paypalPay = (req: Request, res: Response, next: NextFunction) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "exp://192.168.0.11:19000/?payment=success",
-      cancel_url: "exp://192.168.0.11:19000/?payment=cancel",
+      return_url: "exp://192.168.0.11:19000",
+      cancel_url: "exp://192.168.0.11:19000",
     },
     transactions: [
       {
