@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.paypalController = void 0;
 const paypal_rest_sdk_1 = __importDefault(require("paypal-rest-sdk"));
 const errorHandler_1 = require("../errors/errorHandler");
-const user_1 = __importDefault(require("../model/user"));
 const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
 paypal_rest_sdk_1.default.configure({
     mode: "sandbox",
@@ -76,9 +75,11 @@ const paypalSuccess = (req, res, next) => {
             throw new errorHandler_1.http500Error("Something went wrong when processing payment");
         }
         else {
-            user_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true }).catch((err) => {
-                throw new errorHandler_1.http500Error(err);
-            });
+            // User.findByIdAndUpdate(req.params.id, req.body, { new: true }).catch(
+            //   (err) => {
+            //     throw new http500Error(err);
+            //   }
+            // );
             res.json({ payment: "success" });
         }
     });

@@ -79,11 +79,11 @@ const paypalSuccess = (req: Request, res: Response, next: NextFunction) => {
       if (error) {
         throw new http500Error("Something went wrong when processing payment");
       } else {
-        User.findByIdAndUpdate(req.params.id, req.body, { new: true }).catch(
-          (err) => {
-            throw new http500Error(err);
-          }
-        );
+        // User.findByIdAndUpdate(req.params.id, req.body, { new: true }).catch(
+        //   (err) => {
+        //     throw new http500Error(err);
+        //   }
+        // );
         res.json({ payment: "success" });
       }
     }
