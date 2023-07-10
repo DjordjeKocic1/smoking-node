@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paypalController = void 0;
 const paypal_rest_sdk_1 = __importDefault(require("paypal-rest-sdk"));
+const errorHandler_1 = require("../errors/errorHandler");
 const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
 paypal_rest_sdk_1.default.configure({
     mode: "sandbox",
@@ -55,6 +56,34 @@ const paypalPay = (req, res, next) => {
         }
     });
 };
+const paypalSuccess = (req, res, next) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+    const execute_payment_json = {
+        payer_id: payerId,
+        transactions: [
+            {
+                amount: {
+                    currency: "USD",
+                    total: "5.00",
+                },
+            },
+        ],
+    };
+    paypal_rest_sdk_1.default.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+        if (error) {
+            throw new errorHandler_1.http500Error("Something went wrong when processing payment");
+        }
+        else {
+            res.json({ payment: "success" });
+        }
+    });
+};
+const paypalCancel = (req, res, next) => {
+    res.json({ payment: "cancel" });
+};
 exports.paypalController = {
     paypalPay,
+    paypalSuccess,
+    paypalCancel,
 };

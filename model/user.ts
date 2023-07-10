@@ -99,6 +99,7 @@ const userShema = new Schema(
     ],
     notificationToken: String,
     subscriber: Boolean,
+    subscribeDate: String,
   },
   { timestamps: true }
 );

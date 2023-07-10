@@ -58,6 +58,8 @@ router.get("/get-achievements/:id", (0, errorRoute_1.checkModelID)(user_1.defaul
 router.get("/fetch-key", stripeController_1.paymentController.keyGetStripe);
 router.post("/payment-sheet", stripeController_1.paymentController.paymentSheet);
 router.post("/paypal-pay", paypalController_1.paypalController.paypalPay);
+router.get("/success", paypalController_1.paypalController.paypalSuccess);
+router.get("/cancel", paypalController_1.paypalController.paypalCancel);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
