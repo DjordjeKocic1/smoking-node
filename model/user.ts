@@ -10,7 +10,7 @@ const userShema = new Schema(
     name: String,
     email: {
       type: String,
-      required: true
+      required: true,
     },
     image: String,
     userVerified: Boolean,
@@ -98,6 +98,7 @@ const userShema = new Schema(
       },
     ],
     notificationToken: String,
+    subscriber: Boolean,
   },
   { timestamps: true }
 );
@@ -176,18 +177,42 @@ userShema.methods.calculateHealth = function (user: any) {
       ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
       : 0;
 
-  this.healthInfo.bloodPressure = (this.smokingInfo.noSmokingDays * 1.5).toFixed(1);
-  this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(1);
-  this.healthInfo.COinBloodDecreases = (this.smokingInfo.noSmokingDays * 1.3).toFixed(1);
-  this.healthInfo.physicalAndBodilyStrength = (this.smokingInfo.noSmokingDays * 1.2).toFixed(1);
-  this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(1);
-  this.healthInfo.irritatingCough = (this.smokingInfo.noSmokingDays * 0.4).toFixed(1);
-  this.healthInfo.stressTolerance = (this.smokingInfo.noSmokingDays * 0.4).toFixed(1);
-  this.healthInfo.riskofheartAttack = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-  this.healthInfo.riskofKidneyCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-  this.healthInfo.riskofThroatCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-  this.healthInfo.riskofLungeCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-  this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
+  this.healthInfo.bloodPressure = (
+    this.smokingInfo.noSmokingDays * 1.5
+  ).toFixed(1);
+  this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(
+    1
+  );
+  this.healthInfo.COinBloodDecreases = (
+    this.smokingInfo.noSmokingDays * 1.3
+  ).toFixed(1);
+  this.healthInfo.physicalAndBodilyStrength = (
+    this.smokingInfo.noSmokingDays * 1.2
+  ).toFixed(1);
+  this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(
+    1
+  );
+  this.healthInfo.irritatingCough = (
+    this.smokingInfo.noSmokingDays * 0.4
+  ).toFixed(1);
+  this.healthInfo.stressTolerance = (
+    this.smokingInfo.noSmokingDays * 0.4
+  ).toFixed(1);
+  this.healthInfo.riskofheartAttack = (
+    this.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofKidneyCancer = (
+    this.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofThroatCancer = (
+    this.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofLungeCancer = (
+    this.smokingInfo.noSmokingDays * 0.3
+  ).toFixed(1);
+  this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(
+    1
+  );
 
   Object.keys(this.healthInfo).forEach((values: any) => {
     if (this.healthInfo[values] > 100) {
