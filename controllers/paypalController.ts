@@ -57,45 +57,6 @@ const paypalPay = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const paypalSuccess = (req: Request, res: Response, next: NextFunction) => {
-  const payerId = req.query.PayerID;
-  const paymentId = <string>req.query.paymentId;
-
-  const execute_payment_json: any = {
-    payer_id: payerId,
-    transactions: [
-      {
-        amount: {
-          currency: "USD",
-          total: "5.00",
-        },
-      },
-    ],
-  };
-  paypal.payment.execute(
-    paymentId,
-    execute_payment_json,
-    function (error, payment) {
-      if (error) {
-        throw new http500Error("Something went wrong when processing payment");
-      } else {
-        // User.findByIdAndUpdate(req.params.id, req.body, { new: true }).catch(
-        //   (err) => {
-        //     throw new http500Error(err);
-        //   }
-        // );
-        res.json({ payment: "success" });
-      }
-    }
-  );
-};
-
-const paypalCancel = (req: Request, res: Response, next: NextFunction) => {
-  res.json({ payment: "cancel" });
-};
-
 export const paypalController = {
   paypalPay,
-  paypalSuccess,
-  paypalCancel,
 };

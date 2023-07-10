@@ -126,8 +126,6 @@ router.get(
 router.get("/fetch-key", paymentController.keyGetStripe);
 router.post("/payment-sheet", paymentController.paymentSheet);
 router.post("/paypal-pay", paypalController.paypalPay);
-router.get("/success", paypalController.paypalSuccess);
-router.get("/cancel", paypalController.paypalCancel);
 
 //Reports
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
