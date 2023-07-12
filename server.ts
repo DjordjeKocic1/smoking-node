@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
 import { http500Error } from "./errors/errorHandler";
@@ -28,7 +28,11 @@ app.use((error: ErrorMsg, _req: Request, res: Response<{ error: string }>) => {
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
-    app.listen(port, () => console.log("Server Start"));
+    const server = app.listen(port, () => console.log("Server Start"));
+    const io = require("./socket").init(server)
+    io.on("connection", (socket:any) => {
+      console.log("Client Connected");
+    })
   })
   .catch(() => {
     throw new http500Error("Someting went wrong. Please try again");
