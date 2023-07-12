@@ -10,6 +10,7 @@ const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
+const io = require("../socket");
 const getTasks = (req, res, next) => {
     const errors = (0, express_validator_1.validationResult)(req);
     if (!errors.isEmpty()) {
@@ -60,6 +61,7 @@ const createTask = (req, res, next) => {
                     body: "You have a new task 📝",
                 })
                     .then(() => {
+                    io.getIO().to(user._id).emit("task", { task });
                     res.status(201).json({ success: "ok", task });
                 })
                     .catch((err) => {
