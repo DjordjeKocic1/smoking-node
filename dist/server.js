@@ -23,12 +23,7 @@ app.use((error, _req, res) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
-    const server = app.listen(port, () => console.log("Server Start"));
-    const io = require("./socket").init(server);
-    io.on("connection", (socket) => {
-        console.log(socket);
-        console.log("Client Connected");
-    });
+    app.listen(port, () => console.log("Server Start"));
 })
     .catch(() => {
     throw new errorHandler_1.http500Error("Someting went wrong. Please try again");

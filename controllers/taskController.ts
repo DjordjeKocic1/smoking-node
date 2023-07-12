@@ -8,8 +8,6 @@ import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { validationResult } from "express-validator";
 
-const io = require("../socket")
-
 const getTasks = (
   req: Request<{ id: string }>,
   res: Response<{ success?: string; error?: string; task?: any }>,
@@ -72,7 +70,6 @@ const createTask = (
               body: "You have a new task 📝",
             })
             .then(() => {
-              io.getIO().to(user._id).emit("task", { task });
               res.status(201).json({ success: "ok", task });
             })
             .catch((err) => {
