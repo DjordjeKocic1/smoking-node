@@ -1,6 +1,7 @@
 import {
   checkAlreadyMentored,
   checkIdParams,
+  checkMentorIDExist,
   checkMentoringYourSelf,
   checkModelID,
   checkUserExist,
@@ -57,7 +58,7 @@ router.put(
 );
 
 //Mentor
-router.get("/get-mentor/:id", mentorController.getMentor);
+router.get("/get-mentor/:id", checkIdParams(), mentorController.getMentor);
 router.post(
   "/create-mentor",
   [checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],
@@ -76,7 +77,11 @@ router.delete(
 
 //Tasks
 router.get("/get-task/:id", checkIdParams(), taskController.getTasks);
-router.post("/create-task", checkUserIDExist(), taskController.createTask);
+router.post(
+  "/create-task",
+  [checkUserIDExist(), checkMentorIDExist()],
+  taskController.createTask
+);
 router.put(
   "/update-task/:id",
   [checkIdParams(), checkModelID(Task)],

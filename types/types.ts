@@ -64,6 +64,7 @@ export interface IUser {
   tasks: any;
   achievements: any;
   gameScore: any;
+  save?: any;
 }
 
 export interface IMentor {
@@ -85,6 +86,7 @@ export interface INotificaion {
 }
 
 export interface ITask {
+  _id?: any;
   toDo: string;
   status: string;
   comment: string;

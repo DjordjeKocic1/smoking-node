@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import paypal from "paypal-rest-sdk";
 import { http500Error } from "../errors/errorHandler";
-import User from "../model/user";
 
 const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
 
@@ -77,7 +76,7 @@ const paypalSuccess = (req: Request, res: Response, next: NextFunction) => {
     execute_payment_json,
     function (error, payment) {
       if (error) {
-        throw new http500Error("Something went wrong when processing payment");
+        throw new http500Error();
       } else {
         res.json({ payment: "success" });
       }

@@ -11,7 +11,7 @@ export const checkIdParams = () =>
     } else {
       return Promise.resolve();
     }
-  }); 
+  });
 
 export const checkUserExist = () =>
   body("email").custom((value, { req }) => {
@@ -27,6 +27,9 @@ export const checkUserExist = () =>
 
 export const checkAlreadyMentored = () =>
   body("user").custom((value) => {
+    if (!value.email) {
+      return Promise.reject("Email required.Please try again later.");
+    }
     if (!value) {
       return Promise.reject("User doesn't exist.Please try again later.");
     }
@@ -54,7 +57,16 @@ export const checkUserIDExist = () =>
   body("userId").custom((value) => {
     return User.findOne({ _id: value }).then((user) => {
       if (!user) {
-        return Promise.reject("User of that ID doesnt exists");
+        return Promise.reject("Create Task User ID doesn't exist");
+      }
+    });
+  });
+
+export const checkMentorIDExist = () =>
+  body("mentorId").custom((value) => {
+    return Mentor.findOne({ _id: value }).then((user) => {
+      if (!user) {
+        return Promise.reject("Create Task Mentor ID doesn't exist");
       }
     });
   });
@@ -67,6 +79,8 @@ export const checkModelID = (Model: any) =>
         return Promise.reject(
           `${Model.modelName} doesn't exist, please try again, it could be something wrong with a server.`
         );
+      } else {
+        return Promise.resolve();
       }
     });
   });

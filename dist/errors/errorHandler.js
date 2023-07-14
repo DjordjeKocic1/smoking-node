@@ -10,8 +10,8 @@ var HttpStatusCode;
     HttpStatusCode[HttpStatusCode["INTERNAL_SERVER"] = 500] = "INTERNAL_SERVER";
 })(HttpStatusCode = exports.HttpStatusCode || (exports.HttpStatusCode = {}));
 const baseError = class BaseError extends Error {
-    constructor(name, statusCode, description) {
-        super(description);
+    constructor(name, statusCode, message) {
+        super(message);
         Object.setPrototypeOf(this, new.target.prototype);
         this.name = name;
         this.statusCode = statusCode;
@@ -20,8 +20,8 @@ const baseError = class BaseError extends Error {
 };
 exports.baseError = baseError;
 const http422Error = class HTTP400Error extends exports.baseError {
-    constructor(description) {
-        super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, description);
+    constructor(message) {
+        super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, message);
     }
 };
 exports.http422Error = http422Error;
@@ -32,9 +32,8 @@ const http404Error = class HTTP500Error extends exports.baseError {
 };
 exports.http404Error = http404Error;
 const http500Error = class HTTP500Error extends exports.baseError {
-    constructor(description) {
-        super("SERVER ERROR", HttpStatusCode.INTERNAL_SERVER, description);
-        Error.captureStackTrace(this);
+    constructor() {
+        super("SERVER ERROR", HttpStatusCode.INTERNAL_SERVER, "Something went wrong with a server. Please try again later.");
     }
 };
 exports.http500Error = http500Error;

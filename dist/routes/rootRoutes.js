@@ -34,13 +34,13 @@ router.post("/create-user", (0, express_validator_1.body)("email").isEmail().wit
 router.put("/update-user/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
 //Mentor
-router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
+router.get("/get-mentor/:id", (0, errorRoute_1.checkIdParams)(), mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", (0, errorRoute_1.checkIdParams)(), taskController_1.taskController.getTasks);
-router.post("/create-task", (0, errorRoute_1.checkUserIDExist)(), taskController_1.taskController.createTask);
+router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)(), (0, errorRoute_1.checkMentorIDExist)()], taskController_1.taskController.createTask);
 router.put("/update-task/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.updateTask);
 router.delete("/delete-task/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.deleteTask);
 //Notification

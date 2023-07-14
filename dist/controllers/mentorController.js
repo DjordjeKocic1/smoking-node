@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -11,139 +20,115 @@ const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
-const getMentor = (req, res, next) => {
-    mentor_1.default.find()
-        .then((mentors) => {
+const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let mentors = yield mentor_1.default.find();
         let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
             mentor.mentorId == req.params.id);
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
-        user_1.default.findOne({ email: arr[0].mentoringUser[0].email })
-            .then((user) => {
-            if (!user) {
-                throw new errorHandler_1.http500Error("No user found");
-            }
-            let mentorTrans = arr.map((mentor) => {
-                return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
-            });
-            res.status(200).json({
-                mentor: Object.assign(Object.assign({}, mentorTrans[0]._doc), { mentoringUser: [mentorTrans[0].mentoringUser] }),
-            });
-        })
-            .catch((err) => {
-            next(err);
+        let user = (yield user_1.default.findOne({
+            email: arr[0].mentoringUser[0].email,
+        }));
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        let mentorTrans = arr.map((mentor) => {
+            return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
         });
-    })
-        .catch((error) => {
+        res.status(200).json({
+            mentor: Object.assign(Object.assign({}, mentorTrans[0]._doc), { mentoringUser: [mentorTrans[0].mentoringUser] }),
+        });
+    }
+    catch (error) {
         next(error);
-    });
-};
-const createMentor = (req, res, next) => {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        throw new errorHandler_1.http422Error(errors.array()[0].msg);
     }
-    user_1.default.findOne({ email: req.body.user.email })
-        .then((user) => {
-        user_1.default.findOne({ email: req.body.email }).then((userMentor) => {
-            const mentor = new mentor_1.default({
-                name: req.body.name,
-                email: req.body.email,
-                accepted: false,
-                mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
-                mentoringUserId: user === null || user === void 0 ? void 0 : user._id,
-                mentoringUser: user,
-            });
-            mentor
-                .save()
-                .then((mentor) => {
-                if (!userMentor.notificationToken) {
-                    return res.status(201).json({ mentor });
-                }
-                notifications_1.expoNotification
-                    .sendPushNotification({
-                    to: userMentor.notificationToken,
-                    title: "Mentor",
-                    body: "New mentor request 🔧",
-                })
-                    .then(() => {
-                    const notification = new notification_1.default({
-                        isTask: false,
-                        isMentoring: true,
-                        isRead: false,
-                        userId: mentor.mentorId,
-                    });
-                    notification.save().then(() => {
-                        res.status(201).json({ mentor });
-                    });
-                })
-                    .catch((err) => {
-                    next(err);
-                });
-            })
-                .catch((err) => {
-                next(err);
-            });
+});
+const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let user = (yield user_1.default.findOne({ _id: req.body.user._id }));
+        let userMentor = (yield user_1.default.findOne({ email: req.body.email }));
+        const mentor = new mentor_1.default({
+            name: req.body.name,
+            email: req.body.email,
+            accepted: false,
+            mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
+            mentoringUserId: user === null || user === void 0 ? void 0 : user._id,
+            mentoringUser: user,
         });
-    })
-        .catch((err) => {
-        next(err);
-    });
-};
-const updateMentor = (req, res, next) => {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        throw new errorHandler_1.http500Error(errors.array()[0].msg);
-    }
-    mentor_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true })
-        .then((mentor) => {
-        user_1.default.findOne({ _id: mentor.mentoringUserId })
-            .then((user) => {
-            if (!user) {
-                throw new errorHandler_1.http500Error("User doesn't exist");
-            }
-            if (!(user === null || user === void 0 ? void 0 : user.notificationToken)) {
-                return res.status(201).json({ mentor });
-            }
-            notifications_1.expoNotification
-                .sendPushNotification({
-                to: user.notificationToken,
-                title: "Mentor",
-                body: `Mentor (${mentor.email}) accepted your request ✅`,
-            })
-                .then(() => {
-                res.status(201).json({ mentor });
-            })
-                .catch((err) => {
-                if (!err.statusCode) {
-                    err.statusCode = 500;
-                }
-                next(err);
-            });
-        })
-            .catch((err) => {
-            next(err);
+        let mentorCreate = yield mentor.save();
+        if (!userMentor.notificationToken) {
+            return res.status(201).json({ mentor: mentorCreate });
+        }
+        yield notifications_1.expoNotification.sendPushNotification({
+            to: userMentor.notificationToken,
+            title: "Mentor",
+            body: "New mentor request 🔧",
         });
-    })
-        .catch((err) => {
-        next(err);
-    });
-};
-const deleteMentor = (req, res, next) => {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (!errors.isEmpty()) {
-        throw new errorHandler_1.http500Error(errors.array()[0].msg);
+        const notification = new notification_1.default({
+            isTask: false,
+            isMentoring: true,
+            isRead: false,
+            userId: mentor.mentorId,
+        });
+        yield notification.save();
+        res.status(201).json({ mentor: mentorCreate });
     }
-    mentor_1.default.findOneAndDelete({ _id: req.params.id })
-        .then((mentor) => {
-        task_1.default.deleteMany({ mentorId: mentor.mentorId });
-        res.status(204);
-    })
-        .catch((err) => {
-        next(err);
-    });
-};
+    catch (error) {
+        next(error);
+    }
+});
+const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http500Error();
+        }
+        let mentorUpdate = (yield mentor_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        }));
+        let user = (yield user_1.default.findOne({
+            _id: mentorUpdate.mentoringUserId,
+        }));
+        if (!(user === null || user === void 0 ? void 0 : user.notificationToken) || !req.body.accepted) {
+            return res.status(201).json({ mentor: mentorUpdate });
+        }
+        yield notifications_1.expoNotification.sendPushNotification({
+            to: user.notificationToken,
+            title: "Mentor",
+            body: `Mentor (${mentorUpdate.email}) accepted your request ✅`,
+        });
+        res.status(201).json({ mentor: mentorUpdate });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http500Error();
+        }
+        let mentorDelete = (yield mentor_1.default.findOneAndDelete({
+            _id: req.params.id,
+        }));
+        yield task_1.default.deleteMany({ mentorId: mentorDelete.mentorId });
+        res.status(204).send({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.mentorController = {
     createMentor,
     updateMentor,

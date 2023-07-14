@@ -22,7 +22,10 @@ const mentorSchema = new Schema({
     mentoringUser: [
         {
             name: String,
-            email: String,
+            email: {
+                type: String,
+                req: true,
+            },
             userId: {
                 type: Schema.Types.ObjectId,
                 ref: "User",

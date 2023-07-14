@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
 import { http500Error } from "./errors/errorHandler";
@@ -18,12 +18,19 @@ app.use(express.json());
 
 app.use("/", router);
 
-app.use((error: ErrorMsg, _req: Request, res: Response<{ error: string }>) => {
-  console.log("Middleware error", error);
-  const status: number = error.statusCode || 500;
-  const message = error.message;
-  res.status(status).json({ error: message });
-});
+app.use(
+  (
+    error: ErrorMsg,
+    _req: Request,
+    res: Response<{ error: string }>,
+    next: NextFunction
+  ) => {
+    console.log("Middleware error", error);
+    const status: number = error.statusCode || 500;
+    const message = error.message;
+    res.status(status).json({ error: message });
+  }
+);
 
 mongoose
   .connect(process.env.MONGO_URI as string)
@@ -31,5 +38,5 @@ mongoose
     app.listen(port, () => console.log("Server Start"));
   })
   .catch(() => {
-    throw new http500Error("Someting went wrong. Please try again");
+    throw new http500Error();
   });

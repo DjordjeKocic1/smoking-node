@@ -72,7 +72,7 @@ const paypalSuccess = (req, res, next) => {
     };
     paypal_rest_sdk_1.default.payment.execute(paymentId, execute_payment_json, function (error, payment) {
         if (error) {
-            throw new errorHandler_1.http500Error("Something went wrong when processing payment");
+            throw new errorHandler_1.http500Error();
         }
         else {
             res.json({ payment: "success" });

@@ -10,8 +10,8 @@ export const baseError = class BaseError extends Error {
   public readonly name: string;
   public readonly statusCode: HttpStatusCode;
 
-  constructor(name: string, statusCode: HttpStatusCode, description: string) {
-    super(description);
+  constructor(name: string, statusCode: HttpStatusCode, message: string) {
+    super(message);
     Object.setPrototypeOf(this, new.target.prototype);
 
     this.name = name;
@@ -22,8 +22,8 @@ export const baseError = class BaseError extends Error {
 };
 
 export const http422Error = class HTTP400Error extends baseError {
-  constructor(description: string) {
-    super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, description);
+  constructor(message: string) {
+    super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, message);
   }
 };
 
@@ -34,12 +34,11 @@ export const http404Error = class HTTP500Error extends baseError {
 };
 
 export const http500Error = class HTTP500Error extends baseError {
-  constructor(description:string) {
+  constructor() {
     super(
       "SERVER ERROR",
       HttpStatusCode.INTERNAL_SERVER,
-      description
+      "Something went wrong with a server. Please try again later."
     );
-    Error.captureStackTrace(this);
   }
 };

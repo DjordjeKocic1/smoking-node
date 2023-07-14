@@ -14,7 +14,7 @@ const app = (0, express_1.default)();
 (0, initPassport_1.initPassport)(app);
 app.use(express_1.default.json());
 app.use("/", rootRoutes_1.default);
-app.use((error, _req, res) => {
+app.use((error, _req, res, next) => {
     console.log("Middleware error", error);
     const status = error.statusCode || 500;
     const message = error.message;
@@ -26,5 +26,5 @@ mongoose_1.default
     app.listen(port, () => console.log("Server Start"));
 })
     .catch(() => {
-    throw new errorHandler_1.http500Error("Someting went wrong. Please try again");
+    throw new errorHandler_1.http500Error();
 });
