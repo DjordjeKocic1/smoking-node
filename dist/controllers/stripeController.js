@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentController = void 0;
 const stripe_1 = __importDefault(require("stripe"));
-require("dotenv").config();
 const keyGetStripe = (req, res, next) => {
     return res.send(process.env.STRIPE_KEY);
 };

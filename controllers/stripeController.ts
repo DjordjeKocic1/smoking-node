@@ -2,8 +2,6 @@ import { NextFunction, Request, Response } from "express";
 
 import Stripe from "stripe";
 
-require("dotenv").config();
-
 const keyGetStripe = (req: Request, res: Response, next: NextFunction) => {
   return res.send(process.env.STRIPE_KEY);
 };

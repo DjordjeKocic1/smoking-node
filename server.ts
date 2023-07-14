@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
+import helmet from 'helmet'
 import { http500Error } from "./errors/errorHandler";
 import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
@@ -8,9 +9,11 @@ import router from "./routes/rootRoutes";
 
 require("dotenv").config();
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 const app = express();
+
+app.use(helmet())
 
 initPassport(app);
 
