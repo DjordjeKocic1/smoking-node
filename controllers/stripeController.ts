@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from "express";
 
 import Stripe from "stripe";
 
+const { STRIPE_KEY, STRIPE_SECRET } = process.env;
+
 const keyGetStripe = (req: Request, res: Response, next: NextFunction) => {
-  return res.send(process.env.STRIPE_KEY);
+  return res.send(STRIPE_KEY);
 };
 
 const paymentSheet = async (
@@ -11,7 +13,7 @@ const paymentSheet = async (
   res: Response,
   next: NextFunction
 ) => {
-  const secret_key = process.env.STRIPE_SECRET;
+  const secret_key = STRIPE_SECRET;
 
   const stripe = new Stripe(secret_key as string, {
     apiVersion: "2022-11-15",

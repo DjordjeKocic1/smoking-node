@@ -14,11 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.paymentController = void 0;
 const stripe_1 = __importDefault(require("stripe"));
+const { STRIPE_KEY, STRIPE_SECRET } = process.env;
 const keyGetStripe = (req, res, next) => {
-    return res.send(process.env.STRIPE_KEY);
+    return res.send(STRIPE_KEY);
 };
 const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const secret_key = process.env.STRIPE_SECRET;
+    const secret_key = STRIPE_SECRET;
     const stripe = new stripe_1.default(secret_key, {
         apiVersion: "2022-11-15",
         typescript: true,
