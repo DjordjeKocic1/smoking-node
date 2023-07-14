@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const helmet_1 = __importDefault(require("helmet"));
 const errorHandler_1 = require("./errors/errorHandler");
 const initPassport_1 = require("./helpers/initPassport");
 const mongoose_1 = __importDefault(require("mongoose"));
@@ -12,7 +11,7 @@ const rootRoutes_1 = __importDefault(require("./routes/rootRoutes"));
 require("dotenv").config();
 const port = process.env.PORT;
 const app = (0, express_1.default)();
-app.use((0, helmet_1.default)());
+// app.use(helmet())
 (0, initPassport_1.initPassport)(app);
 app.use(express_1.default.json());
 app.use("/", rootRoutes_1.default);
