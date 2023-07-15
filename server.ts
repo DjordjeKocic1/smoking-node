@@ -14,7 +14,7 @@ const port = process.env.PORT;
 
 const app = express();
 
-// app.use(helmet())
+app.use(helmet())
 app.use(morgan('combined'))
 
 initPassport(app);

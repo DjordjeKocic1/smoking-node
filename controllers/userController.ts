@@ -34,7 +34,7 @@ const getUserHealth = async (
       let userUpdate = (await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       })) as IUser;
-      res.status(201).json({
+     return res.status(201).json({
         user: {
           ...healthCalc.toObject(),
           notificationToken: userUpdate.notificationToken,
