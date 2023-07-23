@@ -1,4 +1,4 @@
-import { commonHelpers, userHelper } from "../helpers/helperClass";
+import { commonHelpers, userHealth } from "../helpers/helperClass";
 
 import { IUser } from "../types/types";
 import { calculations } from "../helpers/calcs";
@@ -179,44 +179,23 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
       ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
       : 0;
 
-  this.healthInfo.bloodPressure = userHelper.calculateBloodPressure(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.heartRhythm = userHelper.calculateHeartRhythm(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.COinBloodDecreases = userHelper.calculateCOinBloodDecreases(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.physicalAndBodilyStrength =
-    userHelper.calculatephysicalStrength(this.smokingInfo.noSmokingDays);
-  this.healthInfo.lungCapacity = userHelper.calculateLungCapacity(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.irritatingCough = userHelper.calculateIrritatingCough(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.stressTolerance = userHelper.calculateStressTolerance(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.riskofheartAttack = userHelper.calculateRiskofheartAttack(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.riskofKidneyCancer = userHelper.calculateRiskofKidneyCancer(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.riskofThroatCancer = userHelper.calculateRiskofThroatCancer(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.riskofLungeCancer = userHelper.calculateRiskofLungeCancer(
-    this.smokingInfo.noSmokingDays
-  );
-  this.healthInfo.riskofStroke = userHelper.calculateRiskofStroke(
-    this.smokingInfo.noSmokingDays
-  );
+  const userHelperClass = new userHealth(this.smokingInfo.noSmokingDays);
+
+  this.healthInfo.bloodPressure = userHelperClass.calcBloodPressure();
+  this.healthInfo.heartRhythm = userHelperClass.calcHeartRhythm();
+  this.healthInfo.COinBloodDecreases = userHelperClass.calcCOinBloodDecreases();
+  this.healthInfo.physicalAndBodilyStrength = userHelperClass.calcphysicalStr();
+  this.healthInfo.lungCapacity = userHelperClass.calcLungCapacity();
+  this.healthInfo.irritatingCough = userHelperClass.calcIrritatingCough();
+  this.healthInfo.stressTolerance = userHelperClass.calcStressTolerance();
+  this.healthInfo.riskofheartAttack = userHelperClass.calcRiskofheartAttack();
+  this.healthInfo.riskofKidneyCancer = userHelperClass.calcRiskofKidneyCancer();
+  this.healthInfo.riskofThroatCancer = userHelperClass.calcRiskofThroatCancer();
+  this.healthInfo.riskofLungeCancer = userHelperClass.calcRiskofLungeCancer();
+  this.healthInfo.riskofStroke = userHelperClass.calcRiskofStroke();
 
   const healthObjKeys = commonHelpers.extractObjectKeys(this.healthInfo);
-  const healthObj = commonHelpers.extractObjectEntries(this.healthInfo);
+  const healthObjEntries = commonHelpers.extractObjectEntries(this.healthInfo);
 
   healthObjKeys.forEach((value) => {
     if (this.healthInfo[value] > 100) {
@@ -225,13 +204,13 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
   });
 
   let sum = 0;
-  healthObj.forEach(([key, value]) => {
+  healthObjEntries.forEach(([key, value]) => {
     if (key != "avgHealth") {
       sum += value;
     }
   });
 
-  this.healthInfo.avgHealth = (sum / healthObj.length).toFixed(1);
+  this.healthInfo.avgHealth = (sum / healthObjEntries.length).toFixed(1);
 
   return this.save();
 };

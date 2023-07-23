@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userHelper = exports.commonHelpers = void 0;
+exports.userHealth = exports.commonHelpers = void 0;
 const commonHelpers = class Common {
     static extractObjectKeys(value) {
         return Object.keys(value);
@@ -13,42 +13,45 @@ const commonHelpers = class Common {
     }
 };
 exports.commonHelpers = commonHelpers;
-const userHelper = class UserHelper {
-    static calculateBloodPressure(noSmokingDays) {
-        return (noSmokingDays * 1.5).toFixed(1);
+const userHealth = class UserHealth {
+    constructor(noSmokingDays) {
+        this.noSmokingDays = noSmokingDays;
     }
-    static calculateCOinBloodDecreases(noSmokingDays) {
-        return (noSmokingDays * 1.3).toFixed(1);
+    calcBloodPressure() {
+        return (this.noSmokingDays * 1.5).toFixed(1);
     }
-    static calculateHeartRhythm(noSmokingDays) {
-        return (noSmokingDays * 1.4).toFixed(1);
+    calcCOinBloodDecreases() {
+        return (this.noSmokingDays * 1.3).toFixed(1);
     }
-    static calculatephysicalStrength(noSmokingDays) {
-        return (noSmokingDays * 1.2).toFixed(1);
+    calcHeartRhythm() {
+        return (this.noSmokingDays * 1.4).toFixed(1);
     }
-    static calculateLungCapacity(noSmokingDays) {
-        return (noSmokingDays * 0.5).toFixed(1);
+    calcphysicalStr() {
+        return (this.noSmokingDays * 1.2).toFixed(1);
     }
-    static calculateIrritatingCough(noSmokingDays) {
-        return (noSmokingDays * 0.4).toFixed(1);
+    calcLungCapacity() {
+        return (this.noSmokingDays * 0.5).toFixed(1);
     }
-    static calculateStressTolerance(noSmokingDays) {
-        return (noSmokingDays * 0.4).toFixed(1);
+    calcIrritatingCough() {
+        return (this.noSmokingDays * 0.4).toFixed(1);
     }
-    static calculateRiskofheartAttack(noSmokingDays) {
-        return (noSmokingDays * 0.3).toFixed(1);
+    calcStressTolerance() {
+        return (this.noSmokingDays * 0.4).toFixed(1);
     }
-    static calculateRiskofKidneyCancer(noSmokingDays) {
-        return (noSmokingDays * 0.3).toFixed(1);
+    calcRiskofheartAttack() {
+        return (this.noSmokingDays * 0.3).toFixed(1);
     }
-    static calculateRiskofThroatCancer(noSmokingDays) {
-        return (noSmokingDays * 0.3).toFixed(1);
+    calcRiskofKidneyCancer() {
+        return (this.noSmokingDays * 0.3).toFixed(1);
     }
-    static calculateRiskofLungeCancer(noSmokingDays) {
-        return (noSmokingDays * 0.3).toFixed(1);
+    calcRiskofThroatCancer() {
+        return (this.noSmokingDays * 0.3).toFixed(1);
     }
-    static calculateRiskofStroke(noSmokingDays) {
-        return (noSmokingDays * 0.3).toFixed(1);
+    calcRiskofLungeCancer() {
+        return (this.noSmokingDays * 0.3).toFixed(1);
+    }
+    calcRiskofStroke() {
+        return (this.noSmokingDays * 0.3).toFixed(1);
     }
 };
-exports.userHelper = userHelper;
+exports.userHealth = userHealth;
