@@ -18,7 +18,7 @@ app.use((0, morgan_1.default)('combined'));
 (0, initPassport_1.initPassport)(app);
 app.use(express_1.default.json());
 app.use("/", rootRoutes_1.default);
-app.use((error, _req, res, next) => {
+app.use((error, req, res, next) => {
     console.log("Middleware error", error);
     const status = error.statusCode || 500;
     const message = error.message;

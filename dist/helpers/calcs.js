@@ -23,7 +23,7 @@ const cig10YearCost = (req) => {
         10);
 };
 const cigAvoidedCost = (req, avoided) => {
-    return (req.packCigarettesPrice / req.cigarettesInPack) * avoided;
+    return (req.packCigarettesPrice / req.cigarettesInPack) * +avoided;
 };
 exports.calculations = {
     cigDailyCosts,

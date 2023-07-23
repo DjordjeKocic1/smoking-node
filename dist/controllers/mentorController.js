@@ -26,7 +26,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let mentors = yield mentor_1.default.find();
+        let mentors = (yield mentor_1.default.find());
         let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
             mentor.mentorId == req.params.id);
         if (arr.length == 0) {
@@ -91,7 +91,7 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
-            throw new errorHandler_1.http500Error();
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentorUpdate = (yield mentor_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
@@ -117,7 +117,7 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
-            throw new errorHandler_1.http500Error();
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentorDelete = (yield mentor_1.default.findOneAndDelete({
             _id: req.params.id,

@@ -37,9 +37,9 @@ const getAchievemnts = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
-            throw new errorHandler_1.http500Error();
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let achievements = yield achievement_1.default.find();
+        let achievements = (yield achievement_1.default.find());
         let user = (yield user_1.default.findOne({ _id: req.params.id }));
         let newAch = achievements.map((achs) => {
             switch (true) {

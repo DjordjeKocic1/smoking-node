@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const helperClass_1 = require("../helpers/helperClass");
 const calcs_1 = require("../helpers/calcs");
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
@@ -164,34 +165,33 @@ userShema.methods.calculateHealth = function (user) {
         !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
             ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
             : 0;
-    this.healthInfo.bloodPressure = (this.smokingInfo.noSmokingDays * 1.5).toFixed(1);
-    this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(1);
-    this.healthInfo.COinBloodDecreases = (this.smokingInfo.noSmokingDays * 1.3).toFixed(1);
-    this.healthInfo.physicalAndBodilyStrength = (this.smokingInfo.noSmokingDays * 1.2).toFixed(1);
-    this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(1);
-    this.healthInfo.irritatingCough = (this.smokingInfo.noSmokingDays * 0.4).toFixed(1);
-    this.healthInfo.stressTolerance = (this.smokingInfo.noSmokingDays * 0.4).toFixed(1);
-    this.healthInfo.riskofheartAttack = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    this.healthInfo.riskofKidneyCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    this.healthInfo.riskofThroatCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    this.healthInfo.riskofLungeCancer = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(1);
-    Object.keys(this.healthInfo).forEach((values) => {
-        if (this.healthInfo[values] > 100) {
-            this.healthInfo[values] = 100;
+    this.healthInfo.bloodPressure = helperClass_1.userHelper.calculateBloodPressure(this.smokingInfo.noSmokingDays);
+    this.healthInfo.heartRhythm = helperClass_1.userHelper.calculateHeartRhythm(this.smokingInfo.noSmokingDays);
+    this.healthInfo.COinBloodDecreases = helperClass_1.userHelper.calculateCOinBloodDecreases(this.smokingInfo.noSmokingDays);
+    this.healthInfo.physicalAndBodilyStrength =
+        helperClass_1.userHelper.calculatephysicalStrength(this.smokingInfo.noSmokingDays);
+    this.healthInfo.lungCapacity = helperClass_1.userHelper.calculateLungCapacity(this.smokingInfo.noSmokingDays);
+    this.healthInfo.irritatingCough = helperClass_1.userHelper.calculateIrritatingCough(this.smokingInfo.noSmokingDays);
+    this.healthInfo.stressTolerance = helperClass_1.userHelper.calculateStressTolerance(this.smokingInfo.noSmokingDays);
+    this.healthInfo.riskofheartAttack = helperClass_1.userHelper.calculateRiskofheartAttack(this.smokingInfo.noSmokingDays);
+    this.healthInfo.riskofKidneyCancer = helperClass_1.userHelper.calculateRiskofKidneyCancer(this.smokingInfo.noSmokingDays);
+    this.healthInfo.riskofThroatCancer = helperClass_1.userHelper.calculateRiskofThroatCancer(this.smokingInfo.noSmokingDays);
+    this.healthInfo.riskofLungeCancer = helperClass_1.userHelper.calculateRiskofLungeCancer(this.smokingInfo.noSmokingDays);
+    this.healthInfo.riskofStroke = helperClass_1.userHelper.calculateRiskofStroke(this.smokingInfo.noSmokingDays);
+    const healthObjKeys = helperClass_1.commonHelpers.extractObjectKeys(this.healthInfo);
+    const healthObj = helperClass_1.commonHelpers.extractObjectEntries(this.healthInfo);
+    healthObjKeys.forEach((value) => {
+        if (this.healthInfo[value] > 100) {
+            this.healthInfo[value] = 100;
         }
     });
-    this.healthInfo.avgHealth = ((this.healthInfo.bloodPressure +
-        this.healthInfo.heartRhythm +
-        this.healthInfo.COinBloodDecreases +
-        this.healthInfo.lungCapacity +
-        this.healthInfo.physicalAndBodilyStrength +
-        this.healthInfo.riskofheartAttack +
-        this.healthInfo.stressTolerance +
-        this.healthInfo.riskofLungeCancer +
-        this.healthInfo.riskofThroatCancer +
-        this.healthInfo.riskofStroke) /
-        10).toFixed(1);
+    let sum = 0;
+    healthObj.forEach(([key, value]) => {
+        if (key != "avgHealth") {
+            sum += value;
+        }
+    });
+    this.healthInfo.avgHealth = (sum / healthObj.length).toFixed(1);
     return this.save();
 };
 exports.default = mongoose_1.default.model("User", userShema);

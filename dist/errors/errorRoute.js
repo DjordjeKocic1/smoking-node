@@ -10,7 +10,7 @@ const user_1 = __importDefault(require("../model/user"));
 //common errors
 const checkIdParams = () => (0, express_validator_1.param)("id").custom((value) => {
     if (value.length !== 24) {
-        return Promise.reject("Param Id is not valid");
+        return Promise.reject("ID is not valid");
     }
     else {
         return Promise.resolve();
@@ -19,7 +19,7 @@ const checkIdParams = () => (0, express_validator_1.param)("id").custom((value) 
 exports.checkIdParams = checkIdParams;
 const checkUserExist = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
     if (!req.body.email) {
-        return Promise.reject("User doesn't exist.Please try again later.");
+        return Promise.reject("Email is required");
     }
     return user_1.default.findOne({ email: value }).then((user) => {
         if (!user) {
@@ -29,11 +29,11 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
 });
 exports.checkUserExist = checkUserExist;
 const checkAlreadyMentored = () => (0, express_validator_1.body)("user").custom((value) => {
-    if (!value.email) {
-        return Promise.reject("Email required.Please try again later.");
-    }
     if (!value) {
         return Promise.reject("User doesn't exist.Please try again later.");
+    }
+    if (!value.email) {
+        return Promise.reject("Email required.Please try again later.");
     }
     return mentor_1.default.findOne({ mentoringUserId: value._id }).then((user) => {
         if (user) {

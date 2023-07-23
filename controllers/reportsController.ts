@@ -4,7 +4,7 @@ import { IUser } from "../types/types";
 import User from "../model/user";
 
 const getAllVerifyUsers = (req: Request, res: Response, next: NextFunction) => {
-  User.find({ userVerified: true }).then((user: IUser[]) => {
+  User.find({ userVerified: true }).then((user) => {
     res.status(200).json({ verifyUsers: user });
   });
 };
@@ -17,9 +17,9 @@ const getAllUsersByCategorie = (
   let categorieName = req.params.name;
   let arr: any = [];
   User.find({ userVerified: true })
-    .then((user: IUser[]) => {
-      user.forEach((u: IUser) => {
-        u.categories?.map((cat: any) => {
+    .then((user) => {
+      user.forEach((u) => {
+        u.categories?.map((cat) => {
           if (cat.name == categorieName) {
             arr.push({
               email: u.email,

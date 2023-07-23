@@ -1,11 +1,11 @@
-import { ICostsPayload, IUser } from "../types/types";
-import { NextFunction, Request, Response } from "express";
+import { IConsumationPayload, IParams, IUser } from "../types/types";
 import { http422Error, http500Error } from "../errors/errorHandler";
 
+import { RequestHandler } from "express";
 import User from "../model/user";
 import { validationResult } from "express-validator";
 
-const getUsers = async (req: Request, res: Response, next: NextFunction) => {
+const getUsers: RequestHandler = async (req, res, next) => {
   try {
     let users = await User.find();
     res.status(200).json({ users });
@@ -14,11 +14,11 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getUserHealth = async (
-  req: Request<{ id: string }, {}, { notificationToken: string }>,
-  res: Response,
-  next: NextFunction
-) => {
+const getUserHealth: RequestHandler<
+  IParams,
+  {},
+  { notificationToken: string }
+> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -34,7 +34,7 @@ const getUserHealth = async (
       let userUpdate = (await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       })) as IUser;
-     return res.status(201).json({
+      return res.status(201).json({
         user: {
           ...healthCalc.toObject(),
           notificationToken: userUpdate.notificationToken,
@@ -48,11 +48,7 @@ const getUserHealth = async (
   }
 };
 
-const createUser = async (
-  req: Request<{}, {}, IUser>,
-  res: Response,
-  next: NextFunction
-) => {
+const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -65,26 +61,23 @@ const createUser = async (
       address: req.body.address,
       city: req.body.city,
     });
-    let users: IUser[] = await User.find();
-    let existingUser = users.find(
-      (user: IUser) => user.email == req.body.email
-    );
+
+    let users = await User.find();
+
+    let existingUser = users.find((user) => user.email == req.body.email);
+
     if (!!existingUser) {
       return res.status(201).json({ user: existingUser });
     }
 
-    let userCreate: IUser = await user.save();
-    res.status(201).json({ userCreate });
+    let userCreate = await user.save();
+    res.status(201).json({ user: userCreate });
   } catch (error) {
     next(error);
   }
 };
 
-const updateUser = async (
-  req: Request<{ id: string }, {}, IUser>,
-  res: Response,
-  next: NextFunction
-) => {
+const updateUser: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -100,11 +93,11 @@ const updateUser = async (
   }
 };
 
-const updateUserCosts = async (
-  req: Request<{ id: string }, {}, ICostsPayload>,
-  res: Response,
-  next: NextFunction
-) => {
+const updateUserCosts: RequestHandler<
+  IParams,
+  {},
+  IConsumationPayload
+> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

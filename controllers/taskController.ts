@@ -1,25 +1,21 @@
-import { INotificaion, ITask, ITaskPayload, IUser } from "../types/types";
-import { NextFunction, Request, Response } from "express";
-import { http422Error, http500Error } from "../errors/errorHandler";
+import { IParams, ITask, ITaskPayload, IUser } from "../types/types";
 
 import Notification from "../model/notification";
+import { RequestHandler } from "express";
 import Task from "../model/task";
 import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
+import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
-const getTasks = async (
-  req: Request<{ id: string }>,
-  res: Response<{ success?: string; error?: string; task?: any }>,
-  next: NextFunction
-) => {
+const getTasks: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let tasks: ITask[] = await Task.find();
+    let tasks = (await Task.find()) as ITask[];
 
     let arr = tasks.filter((task: ITask) => task.userId == req.params.id);
 
@@ -33,10 +29,10 @@ const getTasks = async (
   }
 };
 
-const createTask = async (
-  req: Request<{}, {}, ITaskPayload>,
-  res: Response<{ success?: string; error?: string; task?: ITask }>,
-  next: NextFunction
+const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
@@ -52,7 +48,7 @@ const createTask = async (
       mentorId: req.body.mentorId,
     });
 
-    let taskCreate: ITask = await task.save();
+    let taskCreate = await task.save();
 
     const notification = new Notification({
       isTask: true,
@@ -61,7 +57,7 @@ const createTask = async (
       userId: taskCreate.userId,
     });
 
-    let notificaitonCreate: INotificaion = await notification.save();
+    let notificaitonCreate = await notification.save();
 
     let userFind = (await User.findOne({
       _id: notificaitonCreate.userId,
@@ -83,17 +79,16 @@ const createTask = async (
   }
 };
 
-const updateTask = async (
-  req: Request<{ id: string }, {}, ITaskPayload>,
-  res: Response<{ success?: string; error?: string; task?: ITask }>,
-  next: NextFunction
+const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
-
     let taskUpdate = (await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     })) as ITask;
@@ -110,11 +105,7 @@ const updateTask = async (
   }
 };
 
-const deleteTask = async (
-  req: Request<{ id: string }, {}, {}>,
-  res: Response<{ success: any }>,
-  next: NextFunction
-) => {
+const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

@@ -66,7 +66,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             return res.status(201).json({ user: existingUser });
         }
         let userCreate = yield user.save();
-        res.status(201).json({ userCreate });
+        res.status(201).json({ user: userCreate });
     }
     catch (error) {
         next(error);

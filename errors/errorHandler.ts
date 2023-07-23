@@ -21,15 +21,15 @@ export const baseError = class BaseError extends Error {
   }
 };
 
-export const http422Error = class HTTP400Error extends baseError {
-  constructor(message: string) {
-    super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, message);
-  }
-};
-
 export const http404Error = class HTTP500Error extends baseError {
   constructor() {
     super("PAGE NOT FOUND", HttpStatusCode.NOT_FOUND, "Page not found.");
+  }
+};
+
+export const http422Error = class HTTP400Error extends baseError {
+  constructor(message: string) {
+    super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, message);
   }
 };
 

@@ -1,9 +1,9 @@
-import { IAchievement, IUser } from "../types/types";
-import { NextFunction, Request, Response } from "express";
+import { IAchievement, IParams, IUser } from "../types/types";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import Achievement from "../model/achievement";
 import User from "../model/user";
-import { http500Error } from "../errors/errorHandler";
+import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
 const createAchievement = async (
@@ -26,22 +26,18 @@ const createAchievement = async (
   }
 };
 
-const getAchievemnts = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAchievemnts: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new http500Error();
+      throw new http422Error(errors.array()[0].msg);
     }
 
-    let achievements: IAchievement[] = await Achievement.find();
+    let achievements = (await Achievement.find()) as IAchievement[];
 
     let user = (await User.findOne({ _id: req.params.id })) as IUser;
 
-    let newAch = achievements.map((achs: any) => {
+    let newAch = achievements.map((achs) => {
       switch (true) {
         case user?.consumptionInfo.cigarettesAvoided >= achs.tag &&
           achs.categorie == "cigarettesAvoided":
@@ -67,7 +63,7 @@ const getAchievemnts = async (
       user.achievements = newAch;
       await user.save();
       res.status(200).json({
-        achievements: newAch.sort((a: any, b: any) => b.holding - a.holding),
+        achievements: newAch.sort((a, b) => b.holding - a.holding),
       });
     }
   } catch (error) {

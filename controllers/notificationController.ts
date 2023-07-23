@@ -1,15 +1,15 @@
-import { INotificaion, IUser } from "../types/types";
-import { NextFunction, Request, Response } from "express";
-import { http422Error, http500Error } from "../errors/errorHandler";
+import { INotificaion, IParams, IUser } from "../types/types";
 
 import Notification from "../model/notification";
+import { RequestHandler } from "express";
 import User from "../model/user";
+import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
-const getNotificationsByUserID = async (
-  req: Request<{ id: string }, {}, INotificaion>,
-  res: Response,
-  next: NextFunction
+const getNotificationsByUserID: RequestHandler<IParams> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
@@ -31,10 +31,10 @@ const getNotificationsByUserID = async (
   }
 };
 
-const createNotification = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const createNotification: RequestHandler<{}, {}, INotificaion> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
@@ -56,17 +56,17 @@ const createNotification = async (
       userId: user?._id,
     });
 
-    let notificationCreate: INotificaion = await notification.save();
+    let notificationCreate = await notification.save();
 
     res.status(201).json({ notification: notificationCreate });
   } catch (error) {
     next(error);
   }
 };
-const updateNotification = async (
-  req: Request<{ id: string }, {}, INotificaion>,
-  res: Response,
-  next: NextFunction
+const updateNotification: RequestHandler<IParams, {}, INotificaion> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
@@ -87,11 +87,7 @@ const updateNotification = async (
   }
 };
 
-const deleteNotification = async (
-  req: Request<{ id: string }, {}, {}>,
-  res: Response<{ success: any }>,
-  next: NextFunction
-) => {
+const deleteNotification: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 

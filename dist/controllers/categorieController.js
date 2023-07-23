@@ -24,10 +24,10 @@ const getCategories = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 const createCategories = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const categorie = new categories_1.default({
-        name: req.body.name,
-    });
     try {
+        const categorie = new categories_1.default({
+            name: req.body.name,
+        });
         let categorieCreate = yield categorie.save();
         res.status(201).json({ categorie: categorieCreate });
     }

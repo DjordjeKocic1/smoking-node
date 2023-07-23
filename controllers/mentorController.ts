@@ -1,5 +1,5 @@
-import { IMentor, IMentorPayload, IUser } from "../types/types";
-import { NextFunction, Request, Response } from "express";
+import { IMentor, IMentorPayload, IParams, IUser } from "../types/types";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { http422Error, http500Error } from "../errors/errorHandler";
 
 import Mentor from "../model/mentor";
@@ -9,11 +9,7 @@ import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { validationResult } from "express-validator";
 
-const getMentor = async (
-  req: Request<{ id: string }>,
-  res: Response<{ error?: string; mentor?: any }>,
-  next: NextFunction
-) => {
+const getMentor: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -21,9 +17,9 @@ const getMentor = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let mentors: IMentor[] = await Mentor.find();
+    let mentors = (await Mentor.find()) as IMentor[];
 
-    let arr: any = mentors.filter(
+    let arr = mentors.filter(
       (mentor: IMentor) =>
         mentor.mentoringUser[0]._id == req.params.id ||
         mentor.mentorId == req.params.id
@@ -41,7 +37,7 @@ const getMentor = async (
       throw new http422Error("User doesn't exist");
     }
 
-    let mentorTrans = arr.map((mentor: IMentor[]) => {
+    let mentorTrans = arr.map((mentor) => {
       return {
         ...mentor,
         mentoringUser: user,
@@ -59,10 +55,10 @@ const getMentor = async (
   }
 };
 
-const createMentor = async (
-  req: Request<{}, {}, IMentorPayload>,
-  res: Response<{ error?: string; mentor?: IMentor }>,
-  next: NextFunction
+const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
+  req,
+  res,
+  next
 ) => {
   try {
     const errors = validationResult(req);
@@ -83,7 +79,7 @@ const createMentor = async (
       mentoringUser: user,
     });
 
-    let mentorCreate: IMentor = await mentor.save();
+    let mentorCreate = await mentor.save();
 
     if (!userMentor.notificationToken) {
       return res.status(201).json({ mentor: mentorCreate });
@@ -111,14 +107,14 @@ const createMentor = async (
 };
 
 const updateMentor = async (
-  req: Request<{ id: string }, {}, IMentorPayload>,
+  req: Request<IParams, {}, IMentorPayload>,
   res: Response<{ mentor: IMentor }>,
   next: NextFunction
 ) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new http500Error();
+      throw new http422Error(errors.array()[0].msg);
     }
 
     let mentorUpdate = (await Mentor.findByIdAndUpdate(
@@ -156,7 +152,7 @@ const deleteMentor = async (
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new http500Error();
+      throw new http422Error(errors.array()[0].msg);
     }
 
     let mentorDelete = (await Mentor.findOneAndDelete({

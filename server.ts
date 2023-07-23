@@ -26,7 +26,7 @@ app.use("/", router);
 app.use(
   (
     error: ErrorMsg,
-    _req: Request,
+    req: Request,
     res: Response<{ error: string }>,
     next: NextFunction
   ) => {

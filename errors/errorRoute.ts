@@ -7,7 +7,7 @@ import User from "../model/user";
 export const checkIdParams = () =>
   param("id").custom((value) => {
     if (value.length !== 24) {
-      return Promise.reject("Param Id is not valid");
+      return Promise.reject("ID is not valid");
     } else {
       return Promise.resolve();
     }
@@ -16,7 +16,7 @@ export const checkIdParams = () =>
 export const checkUserExist = () =>
   body("email").custom((value, { req }) => {
     if (!req.body.email) {
-      return Promise.reject("User doesn't exist.Please try again later.");
+      return Promise.reject("Email is required");
     }
     return User.findOne({ email: value }).then((user) => {
       if (!user) {
@@ -27,11 +27,11 @@ export const checkUserExist = () =>
 
 export const checkAlreadyMentored = () =>
   body("user").custom((value) => {
-    if (!value.email) {
-      return Promise.reject("Email required.Please try again later.");
-    }
     if (!value) {
       return Promise.reject("User doesn't exist.Please try again later.");
+    }
+    if (!value.email) {
+      return Promise.reject("Email required.Please try again later.");
     }
     return Mentor.findOne({ mentoringUserId: value._id }).then((user) => {
       if (user) {

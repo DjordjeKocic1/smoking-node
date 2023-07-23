@@ -1,12 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import Categorie from "../model/categories";
+import { ICategorie } from "../types/types";
 
-const getCategories = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getCategories: RequestHandler = async (req, res, next) => {
   try {
     let categories = await Categorie.find();
     res.status(200).json({ categories });
@@ -15,15 +12,11 @@ const getCategories = async (
   }
 };
 
-const createCategories = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const categorie = new Categorie({
-    name: req.body.name,
-  });
+const createCategories: RequestHandler = async (req, res, next) => {
   try {
+    const categorie = new Categorie({
+      name: req.body.name,
+    });
     let categorieCreate = await categorie.save();
     res.status(201).json({ categorie: categorieCreate });
   } catch (error) {

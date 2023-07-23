@@ -33,8 +33,8 @@ const cig10YearCost = (req: IConsumptionInfo): number => {
   );
 };
 
-const cigAvoidedCost = (req: IConsumptionInfo, avoided: any): number => {
-  return (req.packCigarettesPrice / req.cigarettesInPack) * avoided;
+const cigAvoidedCost = (req: IConsumptionInfo, avoided: number): number => {
+  return (req.packCigarettesPrice / req.cigarettesInPack) * +avoided;
 };
 
 export const calculations = {

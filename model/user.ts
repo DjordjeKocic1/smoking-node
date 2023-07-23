@@ -1,5 +1,6 @@
-import { IHealthInfo, IUser } from "../types/types";
+import { commonHelpers, userHelper } from "../helpers/helperClass";
 
+import { IUser } from "../types/types";
 import { calculations } from "../helpers/calcs";
 import mongoose from "mongoose";
 
@@ -104,7 +105,7 @@ const userShema = new Schema(
   { timestamps: true }
 );
 
-userShema.methods.calculateCosts = function (req: IUser) {
+userShema.methods.calculateCosts = function (req: IUser): Promise<IUser> {
   if (req.savedInfo) {
     this.savedInfo.packCigarettesPrice = req.savedInfo.packCigarettesPrice;
     this.savedInfo.cigarettesInPack = req.savedInfo.cigarettesInPack;
@@ -164,7 +165,7 @@ userShema.methods.calculateCosts = function (req: IUser) {
   return this.save();
 };
 
-userShema.methods.calculateHealth = function (user: any) {
+userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
   const msDiff =
     new Date().getTime() -
     new Date(
@@ -178,64 +179,61 @@ userShema.methods.calculateHealth = function (user: any) {
       ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
       : 0;
 
-  this.healthInfo.bloodPressure = (
-    this.smokingInfo.noSmokingDays * 1.5
-  ).toFixed(1);
-  this.healthInfo.heartRhythm = (this.smokingInfo.noSmokingDays * 1.4).toFixed(
-    1
+  this.healthInfo.bloodPressure = userHelper.calculateBloodPressure(
+    this.smokingInfo.noSmokingDays
   );
-  this.healthInfo.COinBloodDecreases = (
-    this.smokingInfo.noSmokingDays * 1.3
-  ).toFixed(1);
-  this.healthInfo.physicalAndBodilyStrength = (
-    this.smokingInfo.noSmokingDays * 1.2
-  ).toFixed(1);
-  this.healthInfo.lungCapacity = (this.smokingInfo.noSmokingDays * 0.5).toFixed(
-    1
+  this.healthInfo.heartRhythm = userHelper.calculateHeartRhythm(
+    this.smokingInfo.noSmokingDays
   );
-  this.healthInfo.irritatingCough = (
-    this.smokingInfo.noSmokingDays * 0.4
-  ).toFixed(1);
-  this.healthInfo.stressTolerance = (
-    this.smokingInfo.noSmokingDays * 0.4
-  ).toFixed(1);
-  this.healthInfo.riskofheartAttack = (
-    this.smokingInfo.noSmokingDays * 0.3
-  ).toFixed(1);
-  this.healthInfo.riskofKidneyCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
-  ).toFixed(1);
-  this.healthInfo.riskofThroatCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
-  ).toFixed(1);
-  this.healthInfo.riskofLungeCancer = (
-    this.smokingInfo.noSmokingDays * 0.3
-  ).toFixed(1);
-  this.healthInfo.riskofStroke = (this.smokingInfo.noSmokingDays * 0.3).toFixed(
-    1
+  this.healthInfo.COinBloodDecreases = userHelper.calculateCOinBloodDecreases(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.physicalAndBodilyStrength =
+    userHelper.calculatephysicalStrength(this.smokingInfo.noSmokingDays);
+  this.healthInfo.lungCapacity = userHelper.calculateLungCapacity(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.irritatingCough = userHelper.calculateIrritatingCough(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.stressTolerance = userHelper.calculateStressTolerance(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.riskofheartAttack = userHelper.calculateRiskofheartAttack(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.riskofKidneyCancer = userHelper.calculateRiskofKidneyCancer(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.riskofThroatCancer = userHelper.calculateRiskofThroatCancer(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.riskofLungeCancer = userHelper.calculateRiskofLungeCancer(
+    this.smokingInfo.noSmokingDays
+  );
+  this.healthInfo.riskofStroke = userHelper.calculateRiskofStroke(
+    this.smokingInfo.noSmokingDays
   );
 
-  Object.keys(this.healthInfo).forEach((values: any) => {
-    if (this.healthInfo[values] > 100) {
-      this.healthInfo[values] = 100;
+  const healthObjKeys = commonHelpers.extractObjectKeys(this.healthInfo);
+  const healthObj = commonHelpers.extractObjectEntries(this.healthInfo);
+
+  healthObjKeys.forEach((value) => {
+    if (this.healthInfo[value] > 100) {
+      this.healthInfo[value] = 100;
     }
   });
 
-  this.healthInfo.avgHealth = (
-    (this.healthInfo.bloodPressure +
-      this.healthInfo.heartRhythm +
-      this.healthInfo.COinBloodDecreases +
-      this.healthInfo.lungCapacity +
-      this.healthInfo.physicalAndBodilyStrength +
-      this.healthInfo.riskofheartAttack +
-      this.healthInfo.stressTolerance +
-      this.healthInfo.riskofLungeCancer +
-      this.healthInfo.riskofThroatCancer +
-      this.healthInfo.riskofStroke) /
-    10
-  ).toFixed(1);
+  let sum = 0;
+  healthObj.forEach(([key, value]) => {
+    if (key != "avgHealth") {
+      sum += value;
+    }
+  });
+
+  this.healthInfo.avgHealth = (sum / healthObj.length).toFixed(1);
 
   return this.save();
 };
 
-export default mongoose.model<IUser>("User", userShema);
+export default mongoose.model("User", userShema);

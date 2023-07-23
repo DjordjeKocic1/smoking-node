@@ -1,17 +1,16 @@
-import { NextFunction, Request, Response } from "express";
-
+import { RequestHandler } from "express";
 import Stripe from "stripe";
 
 const { STRIPE_KEY, STRIPE_SECRET } = process.env;
 
-const keyGetStripe = (req: Request, res: Response, next: NextFunction) => {
+const keyGetStripe: RequestHandler = (req, res, next) => {
   return res.send(STRIPE_KEY);
 };
 
-const paymentSheet = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+const paymentSheet: RequestHandler<{}, {}, { email: string }> = async (
+  req,
+  res,
+  next
 ) => {
   const secret_key = STRIPE_SECRET;
 

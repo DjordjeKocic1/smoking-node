@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.taskController = void 0;
-const errorHandler_1 = require("../errors/errorHandler");
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
+const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
 const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -25,7 +25,7 @@ const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let tasks = yield task_1.default.find();
+        let tasks = (yield task_1.default.find());
         let arr = tasks.filter((task) => task.userId == req.params.id);
         if (arr.length == 0) {
             return res.status(200).json({ task: null });

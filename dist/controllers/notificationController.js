@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.notificationController = void 0;
-const errorHandler_1 = require("../errors/errorHandler");
 const notification_1 = __importDefault(require("../model/notification"));
 const user_1 = __importDefault(require("../model/user"));
+const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
 const getNotificationsByUserID = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

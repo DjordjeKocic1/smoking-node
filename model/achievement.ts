@@ -15,4 +15,4 @@ const achievementShema = new Schema({
   tag: Number,
 });
 
-export default mongoose.model<IAchievement>("Achievement", achievementShema);
+export default mongoose.model("Achievement", achievementShema);

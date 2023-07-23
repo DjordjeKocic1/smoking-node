@@ -2,12 +2,19 @@ export interface ErrorMsg {
   statusCode: number;
   message: string;
 }
-
 export interface IUserBasicInfo {
   address: string;
   city: string;
   country: string;
   flag: string;
+}
+
+export interface ICategorieUser {
+  name: string;
+  categorieId: string;
+}
+export interface ICategorie {
+  name: string;
 }
 
 export interface IHealthInfo {
@@ -45,26 +52,29 @@ export interface IConsumptionInfo {
   cigarettesAvoidedCost: number;
 }
 export interface IUser {
-  _id?: string;
+  _id: string;
   name: string;
   email: string;
   address: string;
   city: string;
   image: string;
-  userVerified?: boolean;
-  userBasicInfo?: IUserBasicInfo;
-  healthInfo?: IHealthInfo;
-  smokingInfo?: ISmokingInfo;
-  consumptionInfo?: IConsumptionInfo | any;
-  savedInfo?: IConsumptionInfo;
-  calculateHealth?: any;
-  calculateCosts?: any;
-  categories?: [];
+  userVerified: boolean;
+  userBasicInfo: IUserBasicInfo;
+  healthInfo: IHealthInfo;
+  smokingInfo: ISmokingInfo;
+  consumptionInfo: IConsumptionInfo;
+  savedInfo: IConsumptionInfo;
+  calculateHealth: (user: IUser) => Promise<IUser>;
+  calculateCosts: (user: IUser) => Promise<IUser>;
+  toObject: Function;
+  categories: ICategorie[];
   notificationToken: string;
-  tasks: any;
-  achievements: any;
-  gameScore: any;
-  save?: any;
+  tasks: ITaskUser[];
+  achievements: IAchievementUser[];
+  gameScore: number;
+  save: () => Promise<IUser>;
+  subscriber: boolean;
+  subscribeDate: string;
 }
 
 export interface IMentor {
@@ -75,9 +85,10 @@ export interface IMentor {
   mentorId: string;
   mentoringUserId: string;
   mentoringUser: IUser[];
+  _doc: any;
 }
 
-export interface INotificaion {
+export interface INotificaion extends IUser {
   isMentoring: boolean;
   isAchievement: boolean;
   isTask: boolean;
@@ -86,7 +97,7 @@ export interface INotificaion {
 }
 
 export interface ITask {
-  _id?: any;
+  _id: string;
   toDo: string;
   status: string;
   comment: string;
@@ -94,24 +105,32 @@ export interface ITask {
   mentorId: string;
 }
 
+export interface ITaskUser {
+  taskId: string;
+  name: string;
+}
+
+export interface IAchievementUser {
+  achievementId: string;
+  name: string;
+}
+
 export interface IAchievement {
-  _id: any;
+  _id: string;
   name: string;
   description: string;
   categorie: string;
   points: string;
   type: string;
   tag: number;
+  _doc: any;
 }
 
-export interface IConsumationPayload {
+export interface IConsumationPayload extends IUser {
   cigarettesDay: number;
   cigarettesInPack: number;
   packCigarettesPrice: number;
   cigarettesAvoided: number;
-}
-export interface ICostsPayload {
-  consumptionInfo: IConsumationPayload;
 }
 
 export interface IMentorPayload {
@@ -134,4 +153,13 @@ export interface INotificaionMessage {
   to: string;
   title: string;
   body: string;
+}
+
+export interface IParams {
+  id: string;
+}
+
+export interface IQuery {
+  PayerID: string;
+  paymentId: string;
 }

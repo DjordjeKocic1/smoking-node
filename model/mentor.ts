@@ -33,4 +33,4 @@ const mentorSchema = new Schema({
   ],
 });
 
-export default mongoose.model<IMentor>("Mentor", mentorSchema);
+export default mongoose.model("Mentor", mentorSchema);

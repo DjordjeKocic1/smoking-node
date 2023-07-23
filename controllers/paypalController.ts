@@ -1,7 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import paypal from "paypal-rest-sdk";
 import { http500Error } from "../errors/errorHandler";
+import { IQuery } from "../types/types";
 
 const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
 
@@ -11,7 +12,7 @@ paypal.configure({
   client_secret: <string>PAYPAL_SECRET,
 });
 
-const paypalPay = (req: Request, res: Response, next: NextFunction) => {
+const paypalPay: RequestHandler = (req, res, next) => {
   const create_payment_json = {
     intent: "sale",
     payer: {
@@ -56,10 +57,9 @@ const paypalPay = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const paypalSuccess = (req: Request, res: Response, next: NextFunction) => {
+const paypalSuccess: RequestHandler<{}, {}, {}, IQuery> = (req, res, next) => {
   const payerId = req.query.PayerID;
-  const paymentId = <string>req.query.paymentId;
-
+  const paymentId = req.query.paymentId;
   const execute_payment_json: any = {
     payer_id: payerId,
     transactions: [
@@ -84,7 +84,7 @@ const paypalSuccess = (req: Request, res: Response, next: NextFunction) => {
   );
 };
 
-const paypalCancel = (req: Request, res: Response, next: NextFunction) => {
+const paypalCancel: RequestHandler = (req, res, next) => {
   res.json({ payment: "cancel" });
 };
 

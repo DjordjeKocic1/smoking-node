@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const notificationSchema = new Schema({
   isMentoring: Boolean,
-  isTask:Boolean,
+  isTask: Boolean,
   isRead: Boolean,
   userId: {
     type: Schema.Types.ObjectId,
@@ -14,4 +14,4 @@ const notificationSchema = new Schema({
   },
 });
 
-export default mongoose.model<INotificaion>("Notification", notificationSchema);
+export default mongoose.model("Notification", notificationSchema);
