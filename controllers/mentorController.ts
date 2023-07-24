@@ -35,23 +35,8 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
       return res.status(200).json({ mentor: null });
     }
 
-    let user = (await User.find({
-      email: arr[0].mentoringUser[0].email,
-    })) as IUser[];
-
-    if (!user) {
-      throw new http422Error("User doesn't exist");
-    }
-
-    let mentorTrans = arr.map((mentor) => {
-      return {
-        ...mentor,
-        mentoringUser: user,
-      };
-    });
-
     res.status(200).json({
-      mentor: mentorTrans[0]._doc,
+      mentor: arr,
     });
   } catch (error) {
     next(error);

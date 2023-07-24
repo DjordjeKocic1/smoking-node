@@ -32,17 +32,8 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
-        let user = (yield user_1.default.find({
-            email: arr[0].mentoringUser[0].email,
-        }));
-        if (!user) {
-            throw new errorHandler_1.http422Error("User doesn't exist");
-        }
-        let mentorTrans = arr.map((mentor) => {
-            return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
-        });
         res.status(200).json({
-            mentor: mentorTrans[0]._doc,
+            mentor: arr,
         });
     }
     catch (error) {

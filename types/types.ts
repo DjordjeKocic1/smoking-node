@@ -95,6 +95,7 @@ export interface IMentor {
   mentoringUser: IMentoringUser[];
   save: () => Promise<IMentor>;
   _doc?: any;
+  toObject: Function;
 }
 
 export interface INotificaion extends IUser {
