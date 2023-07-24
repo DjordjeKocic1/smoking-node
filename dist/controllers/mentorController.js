@@ -32,7 +32,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
-        let user = (yield user_1.default.findOne({
+        let user = (yield user_1.default.find({
             email: arr[0].mentoringUser[0].email,
         }));
         if (!user) {
@@ -42,7 +42,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             return Object.assign(Object.assign({}, mentor), { mentoringUser: user });
         });
         res.status(200).json({
-            mentor: Object.assign(Object.assign({}, mentorTrans[0]._doc), { mentoringUser: [mentorTrans[0].mentoringUser] }),
+            mentor: mentorTrans[0]._doc,
         });
     }
     catch (error) {
@@ -57,6 +57,9 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         let user = (yield user_1.default.findOne({ _id: req.body.user._id }));
         let userMentor = (yield user_1.default.findOne({ email: req.body.email }));
+        let mentorExist = (yield mentor_1.default.findOne({
+            email: req.body.email,
+        }));
         const mentor = new mentor_1.default({
             name: req.body.name,
             email: req.body.email,
@@ -65,7 +68,23 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             mentoringUserId: user === null || user === void 0 ? void 0 : user._id,
             mentoringUser: user,
         });
-        let mentorCreate = yield mentor.save();
+        let userExistWithinMentor = mentorExist &&
+            mentorExist.mentoringUser.find((value) => value.email == user.email);
+        if (userExistWithinMentor) {
+            throw new errorHandler_1.http422Error(`You are already mentoring ${user.name}`);
+        }
+        let mentorCreate;
+        if (mentorExist) {
+            mentorExist.mentoringUser.push({
+                email: user.email,
+                userId: user._id,
+                name: user.name,
+            });
+            mentorCreate = yield mentorExist.save();
+        }
+        else {
+            mentorCreate = yield mentor.save();
+        }
         if (!userMentor.notificationToken) {
             return res.status(201).json({ mentor: mentorCreate });
         }

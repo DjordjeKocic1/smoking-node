@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 
+import { IUser } from "../types/types";
 import Mentor from "../model/mentor";
 import User from "../model/user";
 

@@ -1,3 +1,5 @@
+import { ObjectId, Types } from "mongoose";
+
 export interface ErrorMsg {
   statusCode: number;
   message: string;
@@ -52,7 +54,7 @@ export interface IConsumptionInfo {
   cigarettesAvoidedCost: number;
 }
 export interface IUser {
-  _id: string;
+  _id: any;
   name: string;
   email: string;
   address: string;
@@ -77,15 +79,22 @@ export interface IUser {
   subscribeDate: string;
 }
 
-export interface IMentor {
+export interface IMentoringUser {
   _id?: string;
+  userId: string;
+  email: string;
+  name: string;
+}
+export interface IMentor {
+  _id: any;
   name: string;
   email: string;
   accepted: boolean;
   mentorId: string;
   mentoringUserId: string;
-  mentoringUser: IUser[];
-  _doc: any;
+  mentoringUser: IMentoringUser[];
+  save: () => Promise<IMentor>;
+  _doc?: any;
 }
 
 export interface INotificaion extends IUser {

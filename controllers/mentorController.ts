@@ -1,4 +1,10 @@
-import { IMentor, IMentorPayload, IParams, IUser } from "../types/types";
+import {
+  IMentor,
+  IMentorPayload,
+  IMentoringUser,
+  IParams,
+  IUser,
+} from "../types/types";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { http422Error, http500Error } from "../errors/errorHandler";
 
@@ -29,9 +35,9 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
       return res.status(200).json({ mentor: null });
     }
 
-    let user = (await User.findOne({
+    let user = (await User.find({
       email: arr[0].mentoringUser[0].email,
-    })) as IUser;
+    })) as IUser[];
 
     if (!user) {
       throw new http422Error("User doesn't exist");
@@ -45,10 +51,7 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
     });
 
     res.status(200).json({
-      mentor: {
-        ...mentorTrans[0]._doc,
-        mentoringUser: [mentorTrans[0].mentoringUser],
-      },
+      mentor: mentorTrans[0]._doc,
     });
   } catch (error) {
     next(error);
@@ -70,6 +73,10 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
 
     let userMentor = (await User.findOne({ email: req.body.email })) as IUser;
 
+    let mentorExist = (await Mentor.findOne({
+      email: req.body.email,
+    })) as IMentor;
+
     const mentor = new Mentor({
       name: req.body.name,
       email: req.body.email,
@@ -79,7 +86,26 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       mentoringUser: user,
     });
 
-    let mentorCreate = await mentor.save();
+    let userExistWithinMentor =
+      mentorExist &&
+      mentorExist.mentoringUser.find((value) => value.email == user.email);
+
+    if (userExistWithinMentor) {
+      throw new http422Error(`You are already mentoring ${user.name}`);
+    }
+
+    let mentorCreate: IMentor;
+
+    if (mentorExist) {
+      mentorExist.mentoringUser.push({
+        email: user.email,
+        userId: user._id,
+        name: user.name,
+      });
+      mentorCreate = await mentorExist.save();
+    } else {
+      mentorCreate = await mentor.save();
+    }
 
     if (!userMentor.notificationToken) {
       return res.status(201).json({ mentor: mentorCreate });
