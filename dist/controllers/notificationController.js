@@ -82,9 +82,23 @@ const deleteNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
         next(error);
     }
 });
+const deleteAllNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        yield notification_1.default.deleteMany({ userId: req.params.id });
+        res.status(204).send({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.notificationController = {
     createNotification,
     updateNotification,
     getNotificationsByUserID,
     deleteNotification,
+    deleteAllNotification,
 };

@@ -102,9 +102,30 @@ const deleteNotification: RequestHandler<IParams> = async (req, res, next) => {
     next(error);
   }
 };
+
+const deleteAllNotification: RequestHandler<IParams> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+
+    await Notification.deleteMany({ userId: req.params.id });
+
+    res.status(204).send({ success: "ok" });
+  } catch (error) {
+    next(error);
+  }
+};
 export const notificationController = {
   createNotification,
   updateNotification,
   getNotificationsByUserID,
   deleteNotification,
+  deleteAllNotification,
 };

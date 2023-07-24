@@ -115,6 +115,12 @@ router.delete(
   notificationController.deleteNotification
 );
 
+router.delete(
+  "/delete-all-notifcation/:id",
+  [checkIdParams(), checkModelID(Notification)],
+  notificationController.deleteAllNotification
+);
+
 // Categories
 router.get("/categories", categorieController.getCategories);
 router.post("/categories", categorieController.createCategories);

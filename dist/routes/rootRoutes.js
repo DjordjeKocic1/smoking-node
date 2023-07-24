@@ -48,6 +48,7 @@ router.get("/get-notification/:id", (0, errorRoute_1.checkIdParams)(), notificat
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);
 router.put("/update-notification/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.updateNotification);
 router.delete("/delete-notifcation/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteNotification);
+router.delete("/delete-all-notifcation/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteAllNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);
