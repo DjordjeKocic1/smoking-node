@@ -20,7 +20,9 @@ export const checkUserExist = () =>
     }
     return User.findOne({ email: value }).then((user) => {
       if (!user) {
-        return Promise.reject("User with that email doesn't exist");
+        return Promise.reject(
+          "User with that email doesn't exist in our database. Share the app with him on a home screen"
+        );
       } else {
         return Promise.resolve();
       }
