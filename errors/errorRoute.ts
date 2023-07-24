@@ -33,6 +33,7 @@ export const checkAlreadyMentored = () =>
     if (!value.email) {
       return Promise.reject("Email required.Please try again later.");
     }
+    return Promise.resolve();
   });
 
 export const checkMentoringYourSelf = () =>
@@ -42,9 +43,8 @@ export const checkMentoringYourSelf = () =>
     }
     if (req.body.user.email == value) {
       return Promise.reject("Can't mentor your self");
-    } else {
-      return Promise.resolve();
     }
+    return Promise.resolve();
   });
 
 // Tasks error handling

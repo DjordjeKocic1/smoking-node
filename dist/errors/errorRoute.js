@@ -35,6 +35,7 @@ const checkAlreadyMentored = () => (0, express_validator_1.body)("user").custom(
     if (!value.email) {
         return Promise.reject("Email required.Please try again later.");
     }
+    return Promise.resolve();
 });
 exports.checkAlreadyMentored = checkAlreadyMentored;
 const checkMentoringYourSelf = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
@@ -44,9 +45,7 @@ const checkMentoringYourSelf = () => (0, express_validator_1.body)("email").cust
     if (req.body.user.email == value) {
         return Promise.reject("Can't mentor your self");
     }
-    else {
-        return Promise.resolve();
-    }
+    return Promise.resolve();
 });
 exports.checkMentoringYourSelf = checkMentoringYourSelf;
 // Tasks error handling
