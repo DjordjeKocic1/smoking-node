@@ -43,7 +43,7 @@ router.post(
 );
 router.post(
   "/create-user",
-  body("email").isEmail().withMessage("Email is invalid"),
+  body("email").isEmail().withMessage("Email is invalid").normalizeEmail(),
   userController.createUser
 );
 router.put(
