@@ -92,6 +92,9 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       mentorCreate = await mentor.save();
     }
 
+    user.mentors.push(mentorCreate);
+    await user.save();
+
     if (!userMentor.notificationToken) {
       return res.status(201).json({ mentor: mentorCreate });
     }

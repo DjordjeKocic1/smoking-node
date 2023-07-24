@@ -98,6 +98,16 @@ const userShema = new Schema({
             },
         },
     ],
+    mentors: [
+        {
+            name: String,
+            email: String,
+            mentorId: {
+                type: Schema.Types.ObjectId,
+                ref: "Mentor",
+            },
+        },
+    ],
     notificationToken: String,
     subscriber: Boolean,
     subscribeDate: String,

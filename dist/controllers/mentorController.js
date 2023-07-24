@@ -76,6 +76,8 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         else {
             mentorCreate = yield mentor.save();
         }
+        user.mentors.push(mentorCreate);
+        yield user.save();
         if (!userMentor.notificationToken) {
             return res.status(201).json({ mentor: mentorCreate });
         }

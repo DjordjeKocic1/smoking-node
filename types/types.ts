@@ -72,6 +72,7 @@ export interface IUser {
   categories: ICategorie[];
   notificationToken: string;
   tasks: ITaskUser[];
+  mentors: IMentor[];
   achievements: IAchievementUser[];
   gameScore: number;
   save: () => Promise<IUser>;
