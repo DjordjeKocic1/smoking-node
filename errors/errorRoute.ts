@@ -33,11 +33,6 @@ export const checkAlreadyMentored = () =>
     if (!value.email) {
       return Promise.reject("Email required.Please try again later.");
     }
-    return Mentor.findOne({ mentoringUserId: value._id }).then((user) => {
-      if (user) {
-        return Promise.reject("Already sent a mentor request");
-      }
-    });
   });
 
 export const checkMentoringYourSelf = () =>
