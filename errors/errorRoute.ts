@@ -21,6 +21,8 @@ export const checkUserExist = () =>
     return User.findOne({ email: value }).then((user) => {
       if (!user) {
         return Promise.reject("User with that email doesn't exist");
+      } else {
+        return Promise.resolve();
       }
     });
   });
@@ -53,6 +55,8 @@ export const checkUserIDExist = () =>
     return User.findOne({ _id: value }).then((user) => {
       if (!user) {
         return Promise.reject("Create Task User ID doesn't exist");
+      } else {
+        return Promise.resolve();
       }
     });
   });
@@ -62,6 +66,8 @@ export const checkMentorIDExist = () =>
     return Mentor.findOne({ _id: value }).then((user) => {
       if (!user) {
         return Promise.reject("Create Task Mentor ID doesn't exist");
+      } else {
+        return Promise.resolve();
       }
     });
   });
