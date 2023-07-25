@@ -33,7 +33,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             return res.status(200).json({ mentor: null });
         }
         res.status(200).json({
-            mentor: arr,
+            mentor: arr[0],
         });
     }
     catch (error) {
@@ -60,7 +60,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         let userExistWithinMentor = mentorExist &&
             mentorExist.mentoringUser.find((value) => value.email == user.email);
         if (userExistWithinMentor) {
-            throw new errorHandler_1.http422Error(`You are already mentoring ${user.name}`);
+            throw new errorHandler_1.http422Error(`You are already mentored by that user`);
         }
         let mentorCreate;
         if (mentorExist) {

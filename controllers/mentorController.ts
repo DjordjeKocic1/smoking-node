@@ -37,7 +37,7 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
     }
 
     res.status(200).json({
-      mentor: arr,
+      mentor: arr[0],
     });
   } catch (error) {
     next(error);
@@ -75,7 +75,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       mentorExist.mentoringUser.find((value) => value.email == user.email);
 
     if (userExistWithinMentor) {
-      throw new http422Error(`You are already mentoring ${user.name}`);
+      throw new http422Error(`You are already mentored by that user`);
     }
 
     let mentorCreate: IMentor;
