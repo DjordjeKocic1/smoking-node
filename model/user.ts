@@ -102,6 +102,10 @@ const userShema = new Schema(
       {
         name: String,
         email: String,
+        accepted: {
+          type: Boolean,
+          default: false,
+        },
         mentorId: {
           type: Schema.Types.ObjectId,
           ref: "Mentor",

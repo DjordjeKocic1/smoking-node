@@ -1,6 +1,7 @@
 import {
   IMentor,
   IMentorPayload,
+  IMentorUpdatePayload,
   IMentoringUser,
   IParams,
   IUser,
@@ -65,9 +66,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     const mentor = new Mentor({
       name: req.body.name,
       email: req.body.email,
-      accepted: false,
       mentorId: userMentor?._id,
-      mentoringUserId: user?._id,
       mentoringUser: user,
     });
 
@@ -89,6 +88,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       });
       mentorCreate = await mentorExist.save();
     } else {
+      mentor.mentoringUser[0].userId = user._id;
       mentorCreate = await mentor.save();
     }
 
@@ -121,8 +121,8 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
 };
 
 const updateMentor = async (
-  req: Request<IParams, {}, IMentorPayload>,
-  res: Response<{ mentor: IMentor }>,
+  req: Request<IParams, {}, IMentorUpdatePayload>,
+  res: Response,
   next: NextFunction
 ) => {
   try {
@@ -131,19 +131,50 @@ const updateMentor = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let mentorUpdate = (await Mentor.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
+    let mentorUpdate = (await Mentor.findOne({
+      _id: req.params.id,
+    })) as IMentor;
+
+    let arr = mentorUpdate.mentoringUser.map((v) => {
+      if (v.userId == req.body.user.userId) {
+        return {
+          ...v,
+          accepted: req.body.user.accepted,
+          name: req.body.name,
+        };
       }
-    )) as IMentor;
+      return {
+        ...v,
+      };
+    }) as IMentoringUser[];
 
-    let user = (await User.findOne({
-      _id: mentorUpdate.mentoringUserId,
-    })) as IUser;
+    mentorUpdate.mentoringUser = arr;
 
-    if (!user?.notificationToken || !req.body.accepted) {
+    await mentorUpdate.save();
+
+    let user = await User.findOne({
+      _id: req.body.user.userId,
+    });
+
+    if (!!user) {
+      let userArr = user.mentors.map((v) => {
+        if (v.mentorId?.toString() == mentorUpdate.mentorId.toString()) {
+          return {
+            ...v,
+            accepted: req.body.user.accepted,
+            name: req.body.name,
+          };
+        }
+        return {
+          ...v,
+        };
+      });
+
+      user.mentors = userArr;
+      await user.save();
+    }
+
+    if (!user?.notificationToken || !req.body.user.accepted) {
       return res.status(201).json({ mentor: mentorUpdate });
     }
 
@@ -152,6 +183,7 @@ const updateMentor = async (
       title: "Mentor",
       body: `Mentor (${mentorUpdate.email}) accepted your request ✅`,
     });
+
     res.status(201).json({ mentor: mentorUpdate });
   } catch (error) {
     next(error);

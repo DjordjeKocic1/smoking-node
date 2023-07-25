@@ -6,7 +6,6 @@ const Schema = mongoose.Schema;
 const mentorSchema = new Schema({
   name: String,
   email: String,
-  accepted: Boolean,
   mentorId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -15,6 +14,10 @@ const mentorSchema = new Schema({
   mentoringUser: [
     {
       name: String,
+      accepted: {
+        type: Boolean,
+        default: false,
+      },
       email: {
         type: String,
         req: true,

@@ -72,7 +72,7 @@ export interface IUser {
   categories: ICategorie[];
   notificationToken: string;
   tasks: ITaskUser[];
-  mentors: IMentor[];
+  mentors: IMentoringUser[];
   achievements: IAchievementUser[];
   gameScore: number;
   save: () => Promise<IUser>;
@@ -82,16 +82,17 @@ export interface IUser {
 
 export interface IMentoringUser {
   _id?: string;
-  userId: string;
+  userId?: string;
+  mentorId?: string;
   email: string;
   name: string;
+  accepted?: boolean;
 }
 export interface IMentor {
   _id: any;
   name: string;
   email: string;
-  accepted: boolean;
-  mentorId: string;
+  mentorId: any;
   mentoringUserId: string;
   mentoringUser: IMentoringUser[];
   save: () => Promise<IMentor>;
@@ -142,6 +143,15 @@ export interface IConsumationPayload extends IUser {
   cigarettesInPack: number;
   packCigarettesPrice: number;
   cigarettesAvoided: number;
+}
+
+export interface IMentorUpdatePayload {
+  name: string;
+  user: {
+    userId: string;
+    accepted: boolean;
+    name: string;
+  };
 }
 
 export interface IMentorPayload {

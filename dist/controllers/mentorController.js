@@ -54,9 +54,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const mentor = new mentor_1.default({
             name: req.body.name,
             email: req.body.email,
-            accepted: false,
             mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
-            mentoringUserId: user === null || user === void 0 ? void 0 : user._id,
             mentoringUser: user,
         });
         let userExistWithinMentor = mentorExist &&
@@ -74,6 +72,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             mentorCreate = yield mentorExist.save();
         }
         else {
+            mentor.mentoringUser[0].userId = user._id;
             mentorCreate = yield mentor.save();
         }
         user.mentors.push(mentorCreate);
@@ -105,13 +104,32 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let mentorUpdate = (yield mentor_1.default.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
+        let mentorUpdate = (yield mentor_1.default.findOne({
+            _id: req.params.id,
         }));
-        let user = (yield user_1.default.findOne({
-            _id: mentorUpdate.mentoringUserId,
-        }));
-        if (!(user === null || user === void 0 ? void 0 : user.notificationToken) || !req.body.accepted) {
+        let arr = mentorUpdate.mentoringUser.map((v) => {
+            if (v.userId == req.body.user.userId) {
+                return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
+            }
+            return Object.assign({}, v);
+        });
+        mentorUpdate.mentoringUser = arr;
+        yield mentorUpdate.save();
+        let user = yield user_1.default.findOne({
+            _id: req.body.user.userId,
+        });
+        if (!!user) {
+            let userArr = user.mentors.map((v) => {
+                var _a;
+                if (((_a = v.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) == mentorUpdate.mentorId.toString()) {
+                    return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
+                }
+                return Object.assign({}, v);
+            });
+            user.mentors = userArr;
+            yield user.save();
+        }
+        if (!(user === null || user === void 0 ? void 0 : user.notificationToken) || !req.body.user.accepted) {
             return res.status(201).json({ mentor: mentorUpdate });
         }
         yield notifications_1.expoNotification.sendPushNotification({
