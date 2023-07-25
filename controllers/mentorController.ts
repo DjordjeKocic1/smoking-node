@@ -7,13 +7,13 @@ import {
   IUser,
 } from "../types/types";
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import { http422Error, http500Error } from "../errors/errorHandler";
 
 import Mentor from "../model/mentor";
 import Notification from "../model/notification";
 import Task from "../model/task";
 import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
+import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
 const getMentor: RequestHandler<IParams> = async (req, res, next) => {
