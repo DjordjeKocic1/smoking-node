@@ -64,7 +64,7 @@ const checkUserIDExist = () => (0, express_validator_1.body)("userId").custom((v
 });
 exports.checkUserIDExist = checkUserIDExist;
 const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custom((value) => {
-    return mentor_1.default.findOne({ _id: value }).then((user) => {
+    return mentor_1.default.findOne({ mentorId: value }).then((user) => {
         if (!user) {
             return Promise.reject("Create Task Mentor ID doesn't exist");
         }

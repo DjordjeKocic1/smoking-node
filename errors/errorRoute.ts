@@ -66,7 +66,7 @@ export const checkUserIDExist = () =>
 
 export const checkMentorIDExist = () =>
   body("mentorId").custom((value) => {
-    return Mentor.findOne({ _id: value }).then((user) => {
+    return Mentor.findOne({ mentorId: value }).then((user) => {
       if (!user) {
         return Promise.reject("Create Task Mentor ID doesn't exist");
       } else {
