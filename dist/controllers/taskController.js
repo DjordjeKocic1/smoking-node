@@ -50,6 +50,18 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             mentorId: req.body.mentorId,
         });
         let taskCreate = yield task.save();
+        let user = (yield user_1.default.findOne({ _id: taskCreate.userId }));
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        user.tasks.push({
+            toDo: req.body.toDo,
+            comment: req.body.comment,
+            status: "",
+            mentorId: req.body.mentorId,
+            taskId: taskCreate._id,
+        });
+        yield user.save();
         const notification = new notification_1.default({
             isTask: true,
             isMentoring: false,
@@ -83,11 +95,18 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         let taskUpdate = (yield task_1.default.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
         }));
-        if (req.body.status == "done") {
-            let user = (yield user_1.default.findOne({ _id: taskUpdate.userId }));
-            user.tasks.push({ taskId: taskUpdate._id, name: taskUpdate.toDo });
-            yield user.save();
+        let user = (yield user_1.default.findOne({ _id: taskUpdate.userId }));
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
         }
+        let userTasks = user.tasks.map((v) => {
+            if (v.taskId.toString() === taskUpdate._id.toString()) {
+                return taskUpdate;
+            }
+            return Object.assign({}, v);
+        });
+        user.tasks = userTasks;
+        user.save();
         res.status(201).json({ task: taskUpdate });
     }
     catch (err) {
@@ -100,7 +119,16 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        yield task_1.default.deleteOne({ _id: req.params.id });
+        const deletedTask = (yield task_1.default.findByIdAndDelete({
+            _id: req.params.id,
+        }));
+        let user = yield user_1.default.findOne({ _id: deletedTask.userId });
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        let userTasks = user.tasks.filter((v) => v.taskId.toString() != deletedTask._id.toString());
+        user.tasks = userTasks;
+        user.save();
         res.status(204).send({ success: "ok" });
     }
     catch (error) {

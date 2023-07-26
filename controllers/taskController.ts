@@ -1,4 +1,4 @@
-import { IParams, ITask, ITaskPayload, IUser } from "../types/types";
+import { IParams, ITask, ITaskPayload, ITaskUser, IUser } from "../types/types";
 
 import Notification from "../model/notification";
 import { RequestHandler } from "express";
@@ -50,6 +50,22 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
 
     let taskCreate = await task.save();
 
+    let user = (await User.findOne({ _id: taskCreate.userId })) as IUser;
+
+    if (!user) {
+      throw new http422Error("User doesn't exist");
+    }
+
+    user.tasks.push({
+      toDo: req.body.toDo,
+      comment: req.body.comment,
+      status: "",
+      mentorId: req.body.mentorId,
+      taskId: taskCreate._id,
+    });
+
+    await user.save();
+
     const notification = new Notification({
       isTask: true,
       isMentoring: false,
@@ -93,11 +109,21 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
       new: true,
     })) as ITask;
 
-    if (req.body.status == "done") {
-      let user = (await User.findOne({ _id: taskUpdate.userId })) as IUser;
-      user.tasks.push({ taskId: taskUpdate._id, name: taskUpdate.toDo });
-      await user.save();
+    let user = (await User.findOne({ _id: taskUpdate.userId })) as IUser;
+
+    if (!user) {
+      throw new http422Error("User doesn't exist");
     }
+
+    let userTasks = user.tasks.map((v) => {
+      if (v.taskId.toString() === taskUpdate._id.toString()) {
+        return taskUpdate;
+      }
+      return { ...v };
+    });
+
+    user.tasks = userTasks;
+    user.save();
 
     res.status(201).json({ task: taskUpdate });
   } catch (err: any) {
@@ -111,7 +137,23 @@ const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
-    await Task.deleteOne({ _id: req.params.id });
+    const deletedTask = (await Task.findByIdAndDelete({
+      _id: req.params.id,
+    })) as ITask;
+
+    let user = await User.findOne({ _id: deletedTask.userId });
+
+    if (!user) {
+      throw new http422Error("User doesn't exist");
+    }
+
+    let userTasks = user.tasks.filter(
+      (v) => v.taskId!.toString() != deletedTask._id.toString()
+    );
+
+    user.tasks = userTasks;
+    user.save();
+
     res.status(204).send({ success: "ok" });
   } catch (error) {
     next(error);

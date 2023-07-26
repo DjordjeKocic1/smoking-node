@@ -91,7 +91,10 @@ const userShema = new Schema({
     ],
     tasks: [
         {
-            name: String,
+            toDo: String,
+            status: String,
+            comment: String,
+            mentorId: String,
             taskId: {
                 type: Schema.Types.ObjectId,
                 ref: "Task",

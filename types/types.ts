@@ -118,8 +118,11 @@ export interface ITask {
 }
 
 export interface ITaskUser {
-  taskId: string;
-  name: string;
+  toDo: string;
+  status: string;
+  comment: string;
+  mentorId: string;
+  taskId?: any;
 }
 
 export interface IAchievementUser {
