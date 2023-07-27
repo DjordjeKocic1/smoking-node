@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mentorController = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
-const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
@@ -152,8 +151,13 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         let mentorDelete = (yield mentor_1.default.findOneAndDelete({
             _id: req.params.id,
         }));
-        yield task_1.default.deleteMany({ mentorId: mentorDelete.mentorId });
-        res.status(204).send({ success: "ok" });
+        let users = (yield user_1.default.find()).filter((v) => v.mentors.length);
+        for (const user of users) {
+            let filter = user.mentors.filter((use) => { var _a; return ((_a = use.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) != mentorDelete.mentorId.toString(); });
+            user.mentors = filter;
+            yield user.save();
+        }
+        res.status(204).json({ success: "ok" });
     }
     catch (error) {
         next(error);

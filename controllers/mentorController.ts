@@ -205,9 +205,18 @@ const deleteMentor = async (
       _id: req.params.id,
     })) as IMentor;
 
-    await Task.deleteMany({ mentorId: mentorDelete.mentorId });
+    let users = (await User.find()).filter((v) => v.mentors.length);
 
-    res.status(204).send({ success: "ok" });
+    for (const user of users) {
+      let filter = user.mentors.filter(
+        (use) => use.mentorId?.toString() != mentorDelete.mentorId.toString()
+      );
+
+      user.mentors = filter;
+      await user.save();
+    }
+
+    res.status(204).json({ success: "ok" });
   } catch (error) {
     next(error);
   }

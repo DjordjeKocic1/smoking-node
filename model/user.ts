@@ -232,4 +232,4 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
   return this.save();
 };
 
-export default mongoose.model("User", userShema);
+export default mongoose.model<IUser>("User", userShema);

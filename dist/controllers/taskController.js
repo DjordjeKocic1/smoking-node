@@ -100,7 +100,7 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             throw new errorHandler_1.http422Error("User doesn't exist");
         }
         let userTasks = user.tasks.map((v) => {
-            if (v.taskId.toString() === taskUpdate._id.toString()) {
+            if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
                 return taskUpdate;
             }
             return Object.assign({}, v);
@@ -126,7 +126,7 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!user) {
             throw new errorHandler_1.http422Error("User doesn't exist");
         }
-        let userTasks = user.tasks.filter((v) => v.taskId.toString() != deletedTask._id.toString());
+        let userTasks = user.tasks.filter((v) => v.taskId && v.taskId.toString() != deletedTask._id.toString());
         user.tasks = userTasks;
         user.save();
         res.status(204).send({ success: "ok" });

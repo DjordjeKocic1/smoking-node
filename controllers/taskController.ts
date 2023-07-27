@@ -116,7 +116,7 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
     }
 
     let userTasks = user.tasks.map((v) => {
-      if (v.taskId.toString() === taskUpdate._id.toString()) {
+      if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
         return taskUpdate;
       }
       return { ...v };
@@ -148,7 +148,7 @@ const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
     }
 
     let userTasks = user.tasks.filter(
-      (v) => v.taskId!.toString() != deletedTask._id.toString()
+      (v) => v.taskId && v.taskId.toString() != deletedTask._id.toString()
     );
 
     user.tasks = userTasks;
