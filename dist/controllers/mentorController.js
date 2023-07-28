@@ -150,6 +150,7 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         let mentorDelete = (yield mentor_1.default.findOneAndDelete({
             _id: req.params.id,
         }));
+        console.log("Mentor to remove:", mentorDelete);
         let users = (yield user_1.default.find()).filter((v) => v.mentors.length);
         for (const user of users) {
             let filter = user.mentors.filter((use) => { var _a; return ((_a = use.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) != mentorDelete.mentorId.toString(); });

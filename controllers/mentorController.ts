@@ -204,6 +204,10 @@ const deleteMentor = async (
       _id: req.params.id,
     })) as IMentor;
 
+
+    console.log("Mentor to remove:", mentorDelete);
+    
+
     let users = (await User.find()).filter((v) => v.mentors.length);
 
     for (const user of users) {
