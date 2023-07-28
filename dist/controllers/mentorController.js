@@ -26,8 +26,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentors = (yield mentor_1.default.find());
-        let arr = mentors.filter((mentor) => mentor.mentoringUser[0]._id == req.params.id ||
-            mentor.mentorId == req.params.id);
+        let arr = mentors.filter((mentor) => mentor.mentorId == req.params.id);
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }

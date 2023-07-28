@@ -28,7 +28,6 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
 
     let arr = mentors.filter(
       (mentor: IMentor) =>
-        mentor.mentoringUser[0]._id == req.params.id ||
         mentor.mentorId == req.params.id
     );
 
