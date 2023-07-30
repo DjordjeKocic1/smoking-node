@@ -148,7 +148,7 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentor = (yield mentor_1.default.findOne({
-            _id: req.params.mentorId,
+            mentorId: req.params.mentorId,
         }));
         let user = (yield user_1.default.findOne({
             _id: req.params.userId,

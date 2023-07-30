@@ -200,7 +200,7 @@ const deleteMentor = async (
     }
 
     let mentor = (await Mentor.findOne({
-      _id: req.params.mentorId,
+      mentorId: req.params.mentorId,
     })) as IMentor;
 
     let user = (await User.findOne({
