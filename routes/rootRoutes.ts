@@ -2,6 +2,8 @@ import {
   checkAlreadyMentored,
   checkIdParams,
   checkMentorIDExist,
+  checkMentorIDParamExist,
+  checkMentorUserIdParamExist,
   checkMentoringYourSelf,
   checkModelID,
   checkUserExist,
@@ -71,7 +73,7 @@ router.put(
 );
 router.delete(
   "/delete-mentor/:mentorId/:userId",
-  [checkMentorIDExist()],
+  [checkMentorIDParamExist(),checkMentorUserIdParamExist()],
   mentorController.deleteMentor
 );
 

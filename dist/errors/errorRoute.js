@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = exports.checkIdParams = void 0;
+exports.checkModelID = exports.checkMentorUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = exports.checkIdParams = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
@@ -74,6 +74,28 @@ const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custo
     });
 });
 exports.checkMentorIDExist = checkMentorIDExist;
+const checkMentorIDParamExist = () => (0, express_validator_1.param)("mentorId").custom((value) => {
+    return mentor_1.default.findOne({ mentorId: value }).then((user) => {
+        if (!user) {
+            return Promise.reject("Mentor ID doesn't exist");
+        }
+        else {
+            return Promise.resolve();
+        }
+    });
+});
+exports.checkMentorIDParamExist = checkMentorIDParamExist;
+const checkMentorUserIdParamExist = () => (0, express_validator_1.param)("userId").custom((value) => {
+    return user_1.default.findOne({ _id: value }).then((user) => {
+        if (!user) {
+            return Promise.reject("User ID doesn't exist");
+        }
+        else {
+            return Promise.resolve();
+        }
+    });
+});
+exports.checkMentorUserIdParamExist = checkMentorUserIdParamExist;
 //Model ID error
 const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((value) => {
     return Model.findOne({ _id: value }).then((modalData) => {

@@ -75,6 +75,28 @@ export const checkMentorIDExist = () =>
     });
   });
 
+  export const checkMentorIDParamExist = () =>
+  param("mentorId").custom((value) => {
+    return Mentor.findOne({ mentorId: value }).then((user) => {
+      if (!user) {
+        return Promise.reject("Mentor ID doesn't exist");
+      } else {
+        return Promise.resolve();
+      }
+    });
+  });
+
+  export const checkMentorUserIdParamExist = () =>
+  param("userId").custom((value) => {
+    return User.findOne({ _id: value }).then((user) => {
+      if (!user) {
+        return Promise.reject("User ID doesn't exist");
+      } else {
+        return Promise.resolve();
+      }
+    });
+  });
+
 //Model ID error
 export const checkModelID = (Model: any) =>
   param("id").custom((value) => {
