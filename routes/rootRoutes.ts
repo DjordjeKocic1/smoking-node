@@ -38,7 +38,7 @@ router.get("/", (req, res, next) => {
 router.get("/users", userController.getUsers);
 router.post(
   "/user-health/:id",
-  [checkIdParams(), checkModelID(User)],
+  [ checkModelID(User)],
   userController.getUserHealth
 );
 router.post(
@@ -48,17 +48,17 @@ router.post(
 );
 router.put(
   "/update-user/:id",
-  [checkIdParams(), checkModelID(User)],
+  [ checkModelID(User)],
   userController.updateUser
 );
 router.put(
   "/update-user-costs/:id",
-  [checkIdParams(), checkModelID(User)],
+  [ checkModelID(User)],
   userController.updateUserCosts
 );
 
 //Mentor
-router.get("/get-mentor/:id", checkIdParams(), mentorController.getMentor);
+router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
   [checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],
@@ -66,17 +66,17 @@ router.post(
 );
 router.put(
   "/update-mentor/:id",
-  [checkIdParams(), checkModelID(Mentor)],
+  [ checkMentorIDExist()],
   mentorController.updateMentor
 );
 router.delete(
   "/delete-mentor/:mentorId/:userId",
-  [checkIdParams(), checkModelID(Mentor)],
+  [checkMentorIDExist()],
   mentorController.deleteMentor
 );
 
 //Tasks
-router.get("/get-task/:id", checkIdParams(), taskController.getTasks);
+router.get("/get-task/:id", taskController.getTasks);
 router.post(
   "/create-task",
   [checkUserIDExist(), checkMentorIDExist()],
@@ -84,19 +84,18 @@ router.post(
 );
 router.put(
   "/update-task/:id",
-  [checkIdParams(), checkModelID(Task)],
+  [checkModelID(Task)],
   taskController.updateTask
 );
 router.delete(
   "/delete-task/:id",
-  [checkIdParams(), checkModelID(Task)],
+  [checkModelID(Task)],
   taskController.deleteTask
 );
 
 //Notification
 router.get(
   "/get-notification/:id",
-  checkIdParams(),
   notificationController.getNotificationsByUserID
 );
 router.post(
@@ -106,18 +105,18 @@ router.post(
 );
 router.put(
   "/update-notification/:id",
-  [checkIdParams(), checkModelID(Notification)],
+  [checkModelID(Notification)],
   notificationController.updateNotification
 );
 router.delete(
   "/delete-notifcation/:id",
-  [checkIdParams(), checkModelID(Notification)],
+  [checkModelID(Notification)],
   notificationController.deleteNotification
 );
 
 router.delete(
   "/delete-all-notifcation/:id",
-  [checkIdParams(), checkModelID(Notification)],
+  [checkModelID(Notification)],
   notificationController.deleteAllNotification
 );
 

@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const errorRoute_1 = require("../errors/errorRoute");
-const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
@@ -29,26 +28,26 @@ router.get("/", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/user-health/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserHealth);
+router.post("/user-health/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserHealth);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid").normalizeEmail(), userController_1.userController.createUser);
-router.put("/update-user/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
-router.put("/update-user-costs/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
+router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
+router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
 //Mentor
-router.get("/get-mentor/:id", (0, errorRoute_1.checkIdParams)(), mentorController_1.mentorController.getMentor);
+router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
-router.put("/update-mentor/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
-router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.deleteMentor);
+router.put("/update-mentor/:id", [(0, errorRoute_1.checkMentorIDExist)()], mentorController_1.mentorController.updateMentor);
+router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
-router.get("/get-task/:id", (0, errorRoute_1.checkIdParams)(), taskController_1.taskController.getTasks);
+router.get("/get-task/:id", taskController_1.taskController.getTasks);
 router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)(), (0, errorRoute_1.checkMentorIDExist)()], taskController_1.taskController.createTask);
-router.put("/update-task/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.updateTask);
-router.delete("/delete-task/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.deleteTask);
+router.put("/update-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.updateTask);
+router.delete("/delete-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.deleteTask);
 //Notification
-router.get("/get-notification/:id", (0, errorRoute_1.checkIdParams)(), notificationController_1.notificationController.getNotificationsByUserID);
+router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);
-router.put("/update-notification/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.updateNotification);
-router.delete("/delete-notifcation/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteNotification);
-router.delete("/delete-all-notifcation/:id", [(0, errorRoute_1.checkIdParams)(), (0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteAllNotification);
+router.put("/update-notification/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.updateNotification);
+router.delete("/delete-notifcation/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteNotification);
+router.delete("/delete-all-notifcation/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteAllNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);
 router.post("/categories", categorieController_1.categorieController.createCategories);

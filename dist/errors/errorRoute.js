@@ -75,7 +75,7 @@ const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custo
 });
 exports.checkMentorIDExist = checkMentorIDExist;
 //Model ID error
-const checkModelID = (Model) => (0, express_validator_1.param)("mentorId").custom((value) => {
+const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((value) => {
     return Model.findOne({ _id: value }).then((modalData) => {
         if (!modalData) {
             return Promise.reject(`${Model.modelName} doesn't exist, please try again, it could be something wrong with a server.`);

@@ -77,7 +77,7 @@ export const checkMentorIDExist = () =>
 
 //Model ID error
 export const checkModelID = (Model: any) =>
-  param("mentorId").custom((value) => {
+  param("id").custom((value) => {
     return Model.findOne({ _id: value }).then((modalData: any) => {
       if (!modalData) {
         return Promise.reject(
