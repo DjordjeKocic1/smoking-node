@@ -8,7 +8,7 @@ const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
 //common errors
-const checkIdParams = () => (0, express_validator_1.param)("id").custom((value) => {
+const checkIdParams = () => (0, express_validator_1.param)("mentorId").custom((value) => {
     if (value.length !== 24) {
         return Promise.reject("ID is not valid");
     }
@@ -75,7 +75,7 @@ const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custo
 });
 exports.checkMentorIDExist = checkMentorIDExist;
 //Model ID error
-const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((value) => {
+const checkModelID = (Model) => (0, express_validator_1.param)("mentorId").custom((value) => {
     return Model.findOne({ _id: value }).then((modalData) => {
         if (!modalData) {
             return Promise.reject(`${Model.modelName} doesn't exist, please try again, it could be something wrong with a server.`);

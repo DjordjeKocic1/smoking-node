@@ -6,7 +6,7 @@ import User from "../model/user";
 
 //common errors
 export const checkIdParams = () =>
-  param("id").custom((value) => {
+  param("mentorId").custom((value) => {
     if (value.length !== 24) {
       return Promise.reject("ID is not valid");
     } else {
@@ -77,7 +77,7 @@ export const checkMentorIDExist = () =>
 
 //Model ID error
 export const checkModelID = (Model: any) =>
-  param("id").custom((value) => {
+  param("mentorId").custom((value) => {
     return Model.findOne({ _id: value }).then((modalData: any) => {
       if (!modalData) {
         return Promise.reject(

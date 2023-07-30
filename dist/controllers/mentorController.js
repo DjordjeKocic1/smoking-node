@@ -147,16 +147,21 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let mentorDelete = (yield mentor_1.default.findOneAndDelete({
-            _id: req.params.id,
+        let mentor = (yield mentor_1.default.findOne({
+            _id: req.params.mentorId,
         }));
-        console.log("Mentor to remove:", mentorDelete);
-        let users = (yield user_1.default.find()).filter((v) => v.mentors.length);
-        for (const user of users) {
-            let filter = user.mentors.filter((use) => { var _a; return ((_a = use.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) != mentorDelete.mentorId.toString(); });
-            user.mentors = filter;
-            yield user.save();
+        let user = (yield user_1.default.findOne({
+            _id: req.params.userId,
+        }));
+        if (!user && !mentor) {
+            throw new errorHandler_1.http422Error("User or mentor doesn't exist");
         }
+        let userMentorRemoved = user.mentors.filter((v) => { var _a; return ((_a = v.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) != mentor.mentorId.toString(); });
+        let mentorRemoveUser = mentor.mentoringUser.filter((v) => { var _a; return ((_a = v.userId) === null || _a === void 0 ? void 0 : _a.toString()) != user._id.toString(); });
+        user.mentors = userMentorRemoved;
+        yield user.save();
+        mentor.mentoringUser = mentorRemoveUser;
+        yield mentor.save();
         res.status(204).json({ success: "ok" });
     }
     catch (error) {

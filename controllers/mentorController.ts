@@ -27,8 +27,7 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
     let mentors = (await Mentor.find()) as IMentor[];
 
     let arr = mentors.filter(
-      (mentor: IMentor) =>
-        mentor.mentorId == req.params.id
+      (mentor: IMentor) => mentor.mentorId == req.params.id
     );
 
     if (arr.length == 0) {
@@ -190,7 +189,7 @@ const updateMentor = async (
 };
 
 const deleteMentor = async (
-  req: Request<{ id: string }, {}, {}>,
+  req: Request<{ mentorId: string; userId: string }, {}, {}>,
   res: Response<{ success: any }>,
   next: NextFunction
 ) => {
@@ -200,24 +199,30 @@ const deleteMentor = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let mentorDelete = (await Mentor.findOneAndDelete({
-      _id: req.params.id,
+    let mentor = (await Mentor.findOne({
+      _id: req.params.mentorId,
     })) as IMentor;
 
+    let user = (await User.findOne({
+      _id: req.params.userId,
+    })) as IUser;
 
-    console.log("Mentor to remove:", mentorDelete);
-    
-
-    let users = (await User.find()).filter((v) => v.mentors.length);
-
-    for (const user of users) {
-      let filter = user.mentors.filter(
-        (use) => use.mentorId?.toString() != mentorDelete.mentorId.toString()
-      );
-
-      user.mentors = filter;
-      await user.save();
+    if (!user && !mentor) {
+      throw new http422Error("User or mentor doesn't exist");
     }
+
+    let userMentorRemoved = user.mentors.filter(
+      (v) => v.mentorId?.toString() != mentor.mentorId.toString()
+    );
+    let mentorRemoveUser = mentor.mentoringUser.filter(
+      (v) => v.userId?.toString() != user._id.toString()
+    );
+
+    user.mentors = userMentorRemoved;
+    await user.save();
+
+    mentor.mentoringUser = mentorRemoveUser;
+    await mentor.save();
 
     res.status(204).json({ success: "ok" });
   } catch (error) {

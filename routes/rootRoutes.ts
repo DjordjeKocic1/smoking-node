@@ -70,7 +70,7 @@ router.put(
   mentorController.updateMentor
 );
 router.delete(
-  "/delete-mentor/:id",
+  "/delete-mentor/:mentorId/:userId",
   [checkIdParams(), checkModelID(Mentor)],
   mentorController.deleteMentor
 );
