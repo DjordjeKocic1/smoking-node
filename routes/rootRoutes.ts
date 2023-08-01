@@ -147,7 +147,7 @@ router.get(
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
     res.redirect(
-      `exp+istop://expo-development-client/?url=http%3A%2F%2F1doounm.djole232.8081.exp.direct&email=${req.user.email}`
+      `exp+istop://1doounm.djole232.8081.exp.direct?email=${req.user.email}`
     );
   }
 );
