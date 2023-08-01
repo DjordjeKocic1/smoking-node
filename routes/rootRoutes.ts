@@ -154,7 +154,7 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect(`http://1doounm.djole232.8081.exp.direct?email=${req.user.email}`);
+    res.redirect(`exp+istop://expo-development-client/login?&email=${req.user.email}`);
   }
 );
 
