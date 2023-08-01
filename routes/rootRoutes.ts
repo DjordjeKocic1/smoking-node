@@ -40,7 +40,7 @@ router.get("/", (req, res, next) => {
 router.get("/users", userController.getUsers);
 router.post(
   "/user-health/:id",
-  [ checkModelID(User)],
+  [checkModelID(User)],
   userController.getUserHealth
 );
 router.post(
@@ -48,14 +48,10 @@ router.post(
   body("email").isEmail().withMessage("Email is invalid").normalizeEmail(),
   userController.createUser
 );
-router.put(
-  "/update-user/:id",
-  [ checkModelID(User)],
-  userController.updateUser
-);
+router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
 router.put(
   "/update-user-costs/:id",
-  [ checkModelID(User)],
+  [checkModelID(User)],
   userController.updateUserCosts
 );
 
@@ -68,12 +64,12 @@ router.post(
 );
 router.put(
   "/update-mentor/:id",
-  [ checkMentorIDExist()],
+  [checkMentorIDExist()],
   mentorController.updateMentor
 );
 router.delete(
   "/delete-mentor/:mentorId/:userId",
-  [checkMentorIDParamExist(),checkMentorUserIdParamExist()],
+  [checkMentorIDParamExist(), checkMentorUserIdParamExist()],
   mentorController.deleteMentor
 );
 
@@ -84,11 +80,7 @@ router.post(
   [checkUserIDExist(), checkMentorIDExist()],
   taskController.createTask
 );
-router.put(
-  "/update-task/:id",
-  [checkModelID(Task)],
-  taskController.updateTask
-);
+router.put("/update-task/:id", [checkModelID(Task)], taskController.updateTask);
 router.delete(
   "/delete-task/:id",
   [checkModelID(Task)],
@@ -154,7 +146,9 @@ router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
   (req: any, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+    res.redirect(
+      `exp+istop://expo-development-client/?url=http%3A%2F%2F1doounm.djole232.8081.exp.direct&email=${req.user.email}`
+    );
   }
 );
 
