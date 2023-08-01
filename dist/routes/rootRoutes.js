@@ -66,7 +66,7 @@ router.get("/report/categorie/:name", reportsController_1.reportsController.getA
 //Authenticate
 router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
-    res.redirect(`exp://192.168.0.11:19000/?email=${req.user.email}`);
+    res.redirect(`http://1doounm.djole232.8081.exp.direct?email=${req.user.email}`);
 });
 //404
 router.all("*", () => {
