@@ -69,7 +69,10 @@ const userShema = new Schema({
         type: Number,
         default: 0,
     },
-    latestScore: Number,
+    latestScore: {
+        type: Number,
+        default: 0
+    },
     categories: [
         {
             name: String,
