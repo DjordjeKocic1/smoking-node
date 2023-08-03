@@ -64,7 +64,7 @@ router.post(
 );
 router.put(
   "/update-mentor/:id",
-  [checkMentorIDParamExist()],
+  [checkModelID(Mentor)],
   mentorController.updateMentor
 );
 router.delete(
