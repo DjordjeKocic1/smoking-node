@@ -35,7 +35,7 @@ router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.defa
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
-router.put("/update-mentor/:id", [(0, errorRoute_1.checkMentorIDExist)()], mentorController_1.mentorController.updateMentor);
+router.put("/update-mentor/:id", [(0, errorRoute_1.checkMentorIDParamExist)()], mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkMentorUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", taskController_1.taskController.getTasks);
