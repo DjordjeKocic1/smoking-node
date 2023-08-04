@@ -45,7 +45,7 @@ router.post(
 );
 router.post(
   "/create-user",
-  body("email").isEmail().withMessage("Email is invalid").normalizeEmail(),
+  body("email").isEmail().withMessage("Email is invalid"),
   userController.createUser
 );
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
