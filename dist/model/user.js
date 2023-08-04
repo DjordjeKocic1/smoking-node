@@ -71,7 +71,11 @@ const userShema = new Schema({
     },
     latestScore: {
         type: Number,
-        default: 0
+        default: 0,
+    },
+    breathExercies: {
+        type: Number,
+        default: 0,
     },
     categories: [
         {

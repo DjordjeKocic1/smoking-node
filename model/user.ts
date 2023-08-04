@@ -69,9 +69,13 @@ const userShema = new Schema(
       type: Number,
       default: 0,
     },
-    latestScore:{
-      type:Number,
-      default:0
+    latestScore: {
+      type: Number,
+      default: 0,
+    },
+    breathExercies: {
+      type: Number,
+      default: 0,
     },
     categories: [
       {
@@ -96,9 +100,9 @@ const userShema = new Schema(
     tasks: [
       {
         toDo: String,
-        status:String,
-        comment:String,
-        mentorId:String,
+        status: String,
+        comment: String,
+        mentorId: String,
         taskId: {
           type: Schema.Types.ObjectId,
           ref: "Task",
