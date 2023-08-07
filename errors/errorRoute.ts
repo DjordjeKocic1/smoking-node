@@ -75,7 +75,7 @@ export const checkMentorIDExist = () =>
     });
   });
 
-  export const checkMentorIDParamExist = () =>
+export const checkMentorIDParamExist = () =>
   param("mentorId").custom((value) => {
     return Mentor.findOne({ mentorId: value }).then((user) => {
       if (!user) {
@@ -86,7 +86,7 @@ export const checkMentorIDExist = () =>
     });
   });
 
-  export const checkMentorUserIdParamExist = () =>
+export const checkUserIdParamExist = () =>
   param("userId").custom((value) => {
     return User.findOne({ _id: value }).then((user) => {
       if (!user) {

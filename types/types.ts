@@ -106,6 +106,7 @@ export interface INotificaion extends IUser {
   isTask: boolean;
   isRead: boolean;
   userId: string;
+  _doc?: any;
 }
 
 export interface ITask {
@@ -181,6 +182,7 @@ export interface INotificaionMessage {
 
 export interface IParams {
   id: string;
+  userId?: string;
 }
 
 export interface IQuery {

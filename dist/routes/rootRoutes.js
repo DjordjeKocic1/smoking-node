@@ -37,7 +37,7 @@ router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.defa
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", [(0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
-router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkMentorUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
+router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", taskController_1.taskController.getTasks);
 router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)(), (0, errorRoute_1.checkMentorIDExist)()], taskController_1.taskController.createTask);
@@ -46,8 +46,8 @@ router.delete("/delete-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default
 //Notification
 router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);
-router.put("/update-notification/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.updateNotification);
-router.delete("/delete-notifcation/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteNotification);
+router.put("/update-notification/:userId", [(0, errorRoute_1.checkUserIdParamExist)()], notificationController_1.notificationController.updateNotification);
+router.delete("/delete-notifcation/:userId", [(0, errorRoute_1.checkUserIdParamExist)()], notificationController_1.notificationController.deleteNotification);
 router.delete("/delete-all-notifcation/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteAllNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);

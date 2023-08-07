@@ -3,11 +3,11 @@ import {
   checkIdParams,
   checkMentorIDExist,
   checkMentorIDParamExist,
-  checkMentorUserIdParamExist,
   checkMentoringYourSelf,
   checkModelID,
   checkUserExist,
   checkUserIDExist,
+  checkUserIdParamExist,
 } from "../errors/errorRoute";
 
 import Mentor from "../model/mentor";
@@ -69,7 +69,7 @@ router.put(
 );
 router.delete(
   "/delete-mentor/:mentorId/:userId",
-  [checkMentorIDParamExist(), checkMentorUserIdParamExist()],
+  [checkMentorIDParamExist(), checkUserIdParamExist()],
   mentorController.deleteMentor
 );
 
@@ -98,13 +98,13 @@ router.post(
   notificationController.createNotification
 );
 router.put(
-  "/update-notification/:id",
-  [checkModelID(Notification)],
+  "/update-notification/:userId",
+  [checkUserIdParamExist()],
   notificationController.updateNotification
 );
 router.delete(
-  "/delete-notifcation/:id",
-  [checkModelID(Notification)],
+  "/delete-notifcation/:userId",
+  [checkUserIdParamExist()],
   notificationController.deleteNotification
 );
 

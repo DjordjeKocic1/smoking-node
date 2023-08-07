@@ -62,7 +62,16 @@ const updateNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let notificationUpdate = (yield notification_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true }));
+        const { isTask, isMentoring } = req.body;
+        let notificationUpdate = yield notification_1.default.find({
+            userId: req.params.userId,
+            isTask,
+            isMentoring,
+        });
+        for (const not of notificationUpdate) {
+            not.isRead = true;
+            yield not.save();
+        }
         res.status(201).json({ notification: notificationUpdate });
     }
     catch (error) {

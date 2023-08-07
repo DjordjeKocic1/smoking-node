@@ -75,11 +75,18 @@ const updateNotification: RequestHandler<IParams, {}, INotificaion> = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let notificationUpdate = (await Notification.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    )) as INotificaion;
+    const { isTask, isMentoring } = req.body;
+
+    let notificationUpdate = await Notification.find({
+      userId: req.params.userId,
+      isTask,
+      isMentoring,
+    });
+
+    for (const not of notificationUpdate) {
+      not.isRead = true;
+      await not.save();
+    }
 
     res.status(201).json({ notification: notificationUpdate });
   } catch (error) {
