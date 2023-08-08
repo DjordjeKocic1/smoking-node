@@ -1,4 +1,3 @@
-import { IAchievement } from "../types/types";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;

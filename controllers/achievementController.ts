@@ -1,4 +1,4 @@
-import { IAchievement, IParams, IUser } from "../types/types";
+import { IAchievement, IParams, ITask, IUser } from "../types/types";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import Achievement from "../model/achievement";
@@ -11,14 +11,15 @@ const createAchievement = async (
   res: Response,
   next: NextFunction
 ) => {
-  const achievement = new Achievement({
-    name: req.body.name,
-    description: req.body.description,
-    categorie: req.body.categorie,
-    points: req.body.points,
-    type: req.body.type,
-  });
   try {
+    const achievement = new Achievement({
+      name: req.body.name,
+      description: req.body.description,
+      categorie: req.body.categorie,
+      points: req.body.points,
+      type: req.body.type,
+      tag: req.body.tag,
+    });
     let achievementSaved = await achievement.save();
     res.status(201).json({ achievement: achievementSaved });
   } catch (error) {
@@ -37,6 +38,10 @@ const getAchievemnts: RequestHandler<IParams> = async (req, res, next) => {
 
     let user = (await User.findOne({ _id: req.params.id })) as IUser;
 
+    let userCompletedTasks = user.tasks.filter(
+      (v) => v.status == "done"
+    ) as ITask[];
+
     let newAch = achievements.map((achs) => {
       switch (true) {
         case user?.consumptionInfo.cigarettesAvoided >= achs.tag &&
@@ -47,7 +52,8 @@ const getAchievemnts: RequestHandler<IParams> = async (req, res, next) => {
           achs.categorie == "noSmokingDays":
           return { ...achs._doc, holding: true };
         case !!user?.tasks &&
-          user?.tasks.length >= achs.tag &&
+          !!userCompletedTasks.length &&
+          userCompletedTasks.length >= achs.tag &&
           achs.categorie == "tasks":
           return { ...achs._doc, holding: true };
         case !!user?.healthInfo &&
