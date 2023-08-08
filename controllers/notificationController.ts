@@ -79,12 +79,16 @@ const updateNotification: RequestHandler<IParams, {}, INotificaion> = async (
 
     let notificationUpdate = await Notification.find({
       userId: req.params.userId,
-      isTask,
-      isMentoring,
     });
 
     for (const not of notificationUpdate) {
-      not.isRead = true;
+      if (not.isTask && isTask) {
+        not.isRead = isTask;
+      } else if (not.isMentoring && isMentoring) {
+        not.isRead = isMentoring;
+      }else{
+        not.isRead = false;
+      }
       await not.save();
     }
 

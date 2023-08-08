@@ -65,11 +65,17 @@ const updateNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const { isTask, isMentoring } = req.body;
         let notificationUpdate = yield notification_1.default.find({
             userId: req.params.userId,
-            isTask,
-            isMentoring,
         });
         for (const not of notificationUpdate) {
-            not.isRead = true;
+            if (not.isTask && isTask) {
+                not.isRead = isTask;
+            }
+            else if (not.isMentoring && isMentoring) {
+                not.isRead = isMentoring;
+            }
+            else {
+                not.isRead = false;
+            }
             yield not.save();
         }
         res.status(201).json({ notification: notificationUpdate });
