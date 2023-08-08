@@ -101,7 +101,7 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         }
         let userTasks = user.tasks.map((v) => {
             if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
-                return taskUpdate;
+                return Object.assign(Object.assign({}, taskUpdate), { taskId: taskUpdate._id });
             }
             return Object.assign({}, v);
         });

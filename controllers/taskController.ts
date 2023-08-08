@@ -117,7 +117,10 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
 
     let userTasks = user.tasks.map((v) => {
       if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
-        return taskUpdate;
+        return {
+          ...taskUpdate,
+          taskId: taskUpdate._id,
+        };
       }
       return { ...v };
     });
