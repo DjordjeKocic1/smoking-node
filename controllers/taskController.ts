@@ -123,7 +123,7 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
     });
 
     user.tasks = userTasks;
-    user.save();
+    await user.save();
 
     res.status(201).json({ task: taskUpdate });
   } catch (err: any) {

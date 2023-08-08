@@ -106,7 +106,7 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             return Object.assign({}, v);
         });
         user.tasks = userTasks;
-        user.save();
+        yield user.save();
         res.status(201).json({ task: taskUpdate });
     }
     catch (err) {
