@@ -18,14 +18,10 @@ const getNotificationsByUserID: RequestHandler<IParams> = async (
     }
 
     let notifications: INotificaion[] = await Notification.find({
-      isRead: false,
+      userId:req.params.id
     });
 
-    let nots = notifications.filter(
-      (notification: INotificaion) => notification.userId == req.params.id
-    );
-
-    res.status(201).json({ notification: nots });
+    res.status(201).json({ notification: notifications });
   } catch (error) {
     next(error);
   }

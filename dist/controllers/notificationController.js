@@ -24,10 +24,9 @@ const getNotificationsByUserID = (req, res, next) => __awaiter(void 0, void 0, v
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let notifications = yield notification_1.default.find({
-            isRead: false,
+            userId: req.params.id
         });
-        let nots = notifications.filter((notification) => notification.userId == req.params.id);
-        res.status(201).json({ notification: nots });
+        res.status(201).json({ notification: notifications });
     }
     catch (error) {
         next(error);
