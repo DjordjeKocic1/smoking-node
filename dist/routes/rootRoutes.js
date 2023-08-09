@@ -3,13 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_validator_1 = require("express-validator");
 const errorRoute_1 = require("../errors/errorRoute");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const achievementController_1 = require("../controllers/achievementController");
-const express_validator_1 = require("express-validator");
 const categorieController_1 = require("../controllers/categorieController");
 const express_1 = __importDefault(require("express"));
 const errorHandler_1 = require("../errors/errorHandler");
@@ -47,7 +47,11 @@ router.delete("/delete-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default
 router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);
 router.put("/update-notification/:userId", [(0, errorRoute_1.checkUserIdParamExist)()], notificationController_1.notificationController.updateNotification);
-router.delete("/delete-notifcation/:userId", [(0, errorRoute_1.checkUserIdParamExist)()], notificationController_1.notificationController.deleteNotification);
+router.delete("/delete-notifcation/:userId", [
+    (0, errorRoute_1.checkUserIdParamExist)(),
+    (0, express_validator_1.query)("isTask").isString().withMessage("isTask query required"),
+    (0, express_validator_1.query)("isMentoring").isString().withMessage("isMentoring query required"),
+], notificationController_1.notificationController.deleteNotification);
 router.delete("/delete-all-notifcation/:id", [(0, errorRoute_1.checkModelID)(notification_1.default)], notificationController_1.notificationController.deleteAllNotification);
 // Categories
 router.get("/categories", categorieController_1.categorieController.getCategories);

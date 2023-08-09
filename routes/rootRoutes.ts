@@ -1,3 +1,4 @@
+import { body, query } from "express-validator";
 import {
   checkAlreadyMentored,
   checkIdParams,
@@ -15,7 +16,6 @@ import Notification from "../model/notification";
 import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
-import { body } from "express-validator";
 import { categorieController } from "../controllers/categorieController";
 import exporess from "express";
 import { http404Error } from "../errors/errorHandler";
@@ -104,7 +104,11 @@ router.put(
 );
 router.delete(
   "/delete-notifcation/:userId",
-  [checkUserIdParamExist()],
+  [
+    checkUserIdParamExist(),
+    query("isTask").isString().withMessage("isTask query required"),
+    query("isMentoring").isString().withMessage("isMentoring query required"),
+  ],
   notificationController.deleteNotification
 );
 

@@ -1,4 +1,10 @@
-import { INotificaion, IParams, IUser } from "../types/types";
+import {
+  INotificaion,
+  IParams,
+  IQuery,
+  IQueryParams,
+  IUser,
+} from "../types/types";
 
 import Notification from "../model/notification";
 import { RequestHandler } from "express";
@@ -18,7 +24,7 @@ const getNotificationsByUserID: RequestHandler<IParams> = async (
     }
 
     let notifications: INotificaion[] = await Notification.find({
-      userId:req.params.id
+      userId: req.params.id,
     });
 
     res.status(201).json({ notification: notifications });
@@ -82,7 +88,7 @@ const updateNotification: RequestHandler<IParams, {}, INotificaion> = async (
         not.isRead = isTask;
       } else if (not.isMentoring && isMentoring) {
         not.isRead = isMentoring;
-      }else{
+      } else {
         not.isRead = false;
       }
       await not.save();
@@ -94,7 +100,12 @@ const updateNotification: RequestHandler<IParams, {}, INotificaion> = async (
   }
 };
 
-const deleteNotification: RequestHandler<IParams> = async (req, res, next) => {
+const deleteNotification: RequestHandler<
+  IParams,
+  {},
+  {},
+  IQueryParams
+> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -102,7 +113,14 @@ const deleteNotification: RequestHandler<IParams> = async (req, res, next) => {
       throw new http422Error(errors.array()[0].msg);
     }
 
-    await Notification.findOneAndDelete({ _id: req.params.id });
+    let isTask = req.query.isTask == "true";
+    let isMentoring = req.query.isMentoring == "true";
+
+    await Notification.deleteMany({
+      userId: req.params.userId,
+      isTask,
+      isMentoring,
+    });
 
     res.status(204).send({ success: "ok" });
   } catch (error) {

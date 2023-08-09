@@ -189,3 +189,8 @@ export interface IQuery {
   PayerID: string;
   paymentId: string;
 }
+
+export interface IQueryParams {
+  isTask?: string;
+  isMentoring?: string;
+}

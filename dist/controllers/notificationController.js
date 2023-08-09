@@ -24,7 +24,7 @@ const getNotificationsByUserID = (req, res, next) => __awaiter(void 0, void 0, v
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let notifications = yield notification_1.default.find({
-            userId: req.params.id
+            userId: req.params.id,
         });
         res.status(201).json({ notification: notifications });
     }
@@ -89,7 +89,13 @@ const deleteNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        yield notification_1.default.findOneAndDelete({ _id: req.params.id });
+        let isTask = req.query.isTask == "true";
+        let isMentoring = req.query.isMentoring == "true";
+        yield notification_1.default.deleteMany({
+            userId: req.params.userId,
+            isTask,
+            isMentoring,
+        });
         res.status(204).send({ success: "ok" });
     }
     catch (error) {
