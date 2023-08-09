@@ -53,18 +53,6 @@ const userShema = new Schema({
         cigarettes10YearCost: Number,
         cigarettesAvoidedCost: Number,
     },
-    savedInfo: {
-        cigarettesDay: Number,
-        packCigarettesPrice: Number,
-        cigarettesInPack: Number,
-        cigarettesDailyCost: Number,
-        cigarettesMontlyCost: Number,
-        cigarettesYearlyCost: Number,
-        cigarettes5YearCost: Number,
-        cigarettes10YearCost: Number,
-        cigarettesAvoidedCost: Number,
-        cigarettesAvoided: Number,
-    },
     gameScore: {
         type: Number,
         default: 0,
