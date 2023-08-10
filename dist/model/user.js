@@ -8,6 +8,10 @@ const calcs_1 = require("../helpers/calcs");
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const userShema = new Schema({
+    type: {
+        type: String,
+        default: "user",
+    },
     name: String,
     email: {
         type: String,
