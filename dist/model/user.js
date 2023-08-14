@@ -49,7 +49,10 @@ const userShema = new Schema({
         cigarettesDay: Number,
         packCigarettesPrice: Number,
         cigarettesInPack: Number,
-        cigarettesAvoided: Number,
+        cigarettesAvoided: {
+            type: Number,
+            default: 0,
+        },
         cigarettesDailyCost: Number,
         cigarettesMontlyCost: Number,
         cigarettesYearlyCost: Number,
@@ -120,6 +123,10 @@ const userShema = new Schema({
     subscribeDate: String,
 }, { timestamps: true });
 userShema.methods.calculateCosts = function (req) {
+    if (!!req.type && !!req.userVerified) {
+        this.type = req.type;
+        this.userVerified = req.userVerified;
+    }
     this.consumptionInfo.cigarettesAvoided =
         req.consumptionInfo.cigarettesAvoided;
     this.consumptionInfo.packCigarettesPrice =

@@ -54,6 +54,7 @@ export interface IConsumptionInfo {
   cigarettesAvoidedCost: number;
 }
 export interface IUser {
+  type?: string;
   _id: any;
   name: string;
   email: string;
