@@ -101,10 +101,24 @@ const updateUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         next(error);
     }
 });
+const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        yield user_1.default.findByIdAndDelete({ _id: req.params.id });
+        res.status(204).send({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.userController = {
     getUsers,
     getUserHealth,
     createUser,
     updateUser,
     updateUserCosts,
+    deleteUser,
 };

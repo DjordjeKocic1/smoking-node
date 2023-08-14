@@ -54,6 +54,11 @@ router.put(
   [checkModelID(User)],
   userController.updateUserCosts
 );
+router.delete(
+  "/delete-user/:id",
+  [checkModelID(User)],
+  userController.deleteUser
+);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);

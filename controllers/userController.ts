@@ -111,10 +111,26 @@ const updateUserCosts: RequestHandler<
   }
 };
 
+const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+
+    await User.findByIdAndDelete({ _id: req.params.id });
+
+    res.status(204).send({ success: "ok" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const userController = {
   getUsers,
   getUserHealth,
   createUser,
   updateUser,
   updateUserCosts,
+  deleteUser,
 };

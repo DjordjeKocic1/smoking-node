@@ -33,6 +33,7 @@ router.post("/user-health/:id", [(0, errorRoute_1.checkModelID)(user_1.default)]
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
+router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
