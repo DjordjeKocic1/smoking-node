@@ -41,9 +41,15 @@ const userShema = new Schema(
       avgHealth: Number,
     },
     smokingInfo: {
-      isQuiting: Boolean,
+      isQuiting: {
+        type: Boolean,
+        default: false,
+      },
       dateOfQuiting: String,
-      noSmokingDays: Number,
+      noSmokingDays: {
+        type: Number,
+        default: 0,
+      },
     },
     consumptionInfo: {
       cigarettesDay: Number,
