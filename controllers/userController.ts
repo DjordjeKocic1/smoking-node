@@ -121,7 +121,7 @@ const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
 
     let userDeleted = await User.findByIdAndDelete({ _id: req.params.id });
 
-    await Mentor.findByIdAndDelete({mentorId:userDeleted?._id})
+    await Mentor.findByIdAndDelete({ mentorId: userDeleted?._id });
 
     res.status(204).send({ success: "ok" });
   } catch (error) {
