@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const errorHandler_1 = require("../errors/errorHandler");
+const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
 const express_validator_1 = require("express-validator");
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -107,7 +108,8 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        yield user_1.default.findByIdAndDelete({ _id: req.params.id });
+        let userDeleted = yield user_1.default.findByIdAndDelete({ _id: req.params.id });
+        yield mentor_1.default.findByIdAndDelete({ mentorId: userDeleted === null || userDeleted === void 0 ? void 0 : userDeleted._id });
         res.status(204).send({ success: "ok" });
     }
     catch (error) {

@@ -1,6 +1,7 @@
 import { IConsumationPayload, IParams, IUser } from "../types/types";
 import { http422Error, http500Error } from "../errors/errorHandler";
 
+import Mentor from "../model/mentor";
 import { RequestHandler } from "express";
 import User from "../model/user";
 import { validationResult } from "express-validator";
@@ -118,7 +119,9 @@ const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
       throw new http422Error(errors.array()[0].msg);
     }
 
-    await User.findByIdAndDelete({ _id: req.params.id });
+    let userDeleted = await User.findByIdAndDelete({ _id: req.params.id });
+
+    await Mentor.findByIdAndDelete({mentorId:userDeleted?._id})
 
     res.status(204).send({ success: "ok" });
   } catch (error) {
