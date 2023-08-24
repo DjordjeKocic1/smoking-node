@@ -7,11 +7,11 @@ const keyGetStripe: RequestHandler = (req, res, next) => {
   return res.send(STRIPE_KEY);
 };
 
-const paymentSheet: RequestHandler<{}, {}, { email: string }> = async (
-  req,
-  res,
-  next
-) => {
+const paymentSheet: RequestHandler<
+  {},
+  {},
+  { email: string; price: number }
+> = async (req, res, next) => {
   const secret_key = STRIPE_SECRET;
 
   const stripe = new Stripe(secret_key as string, {
@@ -39,7 +39,7 @@ const paymentSheet: RequestHandler<{}, {}, { email: string }> = async (
   );
 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: 500,
+    amount: req.body.price,
     currency: "usd",
     customer: customer.id,
     payment_method_types: ["card"],

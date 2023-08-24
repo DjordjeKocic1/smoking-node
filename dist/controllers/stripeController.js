@@ -36,7 +36,7 @@ const paymentSheet = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
     const ephemeralKey = yield stripe.ephemeralKeys.create({ customer: customer.id }, { apiVersion: "2022-11-15" });
     const paymentIntent = yield stripe.paymentIntents.create({
-        amount: 500,
+        amount: req.body.price,
         currency: "usd",
         customer: customer.id,
         payment_method_types: ["card"],
