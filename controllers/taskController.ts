@@ -43,8 +43,6 @@ const getTasksByMentor: RequestHandler<IParams> = async (req, res, next) => {
         task.userId == req.params.userId && task.mentorId == req.params.mentorId
     );
 
-    console.log(arr);
-
     if (arr.length == 0) {
       return res.status(200).json({ task: null });
     }

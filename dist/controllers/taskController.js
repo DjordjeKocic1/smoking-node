@@ -44,7 +44,6 @@ const getTasksByMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         }
         let tasks = (yield task_1.default.find());
         let arr = tasks.filter((task) => task.userId == req.params.userId && task.mentorId == req.params.mentorId);
-        console.log(arr);
         if (arr.length == 0) {
             return res.status(200).json({ task: null });
         }
