@@ -36,6 +36,24 @@ const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(error);
     }
 });
+const getTasksByMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let tasks = (yield task_1.default.find());
+        let arr = tasks.filter((task) => task.userId == req.params.userId && task.mentorId == req.params.mentorId);
+        console.log(arr);
+        if (arr.length == 0) {
+            return res.status(200).json({ task: null });
+        }
+        res.status(200).json({ task: arr });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -139,5 +157,6 @@ exports.taskController = {
     createTask,
     updateTask,
     getTasks,
+    getTasksByMentor,
     deleteTask,
 };

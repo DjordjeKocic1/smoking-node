@@ -184,6 +184,7 @@ export interface INotificaionMessage {
 export interface IParams {
   id: string;
   userId?: string;
+  mentorId?: string;
 }
 
 export interface IQuery {

@@ -29,6 +29,32 @@ const getTasks: RequestHandler<IParams> = async (req, res, next) => {
   }
 };
 
+const getTasksByMentor: RequestHandler<IParams> = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+
+    let tasks = (await Task.find()) as ITask[];
+
+    let arr = tasks.filter(
+      (task: ITask) =>
+        task.userId == req.params.userId && task.mentorId == req.params.mentorId
+    );
+
+    console.log(arr);
+
+    if (arr.length == 0) {
+      return res.status(200).json({ task: null });
+    }
+
+    res.status(200).json({ task: arr });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
   req,
   res,
@@ -167,5 +193,6 @@ export const taskController = {
   createTask,
   updateTask,
   getTasks,
+  getTasksByMentor,
   deleteTask,
 };

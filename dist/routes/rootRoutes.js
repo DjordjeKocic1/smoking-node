@@ -41,6 +41,7 @@ router.put("/update-mentor/:id", [(0, errorRoute_1.checkModelID)(mentor_1.defaul
 router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", taskController_1.taskController.getTasks);
+router.get("/get-task/:userId/:mentorId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], taskController_1.taskController.getTasksByMentor);
 router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)(), (0, errorRoute_1.checkMentorIDExist)()], taskController_1.taskController.createTask);
 router.put("/update-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.updateTask);
 router.delete("/delete-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.deleteTask);

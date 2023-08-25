@@ -80,6 +80,11 @@ router.delete(
 
 //Tasks
 router.get("/get-task/:id", taskController.getTasks);
+router.get(
+  "/get-task/:userId/:mentorId",
+  [checkMentorIDParamExist(), checkUserIdParamExist()],
+  taskController.getTasksByMentor
+);
 router.post(
   "/create-task",
   [checkUserIDExist(), checkMentorIDExist()],
