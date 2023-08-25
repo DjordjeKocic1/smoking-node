@@ -126,6 +126,7 @@ const userShema = new Schema({
     ],
     notificationToken: String,
     subscriber: Boolean,
+    subscribeLasts: Number,
     subscribeDate: String,
 }, { timestamps: true });
 userShema.methods.calculateCosts = function (req) {
@@ -166,6 +167,7 @@ userShema.methods.calculateHealth = function (user) {
             : new Date().toDateString()).getTime();
     const subscribeTimeDate = new Date().getTime() - new Date(this.subscribeDate).getTime();
     const subscribeTime = Math.floor(subscribeTimeDate / (1000 * 60 * 60 * 24));
+    this.subscribeLasts = 30 - subscribeTime;
     if (subscribeTime >= 30) {
         this.subscriber = false;
     }
