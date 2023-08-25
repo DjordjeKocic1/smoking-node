@@ -174,15 +174,17 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
         : new Date().toDateString()
     ).getTime();
 
-  const subscribeTimeDate =
-    new Date().getTime() - new Date(this.subscribeDate).getTime();
+  if (this.subscriber) {
+    const subscribeTimeDate =
+      new Date().getTime() - new Date(this.subscribeDate).getTime();
 
-  const subscribeTime = Math.floor(subscribeTimeDate / (1000 * 60 * 60 * 24));
+    const subscribeTime = Math.floor(subscribeTimeDate / (1000 * 60 * 60 * 24));
 
-  this.subscribeLasts = 30 - subscribeTime;
+    this.subscribeLasts = 30 - subscribeTime;
 
-  if (subscribeTime >= 30) {
-    this.subscriber = false;
+    if (subscribeTime >= 30) {
+      this.subscriber = false;
+    }
   }
 
   this.smokingInfo.noSmokingDays =
