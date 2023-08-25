@@ -164,6 +164,11 @@ userShema.methods.calculateHealth = function (user) {
         new Date(!!this.smokingInfo.dateOfQuiting
             ? this.smokingInfo.dateOfQuiting
             : new Date().toDateString()).getTime();
+    const subscribeTimeDate = new Date().getTime() - new Date(this.subscribeDate).getTime();
+    const subscribeTime = Math.floor(subscribeTimeDate / (1000 * 60 * 60 * 24));
+    if (subscribeTime >= 30) {
+        this.subscriber = false;
+    }
     this.smokingInfo.noSmokingDays =
         !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
             ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
