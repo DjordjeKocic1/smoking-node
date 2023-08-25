@@ -61,6 +61,10 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
 
     let userMentor = (await User.findOne({ email: req.body.email })) as IUser;
 
+    if (!userMentor) {
+      return res.status(201).send("EXISTSFALSE");
+    }
+
     let mentorExist = (await Mentor.findOne({
       email: req.body.email,
     })) as IMentor;

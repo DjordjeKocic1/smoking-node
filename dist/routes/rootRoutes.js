@@ -11,6 +11,7 @@ const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const achievementController_1 = require("../controllers/achievementController");
 const categorieController_1 = require("../controllers/categorieController");
+const emailController_1 = require("../controllers/emailController");
 const express_1 = __importDefault(require("express"));
 const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
@@ -36,7 +37,7 @@ router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.defa
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
-router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
+router.post("/create-mentor", [(0, errorRoute_1.checkAlreadyMentored)(), (0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", [(0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
@@ -75,6 +76,8 @@ router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["
 router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
     res.redirect(`exp+istop://1doounm.djole232.8081.exp.direct?email=${req.user.email}`);
 });
+//email
+router.post("/email/create-email", emailController_1.emailController.createEmail);
 //404
 router.all("*", () => {
     throw new errorHandler_1.http404Error();

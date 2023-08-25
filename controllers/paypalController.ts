@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { RequestHandler } from "express";
 
 import paypal from "paypal-rest-sdk";
 import { http500Error } from "../errors/errorHandler";

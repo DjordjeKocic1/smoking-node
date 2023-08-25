@@ -17,6 +17,7 @@ import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
 import { categorieController } from "../controllers/categorieController";
+import { emailController } from "../controllers/emailController";
 import exporess from "express";
 import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
@@ -64,7 +65,7 @@ router.delete(
 router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
-  [checkAlreadyMentored(), checkUserExist(), checkMentoringYourSelf()],
+  [checkAlreadyMentored(), checkMentoringYourSelf()],
   mentorController.createMentor
 );
 router.put(
@@ -165,6 +166,9 @@ router.get(
     );
   }
 );
+
+//email
+router.post("/email/create-email", emailController.createEmail);
 
 //404
 router.all("*", () => {

@@ -196,3 +196,8 @@ export interface IQueryParams {
   isTask?: string;
   isMentoring?: string;
 }
+
+export interface IEmail {
+  name: string;
+  email: string;
+}
