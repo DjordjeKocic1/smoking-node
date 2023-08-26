@@ -200,4 +200,12 @@ export interface IQueryParams {
 export interface IEmail {
   name: string;
   email: string;
+  templateId: number;
+  params: IEmailParams;
+}
+
+export interface IEmailParams {
+  name: string;
+  email: string;
+  price: string;
 }

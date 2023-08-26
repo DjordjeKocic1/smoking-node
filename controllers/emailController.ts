@@ -27,8 +27,9 @@ const createEmail: RequestHandler<{}, { success: string }, IEmail> = async (
       email: req.body.email,
     },
   ];
+  sendSmtpEmail.params = req.body.params;
   sendSmtpEmail.type = "classic";
-  sendSmtpEmail.templateId = 1;
+  sendSmtpEmail.templateId = req.body.templateId;
 
   try {
     await apiInstance.sendTransacEmail(sendSmtpEmail);

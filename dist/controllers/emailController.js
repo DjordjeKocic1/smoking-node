@@ -29,8 +29,9 @@ const createEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             email: req.body.email,
         },
     ];
+    sendSmtpEmail.params = req.body.params;
     sendSmtpEmail.type = "classic";
-    sendSmtpEmail.templateId = 1;
+    sendSmtpEmail.templateId = req.body.templateId;
     try {
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
         res.status(201).json({ success: "ok" });
