@@ -12,15 +12,19 @@ paypal.configure({
   client_secret: <string>PAYPAL_SECRET,
 });
 
-const paypalPay: RequestHandler = (req, res, next) => {
+const paypalPay: RequestHandler<{}, {}, { price: string }> = (
+  req,
+  res,
+  next
+) => {
   const create_payment_json = {
     intent: "sale",
     payer: {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "exp://192.168.0.11:19000",
-      cancel_url: "exp://192.168.0.11:19000",
+      return_url: "exp+istop://1doounm.djole232.8081.exp.direct",
+      cancel_url: "exp+istop://1doounm.djole232.8081.exp.direct",
     },
     transactions: [
       {
@@ -29,7 +33,7 @@ const paypalPay: RequestHandler = (req, res, next) => {
             {
               name: "Mentoring",
               sku: "001",
-              price: "5",
+              price: req.body.price,
               currency: "USD",
               quantity: 1,
             },
@@ -37,7 +41,7 @@ const paypalPay: RequestHandler = (req, res, next) => {
         },
         amount: {
           currency: "USD",
-          total: "5",
+          total: req.body.price,
         },
         description: "Mentoring system",
       },
