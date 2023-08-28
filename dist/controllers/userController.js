@@ -16,6 +16,7 @@ exports.userController = void 0;
 const errorHandler_1 = require("../errors/errorHandler");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
+const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -116,6 +117,19 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
+const pokeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield notifications_1.expoNotification.sendPushNotification({
+            to: req.body.notificationToken,
+            title: `Poked by ${req.body.name}`,
+            body: "You just received a poke 👈",
+        });
+        res.status(201).json({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.userController = {
     getUsers,
     getUserHealth,
@@ -123,4 +137,5 @@ exports.userController = {
     updateUser,
     updateUserCosts,
     deleteUser,
+    pokeUser,
 };

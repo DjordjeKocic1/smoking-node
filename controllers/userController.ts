@@ -4,6 +4,7 @@ import { http422Error, http500Error } from "../errors/errorHandler";
 import Mentor from "../model/mentor";
 import { RequestHandler } from "express";
 import User from "../model/user";
+import { expoNotification } from "../helpers/notifications/notifications";
 import { validationResult } from "express-validator";
 
 const getUsers: RequestHandler = async (req, res, next) => {
@@ -129,6 +130,24 @@ const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
   }
 };
 
+const pokeUser: RequestHandler<
+  {},
+  {},
+  { notificationToken: string; name: string }
+> = async (req, res, next) => {
+  try {
+    await expoNotification.sendPushNotification({
+      to: req.body.notificationToken,
+      title: `Poked by ${req.body.name}`,
+      body: "You just received a poke 👈",
+    });
+
+    res.status(201).json({ success: "ok" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const userController = {
   getUsers,
   getUserHealth,
@@ -136,4 +155,5 @@ export const userController = {
   updateUser,
   updateUserCosts,
   deleteUser,
+  pokeUser,
 };

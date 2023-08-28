@@ -60,6 +60,7 @@ router.delete(
   [checkModelID(User)],
   userController.deleteUser
 );
+router.post("/poke-user", userController.pokeUser);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);
