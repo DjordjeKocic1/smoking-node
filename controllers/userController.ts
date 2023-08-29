@@ -139,7 +139,7 @@ const pokeUser: RequestHandler<
     await expoNotification.sendPushNotification({
       to: req.body.notificationToken,
       title: `Poked by ${req.body.name}`,
-      body: "You just received a poke 👈",
+      body: "You just received a poke from mentor 👈",
     });
 
     res.status(201).json({ success: "ok" });
