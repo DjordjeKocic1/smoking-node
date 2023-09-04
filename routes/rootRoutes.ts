@@ -63,7 +63,10 @@ router.post("/poke-user", userController.pokeUser);
 router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
-  [checkMentoringYourSelf()],
+  [
+    body("email").isEmail().withMessage("Email is invalid"),
+    checkMentoringYourSelf(),
+  ],
   mentorController.createMentor
 );
 router.put(

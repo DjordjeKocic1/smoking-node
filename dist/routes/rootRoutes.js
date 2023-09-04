@@ -38,7 +38,10 @@ router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default
 router.post("/poke-user", userController_1.userController.pokeUser);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
-router.post("/create-mentor", [(0, errorRoute_1.checkMentoringYourSelf)()], mentorController_1.mentorController.createMentor);
+router.post("/create-mentor", [
+    (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"),
+    (0, errorRoute_1.checkMentoringYourSelf)(),
+], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", [(0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
 router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
 //Tasks
