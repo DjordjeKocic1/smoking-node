@@ -12,18 +12,14 @@ const userShema = new Schema(
       type: String,
       default: "user",
     },
+    image: String,
     name: String,
+    address: String,
+    city: String,
+    country: String,
     email: {
       type: String,
       required: true,
-    },
-    image: String,
-    userVerified: Boolean,
-    userBasicInfo: {
-      address: String,
-      city: String,
-      country: String,
-      flag: String,
     },
     healthInfo: {
       bloodPressure: Number,
@@ -65,18 +61,6 @@ const userShema = new Schema(
       cigarettes5YearCost: Number,
       cigarettes10YearCost: Number,
       cigarettesAvoidedCost: Number,
-    },
-    gameScore: {
-      type: Number,
-      default: 0,
-    },
-    latestScore: {
-      type: Number,
-      default: 0,
-    },
-    breathExercies: {
-      type: Number,
-      default: 0,
     },
     categories: [
       {
@@ -124,10 +108,23 @@ const userShema = new Schema(
         },
       },
     ],
+    gameScore: {
+      type: Number,
+      default: 0,
+    },
+    latestScore: {
+      type: Number,
+      default: 0,
+    },
+    breathExercies: {
+      type: Number,
+      default: 0,
+    },
     notificationToken: String,
     subscriber: Boolean,
     subscribeLasts: Number,
     subscribeDate: String,
+    userVerified: Boolean,
   },
   { timestamps: true }
 );

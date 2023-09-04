@@ -27,7 +27,7 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
     let mentors = (await Mentor.find()) as IMentor[];
 
     let arr = mentors.filter(
-      (mentor: IMentor) => mentor.mentorId == req.params.id
+      (mentor: IMentor) => mentor.userId == req.params.id
     );
 
     if (arr.length == 0) {
@@ -72,7 +72,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     const mentor = new Mentor({
       name: req.body.name,
       email: req.body.email,
-      mentorId: userMentor?._id,
+      userId: userMentor?._id,
       mentoringUser: user,
     });
 
@@ -89,12 +89,11 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     if (mentorExist) {
       mentorExist.mentoringUser.push({
         email: user.email,
-        userId: user._id,
         name: user.name,
+        _id: user._id,
       });
       mentorCreate = await mentorExist.save();
     } else {
-      mentor.mentoringUser[0].userId = user._id;
       mentorCreate = await mentor.save();
     }
 
@@ -115,7 +114,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       isTask: false,
       isMentoring: true,
       isRead: false,
-      userId: mentor.mentorId,
+      userId: mentor.userId,
     });
 
     await notification.save();
@@ -142,7 +141,7 @@ const updateMentor = async (
     })) as IMentor;
 
     let arr = mentorUpdate.mentoringUser.map((v) => {
-      if (v.userId == req.body.user.userId) {
+      if (v._id == req.body.user.userId) {
         return {
           ...v,
           accepted: req.body.user.accepted,
@@ -164,7 +163,7 @@ const updateMentor = async (
 
     if (!!user) {
       let userArr = user.mentors.map((v) => {
-        if (v.mentorId?.toString() == mentorUpdate.mentorId.toString()) {
+        if (v._id?.toString() == mentorUpdate.userId.toString()) {
           return {
             ...v,
             accepted: req.body.user.accepted,
@@ -208,7 +207,7 @@ const deleteMentor = async (
     }
 
     let mentor = (await Mentor.findOne({
-      mentorId: req.params.mentorId,
+      _id: req.params.mentorId,
     })) as IMentor;
 
     let user = (await User.findOne({
@@ -220,10 +219,10 @@ const deleteMentor = async (
     }
 
     let userMentorRemoved = user.mentors.filter(
-      (v) => v.mentorId?.toString() != mentor.mentorId.toString()
+      (v) => v._id?.toString() != mentor._id.toString()
     );
     let mentorRemoveUser = mentor.mentoringUser.filter(
-      (v) => v.userId?.toString() != user._id.toString()
+      (v) => v._id?.toString() != user._id.toString()
     );
 
     user.mentors = userMentorRemoved;

@@ -1,12 +1,9 @@
 import { body, query } from "express-validator";
 import {
-  checkAlreadyMentored,
-  checkIdParams,
   checkMentorIDExist,
   checkMentorIDParamExist,
   checkMentoringYourSelf,
   checkModelID,
-  checkUserExist,
   checkUserIDExist,
   checkUserIdParamExist,
 } from "../errors/errorRoute";
@@ -66,7 +63,7 @@ router.post("/poke-user", userController.pokeUser);
 router.get("/get-mentor/:id", mentorController.getMentor);
 router.post(
   "/create-mentor",
-  [checkAlreadyMentored(), checkMentoringYourSelf()],
+  [checkMentoringYourSelf()],
   mentorController.createMentor
 );
 router.put(

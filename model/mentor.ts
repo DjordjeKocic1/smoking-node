@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const mentorSchema = new Schema({
   name: String,
   email: String,
-  mentorId: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
     req: true,

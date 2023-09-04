@@ -71,13 +71,7 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!user) {
             throw new errorHandler_1.http422Error("User doesn't exist");
         }
-        user.tasks.push({
-            toDo: req.body.toDo,
-            comment: req.body.comment,
-            status: "",
-            mentorId: req.body.mentorId,
-            taskId: taskCreate._id,
-        });
+        user.tasks.push(taskCreate);
         yield user.save();
         const notification = new notification_1.default({
             isTask: true,
@@ -117,7 +111,7 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             throw new errorHandler_1.http422Error("User doesn't exist");
         }
         let userTasks = user.tasks.map((v) => {
-            if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
+            if (!!v._id && v._id.toString() === taskUpdate._id.toString()) {
                 return Object.assign(Object.assign({}, taskUpdate), { taskId: taskUpdate._id });
             }
             return Object.assign({}, v);
@@ -143,7 +137,7 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!user) {
             throw new errorHandler_1.http422Error("User doesn't exist");
         }
-        let userTasks = user.tasks.filter((v) => v.taskId && v.taskId.toString() != deletedTask._id.toString());
+        let userTasks = user.tasks.filter((v) => v._id && v._id.toString() != deletedTask._id.toString());
         user.tasks = userTasks;
         user.save();
         res.status(204).send({ success: "ok" });

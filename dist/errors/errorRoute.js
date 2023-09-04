@@ -3,20 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkAlreadyMentored = exports.checkUserExist = exports.checkIdParams = void 0;
+exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkUserExist = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
-//common errors
-const checkIdParams = () => (0, express_validator_1.param)("mentorId").custom((value) => {
-    if (value.length !== 24) {
-        return Promise.reject("ID is not valid");
-    }
-    else {
-        return Promise.resolve();
-    }
-});
-exports.checkIdParams = checkIdParams;
 const checkUserExist = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
     if (!req.body.email) {
         return Promise.reject("Email is required");
@@ -31,16 +21,6 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
     });
 });
 exports.checkUserExist = checkUserExist;
-const checkAlreadyMentored = () => (0, express_validator_1.body)("user").custom((value) => {
-    if (!value) {
-        return Promise.reject("User doesn't exist.Please try again later.");
-    }
-    if (!value.email) {
-        return Promise.reject("Email required.Please try again later.");
-    }
-    return Promise.resolve();
-});
-exports.checkAlreadyMentored = checkAlreadyMentored;
 const checkMentoringYourSelf = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
     if (!req.body.email) {
         return Promise.reject("User doesn't exist.Please try again later.");
@@ -64,7 +44,7 @@ const checkUserIDExist = () => (0, express_validator_1.body)("userId").custom((v
 });
 exports.checkUserIDExist = checkUserIDExist;
 const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custom((value) => {
-    return mentor_1.default.findOne({ mentorId: value }).then((user) => {
+    return mentor_1.default.findOne({ _id: value }).then((user) => {
         if (!user) {
             return Promise.reject("Create Task Mentor ID doesn't exist");
         }
@@ -75,7 +55,7 @@ const checkMentorIDExist = () => (0, express_validator_1.body)("mentorId").custo
 });
 exports.checkMentorIDExist = checkMentorIDExist;
 const checkMentorIDParamExist = () => (0, express_validator_1.param)("mentorId").custom((value) => {
-    return mentor_1.default.findOne({ mentorId: value }).then((user) => {
+    return mentor_1.default.findOne({ _id: value }).then((user) => {
         if (!user) {
             return Promise.reject("Mentor ID doesn't exist");
         }

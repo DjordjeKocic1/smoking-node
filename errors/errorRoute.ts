@@ -1,18 +1,7 @@
 import { body, param } from "express-validator";
 
-import { IUser } from "../types/types";
 import Mentor from "../model/mentor";
 import User from "../model/user";
-
-//common errors
-export const checkIdParams = () =>
-  param("mentorId").custom((value) => {
-    if (value.length !== 24) {
-      return Promise.reject("ID is not valid");
-    } else {
-      return Promise.resolve();
-    }
-  });
 
 export const checkUserExist = () =>
   body("email").custom((value, { req }) => {
@@ -28,17 +17,6 @@ export const checkUserExist = () =>
         return Promise.resolve();
       }
     });
-  });
-
-export const checkAlreadyMentored = () =>
-  body("user").custom((value) => {
-    if (!value) {
-      return Promise.reject("User doesn't exist.Please try again later.");
-    }
-    if (!value.email) {
-      return Promise.reject("Email required.Please try again later.");
-    }
-    return Promise.resolve();
   });
 
 export const checkMentoringYourSelf = () =>
@@ -66,7 +44,7 @@ export const checkUserIDExist = () =>
 
 export const checkMentorIDExist = () =>
   body("mentorId").custom((value) => {
-    return Mentor.findOne({ mentorId: value }).then((user) => {
+    return Mentor.findOne({ _id: value }).then((user) => {
       if (!user) {
         return Promise.reject("Create Task Mentor ID doesn't exist");
       } else {
@@ -77,7 +55,7 @@ export const checkMentorIDExist = () =>
 
 export const checkMentorIDParamExist = () =>
   param("mentorId").custom((value) => {
-    return Mentor.findOne({ mentorId: value }).then((user) => {
+    return Mentor.findOne({ _id: value }).then((user) => {
       if (!user) {
         return Promise.reject("Mentor ID doesn't exist");
       } else {

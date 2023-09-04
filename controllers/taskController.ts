@@ -80,13 +80,7 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
       throw new http422Error("User doesn't exist");
     }
 
-    user.tasks.push({
-      toDo: req.body.toDo,
-      comment: req.body.comment,
-      status: "",
-      mentorId: req.body.mentorId,
-      taskId: taskCreate._id,
-    });
+    user.tasks.push(taskCreate);
 
     await user.save();
 
@@ -140,7 +134,7 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
     }
 
     let userTasks = user.tasks.map((v) => {
-      if (!!v.taskId && v.taskId.toString() === taskUpdate._id.toString()) {
+      if (!!v._id && v._id.toString() === taskUpdate._id.toString()) {
         return {
           ...taskUpdate,
           taskId: taskUpdate._id,
@@ -175,7 +169,7 @@ const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
     }
 
     let userTasks = user.tasks.filter(
-      (v) => v.taskId && v.taskId.toString() != deletedTask._id.toString()
+      (v) => v._id && v._id.toString() != deletedTask._id.toString()
     );
 
     user.tasks = userTasks;

@@ -8,7 +8,6 @@ export interface IUserBasicInfo {
   address: string;
   city: string;
   country: string;
-  flag: string;
 }
 
 export interface ICategorieUser {
@@ -93,7 +92,7 @@ export interface IMentor {
   _id: any;
   name: string;
   email: string;
-  mentorId: any;
+  userId: any;
   mentoringUserId: string;
   mentoringUser: IMentoringUser[];
   save: () => Promise<IMentor>;
@@ -124,7 +123,7 @@ export interface ITaskUser {
   status: string;
   comment: string;
   mentorId: string;
-  taskId?: any;
+  _id?: any;
 }
 
 export interface IAchievementUser {

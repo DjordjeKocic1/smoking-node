@@ -26,7 +26,7 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentors = (yield mentor_1.default.find());
-        let arr = mentors.filter((mentor) => mentor.mentorId == req.params.id);
+        let arr = mentors.filter((mentor) => mentor.userId == req.params.id);
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
@@ -58,7 +58,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         const mentor = new mentor_1.default({
             name: req.body.name,
             email: req.body.email,
-            mentorId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
+            userId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
             mentoringUser: user,
         });
         let userExistWithinMentor = mentorExist &&
@@ -70,13 +70,12 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (mentorExist) {
             mentorExist.mentoringUser.push({
                 email: user.email,
-                userId: user._id,
                 name: user.name,
+                _id: user._id,
             });
             mentorCreate = yield mentorExist.save();
         }
         else {
-            mentor.mentoringUser[0].userId = user._id;
             mentorCreate = yield mentor.save();
         }
         user.mentors.push(mentorCreate);
@@ -93,7 +92,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             isTask: false,
             isMentoring: true,
             isRead: false,
-            userId: mentor.mentorId,
+            userId: mentor.userId,
         });
         yield notification.save();
         res.status(201).json({ mentor: mentorCreate });
@@ -112,7 +111,7 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             _id: req.params.id,
         }));
         let arr = mentorUpdate.mentoringUser.map((v) => {
-            if (v.userId == req.body.user.userId) {
+            if (v._id == req.body.user.userId) {
                 return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
             }
             return Object.assign({}, v);
@@ -125,7 +124,7 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!!user) {
             let userArr = user.mentors.map((v) => {
                 var _a;
-                if (((_a = v.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) == mentorUpdate.mentorId.toString()) {
+                if (((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) == mentorUpdate.userId.toString()) {
                     return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
                 }
                 return Object.assign({}, v);
@@ -154,7 +153,7 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let mentor = (yield mentor_1.default.findOne({
-            mentorId: req.params.mentorId,
+            _id: req.params.mentorId,
         }));
         let user = (yield user_1.default.findOne({
             _id: req.params.userId,
@@ -162,8 +161,8 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!user && !mentor) {
             throw new errorHandler_1.http422Error("User or mentor doesn't exist");
         }
-        let userMentorRemoved = user.mentors.filter((v) => { var _a; return ((_a = v.mentorId) === null || _a === void 0 ? void 0 : _a.toString()) != mentor.mentorId.toString(); });
-        let mentorRemoveUser = mentor.mentoringUser.filter((v) => { var _a; return ((_a = v.userId) === null || _a === void 0 ? void 0 : _a.toString()) != user._id.toString(); });
+        let userMentorRemoved = user.mentors.filter((v) => { var _a; return ((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) != mentor._id.toString(); });
+        let mentorRemoveUser = mentor.mentoringUser.filter((v) => { var _a; return ((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) != user._id.toString(); });
         user.mentors = userMentorRemoved;
         yield user.save();
         mentor.mentoringUser = mentorRemoveUser;
