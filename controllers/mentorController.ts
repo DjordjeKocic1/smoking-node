@@ -141,7 +141,7 @@ const updateMentor = async (
     })) as IMentor;
 
     let arr = mentorUpdate.mentoringUser.map((v) => {
-      if (v._id == req.body.user.userId) {
+      if (v._id?.toString() == req.body.user.userId.toString()) {
         return {
           ...v,
           accepted: req.body.user.accepted,
@@ -163,7 +163,7 @@ const updateMentor = async (
 
     if (!!user) {
       let userArr = user.mentors.map((v) => {
-        if (v._id?.toString() == mentorUpdate.userId.toString()) {
+        if (v._id?.toString() == mentorUpdate._id.toString()) {
           return {
             ...v,
             accepted: req.body.user.accepted,

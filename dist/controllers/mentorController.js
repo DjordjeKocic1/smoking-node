@@ -111,7 +111,8 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             _id: req.params.id,
         }));
         let arr = mentorUpdate.mentoringUser.map((v) => {
-            if (v._id == req.body.user.userId) {
+            var _a;
+            if (((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) == req.body.user.userId.toString()) {
                 return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
             }
             return Object.assign({}, v);
@@ -124,7 +125,7 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         if (!!user) {
             let userArr = user.mentors.map((v) => {
                 var _a;
-                if (((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) == mentorUpdate.userId.toString()) {
+                if (((_a = v._id) === null || _a === void 0 ? void 0 : _a.toString()) == mentorUpdate._id.toString()) {
                     return Object.assign(Object.assign({}, v), { accepted: req.body.user.accepted, name: req.body.name });
                 }
                 return Object.assign({}, v);
