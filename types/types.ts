@@ -52,6 +52,11 @@ export interface IConsumptionInfo {
   cigarettes10YearCost: number;
   cigarettesAvoidedCost: number;
 }
+
+export interface ISubscription {
+  subscriber: boolean;
+  subscribeDate: string;
+}
 export interface IUser {
   type?: string;
   _id: any;
@@ -76,8 +81,7 @@ export interface IUser {
   achievements: IAchievementUser[];
   gameScore: number;
   save: () => Promise<IUser>;
-  subscriber: boolean;
-  subscribeDate: string;
+  subscription: ISubscription;
 }
 
 export interface IMentoringUser {

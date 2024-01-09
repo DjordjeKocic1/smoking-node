@@ -55,7 +55,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
 
     let user = (await User.findOne({ _id: req.body.user._id })) as IUser;
 
-    if (!user.subscriber && user.type === "user") {
+    if (!user.subscription.subscriber) {
       throw new http422Error("User is not subscriber");
     }
 
