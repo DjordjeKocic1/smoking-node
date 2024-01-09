@@ -120,10 +120,12 @@ const userShema = new Schema({
         type: Number,
         default: 0,
     },
+    subscription: {
+        subscriber: Boolean,
+        subscribeLasts: Number,
+        subscribeDate: String,
+    },
     notificationToken: String,
-    subscriber: Boolean,
-    subscribeLasts: Number,
-    subscribeDate: String,
     userVerified: Boolean,
 }, { timestamps: true });
 userShema.methods.calculateCosts = function (req) {
@@ -162,16 +164,17 @@ userShema.methods.calculateHealth = function (user) {
         new Date(!!this.smokingInfo.dateOfQuiting
             ? this.smokingInfo.dateOfQuiting
             : new Date().toDateString()).getTime();
-    if (this.subscriber) {
-        const subscribeTimeDate = new Date().getTime() - new Date(this.subscribeDate).getTime();
+    if (this.subscription.subscriber) {
+        const subscribeTimeDate = new Date().getTime() -
+            new Date(this.subscription.subscribeDate).getTime();
         const subscribeTime = Math.floor(subscribeTimeDate / (1000 * 60 * 60 * 24));
-        this.subscribeLasts = 30 - subscribeTime;
+        this.subscription.subscribeLasts = 30 - subscribeTime;
         if (subscribeTime >= 30) {
-            this.subscriber = false;
+            this.subscription.subscriber = false;
         }
     }
-    if (this.subscribeLasts <= 0) {
-        this.subscribeLasts = 0;
+    if (this.subscription.subscribeLasts <= 0) {
+        this.subscription.subscribeLasts = 0;
     }
     this.smokingInfo.noSmokingDays =
         !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
