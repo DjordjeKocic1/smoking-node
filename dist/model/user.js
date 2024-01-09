@@ -191,19 +191,19 @@ userShema.methods.calculateHealth = function (user) {
     this.healthInfo.riskofLungeCancer = userHelperClass.calcRiskofLungeCancer();
     this.healthInfo.riskofStroke = userHelperClass.calcRiskofStroke();
     const healthObjKeys = helperClass_1.commonHelpers.extractObjectKeys(this.healthInfo);
-    const healthObjEntries = helperClass_1.commonHelpers.extractObjectEntries(this.healthInfo);
     healthObjKeys.forEach((value) => {
         if (this.healthInfo[value] > 100) {
             this.healthInfo[value] = 100;
         }
     });
+    const healthObjEntries = helperClass_1.commonHelpers.extractObjectEntries(this.healthInfo);
     let sum = 0;
     healthObjEntries.forEach(([key, value]) => {
         if (key != "avgHealth") {
             sum += value;
         }
     });
-    this.healthInfo.avgHealth = (sum / healthObjEntries.length).toFixed(1);
+    this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
     return this.save();
 };
 exports.default = mongoose_1.default.model("User", userShema);

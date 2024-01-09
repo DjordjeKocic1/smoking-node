@@ -184,7 +184,7 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
     }
   }
 
-  if(this.subscribeLasts <= 0) {
+  if (this.subscribeLasts <= 0) {
     this.subscribeLasts = 0;
   }
 
@@ -209,13 +209,14 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
   this.healthInfo.riskofStroke = userHelperClass.calcRiskofStroke();
 
   const healthObjKeys = commonHelpers.extractObjectKeys(this.healthInfo);
-  const healthObjEntries = commonHelpers.extractObjectEntries(this.healthInfo);
 
   healthObjKeys.forEach((value) => {
     if (this.healthInfo[value] > 100) {
       this.healthInfo[value] = 100;
     }
   });
+
+  const healthObjEntries = commonHelpers.extractObjectEntries(this.healthInfo);
 
   let sum = 0;
   healthObjEntries.forEach(([key, value]) => {
@@ -224,7 +225,7 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
     }
   });
 
-  this.healthInfo.avgHealth = (sum / healthObjEntries.length).toFixed(1);
+  this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
 
   return this.save();
 };
