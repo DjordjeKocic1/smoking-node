@@ -205,6 +205,9 @@ userShema.methods.calculateHealth = function (user) {
         }
     });
     this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
+    if (this.healthInfo.avgHealth <= 0) {
+        this.healthInfo.avgHealth = 0;
+    }
     return this.save();
 };
 exports.default = mongoose_1.default.model("User", userShema);

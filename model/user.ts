@@ -227,6 +227,10 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
 
   this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
 
+  if(this.healthInfo.avgHealth <= 0){
+    this.healthInfo.avgHealth = 0
+  }
+
   return this.save();
 };
 
