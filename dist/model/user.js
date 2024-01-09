@@ -170,6 +170,9 @@ userShema.methods.calculateHealth = function (user) {
             this.subscriber = false;
         }
     }
+    if (this.subscribeLasts <= 0) {
+        this.subscribeLasts = 0;
+    }
     this.smokingInfo.noSmokingDays =
         !!user && !!user.smokingInfo && user.smokingInfo.isQuiting
             ? Math.floor(msDiff / (1000 * 60 * 60 * 24))
