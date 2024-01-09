@@ -171,10 +171,8 @@ userShema.methods.calculateHealth = function (user) {
         this.subscription.subscribeLasts = 30 - subscribeTime;
         if (subscribeTime >= 30) {
             this.subscription.subscriber = false;
+            this.subscription.subscribeLasts = 0;
         }
-    }
-    if (this.subscription.subscribeLasts <= 0) {
-        this.subscription.subscribeLasts = 0;
     }
     this.smokingInfo.noSmokingDays =
         !!user && !!user.smokingInfo && user.smokingInfo.isQuiting

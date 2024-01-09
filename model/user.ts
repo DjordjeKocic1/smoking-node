@@ -184,11 +184,8 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
 
     if (subscribeTime >= 30) {
       this.subscription.subscriber = false;
+      this.subscription.subscribeLasts = 0;
     }
-  }
-
-  if (this.subscription.subscribeLasts <= 0) {
-    this.subscription.subscribeLasts = 0;
   }
 
   this.smokingInfo.noSmokingDays =
