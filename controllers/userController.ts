@@ -96,11 +96,11 @@ const updateUser: RequestHandler<IParams> = async (req, res, next) => {
   }
 };
 
-const updateUserCosts: RequestHandler<
-  IParams,
-  {},
-  IConsumationPayload
-> = async (req, res, next) => {
+const getUserCosts: RequestHandler<IParams, {}, IConsumationPayload> = async (
+  req,
+  res,
+  next
+) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -258,7 +258,7 @@ export const userController = {
   getUserHealth,
   createUser,
   updateUser,
-  updateUserCosts,
+  getUserCosts,
   deleteUser,
   createPlan,
   updatePlan,

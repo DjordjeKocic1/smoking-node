@@ -90,7 +90,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const updateUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -209,7 +209,7 @@ exports.userController = {
     getUserHealth,
     createUser,
     updateUser,
-    updateUserCosts,
+    getUserCosts,
     deleteUser,
     createPlan,
     updatePlan,
