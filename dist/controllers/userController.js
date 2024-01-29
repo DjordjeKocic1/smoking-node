@@ -129,10 +129,6 @@ const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             completed: false,
             userId: req.params.id,
         });
-        let planExist = yield plans_1.default.findOne({ name: req.body.name });
-        if (planExist) {
-            throw new errorHandler_1.http422Error("Plan with that name already exits");
-        }
         let planCreated = yield plan.save();
         let user = (yield user_1.default.findOne({ _id: req.params.id }));
         if (!user) {

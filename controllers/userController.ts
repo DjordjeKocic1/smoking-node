@@ -148,12 +148,6 @@ const createPlan: RequestHandler<IParams, {}, IPlans> = async (
       userId: req.params.id,
     });
 
-    let planExist = await Plans.findOne({ name: req.body.name });
-
-    if (planExist) {
-      throw new http422Error("Plan with that name already exits");
-    }
-
     let planCreated = await plan.save();
 
     let user = (await User.findOne({ _id: req.params.id })) as IUser;
