@@ -45,11 +45,11 @@ const getUserNotificationToken: RequestHandler<
   }
 };
 
-const getUserHealth: RequestHandler<
-  IParams,
-  {},
-  { notificationToken: string }
-> = async (req, res, next) => {
+const getUserHealth: RequestHandler<IParams, {}, {}> = async (
+  req,
+  res,
+  next
+) => {
   try {
     const errors = validationResult(req);
 
@@ -60,18 +60,6 @@ const getUserHealth: RequestHandler<
     let user = (await User.findById(req.params.id)) as IUser;
 
     let healthCalc = await user.calculateHealth(user);
-
-    if (!!req.body.notificationToken) {
-      let userUpdate = (await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      })) as IUser;
-      return res.status(201).json({
-        user: {
-          ...healthCalc.toObject(),
-          notificationToken: userUpdate.notificationToken,
-        },
-      });
-    }
 
     res.status(201).json({ user: healthCalc });
   } catch (error) {

@@ -51,14 +51,6 @@ const getUserHealth = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         }
         let user = (yield user_1.default.findById(req.params.id));
         let healthCalc = yield user.calculateHealth(user);
-        if (!!req.body.notificationToken) {
-            let userUpdate = (yield user_1.default.findByIdAndUpdate(req.params.id, req.body, {
-                new: true,
-            }));
-            return res.status(201).json({
-                user: Object.assign(Object.assign({}, healthCalc.toObject()), { notificationToken: userUpdate.notificationToken }),
-            });
-        }
         res.status(201).json({ user: healthCalc });
     }
     catch (error) {
