@@ -90,14 +90,20 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const getUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http500Error();
         }
         const user = (yield user_1.default.findById(req.params.id));
-        const userCost = yield user.calculateCosts(req.body);
+        let userCost;
+        if (!req.body) {
+            userCost = yield user.calculateCosts(user.consumptionInfo);
+        }
+        else {
+            userCost = yield user.calculateCosts(req.body);
+        }
         res.status(201).json({ user: userCost });
     }
     catch (error) {
@@ -209,7 +215,7 @@ exports.userController = {
     getUserHealth,
     createUser,
     updateUser,
-    getUserCosts,
+    updateUserCosts,
     deleteUser,
     createPlan,
     updatePlan,

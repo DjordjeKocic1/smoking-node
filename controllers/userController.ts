@@ -1,4 +1,10 @@
-import { IConsumationPayload, IParams, IPlans, IUser } from "../types/types";
+import {
+  IConsumationPayload,
+  IConsumptionInfo,
+  IParams,
+  IPlans,
+  IUser,
+} from "../types/types";
 import { http422Error, http500Error } from "../errors/errorHandler";
 
 import Mentor from "../model/mentor";
@@ -96,7 +102,7 @@ const updateUser: RequestHandler<IParams> = async (req, res, next) => {
   }
 };
 
-const getUserCosts: RequestHandler<IParams, {}, IConsumationPayload> = async (
+const updateUserCosts: RequestHandler<IParams, {}, IConsumptionInfo> = async (
   req,
   res,
   next
@@ -107,7 +113,12 @@ const getUserCosts: RequestHandler<IParams, {}, IConsumationPayload> = async (
       throw new http500Error();
     }
     const user = (await User.findById(req.params.id)) as IUser;
-    const userCost = await user.calculateCosts(req.body);
+    let userCost;
+    if (!req.body) {
+      userCost = await user.calculateCosts(user.consumptionInfo);
+    } else {
+      userCost = await user.calculateCosts(req.body);
+    }
     res.status(201).json({ user: userCost });
   } catch (error) {
     next(error);
@@ -258,7 +269,7 @@ export const userController = {
   getUserHealth,
   createUser,
   updateUser,
-  getUserCosts,
+  updateUserCosts,
   deleteUser,
   createPlan,
   updatePlan,

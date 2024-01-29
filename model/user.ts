@@ -143,39 +143,42 @@ userShema.methods.calculateCosts = function (req: IUser): Promise<IUser> {
     this.type = req.type;
     this.userVerified = req.userVerified;
   }
-  this.consumptionInfo.cigarettesAvoided =
+  this.consumptionInfo.cigarettesAvoided ??=
     req.consumptionInfo.cigarettesAvoided;
-  this.consumptionInfo.packCigarettesPrice =
+  this.consumptionInfo.packCigarettesPrice ??=
     req.consumptionInfo.packCigarettesPrice;
-  this.consumptionInfo.cigarettesInPack = req.consumptionInfo.cigarettesInPack;
-  this.consumptionInfo.cigarettesDay = req.consumptionInfo.cigarettesDay;
+  this.consumptionInfo.cigarettesInPack ??=
+    req.consumptionInfo.cigarettesInPack;
+  this.consumptionInfo.cigarettesDay ??= req.consumptionInfo.cigarettesDay;
   this.consumptionInfo.cigarettesDailyCost = calculations
-    .cigDailyCosts(req.consumptionInfo)
+    .cigDailyCosts(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
   this.consumptionInfo.cigarettesMontlyCost = calculations
-    .cigMontlyCost(req.consumptionInfo)
+    .cigMontlyCost(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
   this.consumptionInfo.cigarettesYearlyCost = calculations
-    .cigYearlyCost(req.consumptionInfo)
+    .cigYearlyCost(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
   this.consumptionInfo.cigarettes5YearCost = calculations
-    .cig5YearCost(req.consumptionInfo)
+    .cig5YearCost(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
   this.consumptionInfo.cigarettes10YearCost = calculations
-    .cig10YearCost(req.consumptionInfo)
+    .cig10YearCost(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
   this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
     ? (
-        calculations.cigDailyCosts(req.consumptionInfo) *
+        calculations.cigDailyCosts(
+          req.consumptionInfo ?? this.consumptionInfo
+        ) *
           this.smokingInfo.noSmokingDays +
         calculations.cigAvoidedCost(
-          req.consumptionInfo,
+          req.consumptionInfo ?? this.consumptionInfo,
           this.consumptionInfo.cigarettesAvoided
         )
       ).toFixed(1)
     : calculations
         .cigAvoidedCost(
-          req.consumptionInfo,
+          req.consumptionInfo ?? this.consumptionInfo,
           this.consumptionInfo.cigarettesAvoided
         )
         .toFixed(1);

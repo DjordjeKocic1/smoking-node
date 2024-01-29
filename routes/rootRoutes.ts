@@ -48,10 +48,10 @@ router.post(
   userController.createUser
 );
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
-router.get(
+router.put(
   "/update-user-costs/:id",
   [checkModelID(User)],
-  userController.getUserCosts
+  userController.updateUserCosts
 );
 router.delete(
   "/delete-user/:id",
