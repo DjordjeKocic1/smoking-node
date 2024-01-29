@@ -82,6 +82,17 @@ const userShema = new Schema({
             },
         },
     ],
+    plans: [
+        {
+            name: String,
+            completed: Boolean,
+            plansId: {
+                type: Schema.Types.ObjectId,
+                ref: "Plans",
+                req: true,
+            },
+        },
+    ],
     tasks: [
         {
             toDo: String,
@@ -109,10 +120,6 @@ const userShema = new Schema({
         },
     ],
     gameScore: {
-        type: Number,
-        default: 0,
-    },
-    latestScore: {
         type: Number,
         default: 0,
     },

@@ -10,6 +10,7 @@ import {
 
 import Mentor from "../model/mentor";
 import Notification from "../model/notification";
+import Plans from "../model/plans";
 import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
@@ -58,6 +59,23 @@ router.delete(
   userController.deleteUser
 );
 router.post("/poke-user", userController.pokeUser);
+
+//Plans
+router.post(
+  "/create-plan/:id",
+  [checkModelID(User)],
+  userController.createPlan
+);
+router.put(
+  "/update-plan/:id",
+  [checkModelID(Plans)],
+  userController.updatePlan
+);
+router.delete(
+  "/delete-plan/:id",
+  [checkModelID(Plans)],
+  userController.deletePlane
+);
 
 //Mentor
 router.get("/get-mentor/:id", mentorController.getMentor);

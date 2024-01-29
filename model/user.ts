@@ -82,6 +82,17 @@ const userShema = new Schema(
         },
       },
     ],
+    plans: [
+      {
+        name: String,
+        completed: Boolean,
+        plansId: {
+          type: Schema.Types.ObjectId,
+          ref: "Plans",
+          req: true,
+        },
+      },
+    ],
     tasks: [
       {
         toDo: String,
@@ -109,10 +120,6 @@ const userShema = new Schema(
       },
     ],
     gameScore: {
-      type: Number,
-      default: 0,
-    },
-    latestScore: {
       type: Number,
       default: 0,
     },
@@ -227,8 +234,8 @@ userShema.methods.calculateHealth = function (user: IUser): Promise<IUser> {
 
   this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
 
-  if(this.healthInfo.avgHealth <= 0){
-    this.healthInfo.avgHealth = 0
+  if (this.healthInfo.avgHealth <= 0) {
+    this.healthInfo.avgHealth = 0;
   }
 
   return this.save();

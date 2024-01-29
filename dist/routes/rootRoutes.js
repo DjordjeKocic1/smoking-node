@@ -7,6 +7,7 @@ const express_validator_1 = require("express-validator");
 const errorRoute_1 = require("../errors/errorRoute");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
+const plans_1 = __importDefault(require("../model/plans"));
 const task_1 = __importDefault(require("../model/task"));
 const user_1 = __importDefault(require("../model/user"));
 const achievementController_1 = require("../controllers/achievementController");
@@ -36,6 +37,10 @@ router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)],
 router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 router.post("/poke-user", userController_1.userController.pokeUser);
+//Plans
+router.post("/create-plan/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.createPlan);
+router.put("/update-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], userController_1.userController.updatePlan);
+router.delete("/delete-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], userController_1.userController.deletePlane);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [

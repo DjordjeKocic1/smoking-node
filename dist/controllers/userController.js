@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const errorHandler_1 = require("../errors/errorHandler");
 const mentor_1 = __importDefault(require("../model/mentor"));
+const plans_1 = __importDefault(require("../model/plans"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const express_validator_1 = require("express-validator");
@@ -117,6 +118,83 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
+const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let plan = new plans_1.default({
+            name: req.body.name,
+            completed: false,
+            userId: req.params.id,
+        });
+        let planExist = yield plans_1.default.findOne({ name: req.body.name });
+        if (planExist) {
+            throw new errorHandler_1.http422Error("Plan with that name already exits");
+        }
+        let planCreated = yield plan.save();
+        let user = (yield user_1.default.findOne({ _id: req.params.id }));
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        user.plans.push(planCreated);
+        yield user.save();
+        res.status(201).json({ plan: planCreated });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const updatePlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let planUpdate = (yield plans_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        }));
+        let user = (yield user_1.default.findOne({ _id: planUpdate.userId }));
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        let userPlans = user.plans.map((v) => {
+            if (!!v._id && v._id.toString() === planUpdate._id.toString()) {
+                return Object.assign(Object.assign({}, planUpdate), { plansId: planUpdate._id });
+            }
+            return Object.assign({}, v);
+        });
+        user.plans = userPlans;
+        yield user.save();
+        res.status(201).json({ plan: planUpdate });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const deletePlane = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        const deletedPlan = (yield plans_1.default.findByIdAndDelete({
+            _id: req.params.id,
+        }));
+        let user = yield user_1.default.findOne({ _id: deletedPlan.userId });
+        if (!user) {
+            throw new errorHandler_1.http422Error("User doesn't exist");
+        }
+        let userPlans = user.plans.filter((v) => v._id && v._id.toString() != deletedPlan._id.toString());
+        user.plans = userPlans;
+        user.save();
+        res.status(204).send({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const pokeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield notifications_1.expoNotification.sendPushNotification({
@@ -137,5 +215,8 @@ exports.userController = {
     updateUser,
     updateUserCosts,
     deleteUser,
+    createPlan,
+    updatePlan,
+    deletePlane,
     pokeUser,
 };

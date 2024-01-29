@@ -52,7 +52,13 @@ export interface IConsumptionInfo {
   cigarettes10YearCost: number;
   cigarettesAvoidedCost: number;
 }
-
+export interface IPlans {
+  _id: string;
+  name: string;
+  completed?: boolean;
+  userId?: string;
+  plansId?: string;
+}
 export interface ISubscription {
   subscriber: boolean;
   subscribeDate: string;
@@ -71,6 +77,7 @@ export interface IUser {
   smokingInfo: ISmokingInfo;
   consumptionInfo: IConsumptionInfo;
   savedInfo: IConsumptionInfo;
+  plans: IPlans[];
   calculateHealth: (user: IUser) => Promise<IUser>;
   calculateCosts: (user: IUser) => Promise<IUser>;
   toObject: Function;
