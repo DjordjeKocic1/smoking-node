@@ -37,7 +37,7 @@ router.get("/", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.post(
+router.get(
   "/user-health/:id",
   [checkModelID(User)],
   userController.getUserHealth
