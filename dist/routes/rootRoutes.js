@@ -36,6 +36,7 @@ router.post("/create-user", (0, express_validator_1.body)("email").isEmail().wit
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
+router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserNotificationToken);
 router.post("/poke-user", userController_1.userController.pokeUser);
 //Plans
 router.post("/create-plan/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.createPlan);

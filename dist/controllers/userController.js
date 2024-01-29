@@ -28,6 +28,21 @@ const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(error);
     }
 });
+const getUserNotificationToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let userUpdate = (yield user_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        }));
+        res.status(201).json({ user: userUpdate });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const getUserHealth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -221,4 +236,5 @@ exports.userController = {
     updatePlan,
     deletePlane,
     pokeUser,
+    getUserNotificationToken,
 };

@@ -23,6 +23,28 @@ const getUsers: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getUserNotificationToken: RequestHandler<
+  IParams,
+  {},
+  { notificationToken: string }
+> = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+
+    let userUpdate = (await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    })) as IUser;
+
+    res.status(201).json({ user: userUpdate });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUserHealth: RequestHandler<
   IParams,
   {},
@@ -275,4 +297,5 @@ export const userController = {
   updatePlan,
   deletePlane,
   pokeUser,
+  getUserNotificationToken,
 };

@@ -58,6 +58,11 @@ router.delete(
   [checkModelID(User)],
   userController.deleteUser
 );
+router.post(
+  "/user-token/:id",
+  [checkModelID(User)],
+  userController.getUserNotificationToken
+);
 router.post("/poke-user", userController.pokeUser);
 
 //Plans
