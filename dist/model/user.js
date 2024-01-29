@@ -161,9 +161,13 @@ userShema.methods.calculateCosts = function (req) {
     this.consumptionInfo.cigarettes10YearCost = calcs_1.calculations
         .cig10YearCost(req.consumptionInfo)
         .toFixed(1);
-    this.consumptionInfo.cigarettesAvoidedCost = calcs_1.calculations
-        .cigAvoidedCost(req.consumptionInfo, this.consumptionInfo.cigarettesAvoided)
-        .toFixed(1);
+    this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
+        ? (calcs_1.calculations.cigDailyCosts(req.consumptionInfo) *
+            this.smokingInfo.noSmokingDays +
+            calcs_1.calculations.cigAvoidedCost(req.consumptionInfo, this.consumptionInfo.cigarettesAvoided)).toFixed(1)
+        : calcs_1.calculations
+            .cigAvoidedCost(req.consumptionInfo, this.consumptionInfo.cigarettesAvoided)
+            .toFixed(1);
     return this.save();
 };
 userShema.methods.calculateHealth = function (user) {

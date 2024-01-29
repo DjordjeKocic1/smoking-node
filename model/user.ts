@@ -164,9 +164,21 @@ userShema.methods.calculateCosts = function (req: IUser): Promise<IUser> {
   this.consumptionInfo.cigarettes10YearCost = calculations
     .cig10YearCost(req.consumptionInfo)
     .toFixed(1);
-  this.consumptionInfo.cigarettesAvoidedCost = calculations
-    .cigAvoidedCost(req.consumptionInfo, this.consumptionInfo.cigarettesAvoided)
-    .toFixed(1);
+  this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
+    ? (
+        calculations.cigDailyCosts(req.consumptionInfo) *
+          this.smokingInfo.noSmokingDays +
+        calculations.cigAvoidedCost(
+          req.consumptionInfo,
+          this.consumptionInfo.cigarettesAvoided
+        )
+      ).toFixed(1)
+    : calculations
+        .cigAvoidedCost(
+          req.consumptionInfo,
+          this.consumptionInfo.cigarettesAvoided
+        )
+        .toFixed(1);
 
   return this.save();
 };
