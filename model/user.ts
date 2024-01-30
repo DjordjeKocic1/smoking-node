@@ -143,13 +143,10 @@ userShema.methods.calculateCosts = function (req: IUser): Promise<IUser> {
     this.type = req.type;
     this.userVerified = req.userVerified;
   }
-  this.consumptionInfo.cigarettesAvoided ??=
-    req.consumptionInfo.cigarettesAvoided;
-  this.consumptionInfo.packCigarettesPrice ??=
-    req.consumptionInfo.packCigarettesPrice;
-  this.consumptionInfo.cigarettesInPack ??=
-    req.consumptionInfo.cigarettesInPack;
-  this.consumptionInfo.cigarettesDay ??= req.consumptionInfo.cigarettesDay;
+  this.consumptionInfo.cigarettesAvoided = req.consumptionInfo ? req.consumptionInfo.cigarettesAvoided : this.consumptionInfo.cigarettesAvoided;
+  this.consumptionInfo.packCigarettesPrice = req.consumptionInfo ? req.consumptionInfo.packCigarettesPrice : this.consumptionInfo.packCigarettesPrice;
+  this.consumptionInfo.cigarettesInPack = req.consumptionInfo ? req.consumptionInfo.cigarettesInPack : this.consumptionInfo.cigarettesInPack;
+  this.consumptionInfo.cigarettesDay = req.consumptionInfo ? req.consumptionInfo.cigarettesDay : this.consumptionInfo.cigarettesDay;
   this.consumptionInfo.cigarettesDailyCost = calculations
     .cigDailyCosts(req.consumptionInfo ?? this.consumptionInfo)
     .toFixed(1);
@@ -179,7 +176,8 @@ userShema.methods.calculateCosts = function (req: IUser): Promise<IUser> {
     : calculations
         .cigAvoidedCost(
           req.consumptionInfo ?? this.consumptionInfo,
-          this.consumptionInfo.cigarettesAvoided
+          req.consumptionInfo ? req.consumptionInfo.cigarettesAvoided :
+            this.consumptionInfo.cigarettesAvoided
         )
         .toFixed(1);
 

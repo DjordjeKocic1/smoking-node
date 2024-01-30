@@ -105,11 +105,11 @@ const updateUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         }
         const user = (yield user_1.default.findById(req.params.id));
         let userCost;
-        if (!req.body) {
+        if (!req.body.consumptionInfo) {
             userCost = yield user.calculateCosts(user.consumptionInfo);
         }
         else {
-            userCost = yield user.calculateCosts(req.body);
+            userCost = yield user.calculateCosts(req === null || req === void 0 ? void 0 : req.body);
         }
         res.status(201).json({ user: userCost });
     }

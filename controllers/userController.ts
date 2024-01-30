@@ -112,7 +112,7 @@ const updateUser: RequestHandler<IParams> = async (req, res, next) => {
   }
 };
 
-const updateUserCosts: RequestHandler<IParams, {}, IConsumptionInfo> = async (
+const updateUserCosts: RequestHandler<IParams, {}> = async (
   req,
   res,
   next
@@ -124,10 +124,10 @@ const updateUserCosts: RequestHandler<IParams, {}, IConsumptionInfo> = async (
     }
     const user = (await User.findById(req.params.id)) as IUser;
     let userCost;
-    if (!req.body) {
+    if (!req.body.consumptionInfo) {
       userCost = await user.calculateCosts(user.consumptionInfo);
     } else {
-      userCost = await user.calculateCosts(req.body);
+      userCost = await user.calculateCosts(req?.body);
     }
     res.status(201).json({ user: userCost });
   } catch (error) {
