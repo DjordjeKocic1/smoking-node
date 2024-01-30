@@ -187,46 +187,6 @@ const createPlan: RequestHandler<IParams, {}, IPlans> = async (
   }
 };
 
-const updatePlan: RequestHandler<IParams, {}, IPlans> = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new http422Error(errors.array()[0].msg);
-    }
-
-    let planUpdate = (await Plans.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    })) as IPlans;
-
-    let user = (await User.findOne({ _id: planUpdate.userId })) as IUser;
-
-    if (!user) {
-      throw new http422Error("User doesn't exist");
-    }
-
-    let userPlans = user.plans.map((v) => {
-      if (!!v._id && v._id.toString() === planUpdate._id.toString()) {
-        return {
-          ...planUpdate,
-          plansId: planUpdate._id,
-        };
-      }
-      return { ...v };
-    });
-
-    user.plans = userPlans;
-    await user.save();
-
-    res.status(201).json({ plan: planUpdate });
-  } catch (error) {
-    next(error);
-  }
-};
-
 const deletePlane: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -282,7 +242,6 @@ export const userController = {
   updateUserCosts,
   deleteUser,
   createPlan,
-  updatePlan,
   deletePlane,
   pokeUser,
   getUserNotificationToken,

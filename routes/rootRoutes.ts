@@ -71,11 +71,6 @@ router.post(
   [checkModelID(User)],
   userController.createPlan
 );
-router.put(
-  "/update-plan/:id",
-  [checkModelID(Plans)],
-  userController.updatePlan
-);
 router.delete(
   "/delete-plan/:id",
   [checkModelID(Plans)],

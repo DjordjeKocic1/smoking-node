@@ -155,33 +155,6 @@ const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const updatePlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            throw new errorHandler_1.http422Error(errors.array()[0].msg);
-        }
-        let planUpdate = (yield plans_1.default.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        }));
-        let user = (yield user_1.default.findOne({ _id: planUpdate.userId }));
-        if (!user) {
-            throw new errorHandler_1.http422Error("User doesn't exist");
-        }
-        let userPlans = user.plans.map((v) => {
-            if (!!v._id && v._id.toString() === planUpdate._id.toString()) {
-                return Object.assign(Object.assign({}, planUpdate), { plansId: planUpdate._id });
-            }
-            return Object.assign({}, v);
-        });
-        user.plans = userPlans;
-        yield user.save();
-        res.status(201).json({ plan: planUpdate });
-    }
-    catch (error) {
-        next(error);
-    }
-});
 const deletePlane = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -225,7 +198,6 @@ exports.userController = {
     updateUserCosts,
     deleteUser,
     createPlan,
-    updatePlan,
     deletePlane,
     pokeUser,
     getUserNotificationToken,

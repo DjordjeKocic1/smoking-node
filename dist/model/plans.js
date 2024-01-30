@@ -10,7 +10,6 @@ const plansShema = new Schema({
         type: String,
         require: true,
     },
-    completed: Boolean,
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
