@@ -31,10 +31,9 @@ router.get("/", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.get("/user-health/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserHealth);
+router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserInfoCalc);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
-router.put("/update-user-costs/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserCosts);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserNotificationToken);
 router.post("/poke-user", userController_1.userController.pokeUser);

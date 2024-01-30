@@ -135,42 +135,8 @@ const userShema = new Schema({
     notificationToken: String,
     userVerified: Boolean,
 }, { timestamps: true });
-userShema.methods.calculateCosts = function (req) {
+userShema.methods.calculateHealth = function (user, req) {
     var _a, _b, _c, _d, _e, _f, _g, _h;
-    if (!!req.type && !!req.userVerified) {
-        this.type = req.type;
-        this.userVerified = req.userVerified;
-    }
-    this.consumptionInfo.cigarettesAvoided = req.consumptionInfo ? req.consumptionInfo.cigarettesAvoided : this.consumptionInfo.cigarettesAvoided;
-    this.consumptionInfo.packCigarettesPrice = req.consumptionInfo ? req.consumptionInfo.packCigarettesPrice : this.consumptionInfo.packCigarettesPrice;
-    this.consumptionInfo.cigarettesInPack = req.consumptionInfo ? req.consumptionInfo.cigarettesInPack : this.consumptionInfo.cigarettesInPack;
-    this.consumptionInfo.cigarettesDay = req.consumptionInfo ? req.consumptionInfo.cigarettesDay : this.consumptionInfo.cigarettesDay;
-    this.consumptionInfo.cigarettesDailyCost = calcs_1.calculations
-        .cigDailyCosts((_a = req.consumptionInfo) !== null && _a !== void 0 ? _a : this.consumptionInfo)
-        .toFixed(1);
-    this.consumptionInfo.cigarettesMontlyCost = calcs_1.calculations
-        .cigMontlyCost((_b = req.consumptionInfo) !== null && _b !== void 0 ? _b : this.consumptionInfo)
-        .toFixed(1);
-    this.consumptionInfo.cigarettesYearlyCost = calcs_1.calculations
-        .cigYearlyCost((_c = req.consumptionInfo) !== null && _c !== void 0 ? _c : this.consumptionInfo)
-        .toFixed(1);
-    this.consumptionInfo.cigarettes5YearCost = calcs_1.calculations
-        .cig5YearCost((_d = req.consumptionInfo) !== null && _d !== void 0 ? _d : this.consumptionInfo)
-        .toFixed(1);
-    this.consumptionInfo.cigarettes10YearCost = calcs_1.calculations
-        .cig10YearCost((_e = req.consumptionInfo) !== null && _e !== void 0 ? _e : this.consumptionInfo)
-        .toFixed(1);
-    this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
-        ? (calcs_1.calculations.cigDailyCosts((_f = req.consumptionInfo) !== null && _f !== void 0 ? _f : this.consumptionInfo) *
-            this.smokingInfo.noSmokingDays +
-            calcs_1.calculations.cigAvoidedCost((_g = req.consumptionInfo) !== null && _g !== void 0 ? _g : this.consumptionInfo, this.consumptionInfo.cigarettesAvoided)).toFixed(1)
-        : calcs_1.calculations
-            .cigAvoidedCost((_h = req.consumptionInfo) !== null && _h !== void 0 ? _h : this.consumptionInfo, req.consumptionInfo ? req.consumptionInfo.cigarettesAvoided :
-            this.consumptionInfo.cigarettesAvoided)
-            .toFixed(1);
-    return this.save();
-};
-userShema.methods.calculateHealth = function (user) {
     const msDiff = new Date().getTime() -
         new Date(!!this.smokingInfo.dateOfQuiting
             ? this.smokingInfo.dateOfQuiting
@@ -218,6 +184,49 @@ userShema.methods.calculateHealth = function (user) {
     this.healthInfo.avgHealth = (sum / healthObjEntries.length - 1).toFixed(1);
     if (this.healthInfo.avgHealth <= 0) {
         this.healthInfo.avgHealth = 0;
+    }
+    //cost calculations
+    if (req) {
+        if (!!req.type && !!req.userVerified) {
+            this.type = req.type;
+            this.userVerified = req.userVerified;
+        }
+        this.consumptionInfo.cigarettesAvoided = req.consumptionInfo
+            ? req.consumptionInfo.cigarettesAvoided
+            : this.consumptionInfo.cigarettesAvoided;
+        this.consumptionInfo.packCigarettesPrice = req.consumptionInfo
+            ? req.consumptionInfo.packCigarettesPrice
+            : this.consumptionInfo.packCigarettesPrice;
+        this.consumptionInfo.cigarettesInPack = req.consumptionInfo
+            ? req.consumptionInfo.cigarettesInPack
+            : this.consumptionInfo.cigarettesInPack;
+        this.consumptionInfo.cigarettesDay = req.consumptionInfo
+            ? req.consumptionInfo.cigarettesDay
+            : this.consumptionInfo.cigarettesDay;
+        this.consumptionInfo.cigarettesDailyCost = calcs_1.calculations
+            .cigDailyCosts((_a = req.consumptionInfo) !== null && _a !== void 0 ? _a : this.consumptionInfo)
+            .toFixed(1);
+        this.consumptionInfo.cigarettesMontlyCost = calcs_1.calculations
+            .cigMontlyCost((_b = req.consumptionInfo) !== null && _b !== void 0 ? _b : this.consumptionInfo)
+            .toFixed(1);
+        this.consumptionInfo.cigarettesYearlyCost = calcs_1.calculations
+            .cigYearlyCost((_c = req.consumptionInfo) !== null && _c !== void 0 ? _c : this.consumptionInfo)
+            .toFixed(1);
+        this.consumptionInfo.cigarettes5YearCost = calcs_1.calculations
+            .cig5YearCost((_d = req.consumptionInfo) !== null && _d !== void 0 ? _d : this.consumptionInfo)
+            .toFixed(1);
+        this.consumptionInfo.cigarettes10YearCost = calcs_1.calculations
+            .cig10YearCost((_e = req.consumptionInfo) !== null && _e !== void 0 ? _e : this.consumptionInfo)
+            .toFixed(1);
+        this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
+            ? (calcs_1.calculations.cigDailyCosts((_f = req.consumptionInfo) !== null && _f !== void 0 ? _f : this.consumptionInfo) *
+                this.smokingInfo.noSmokingDays +
+                calcs_1.calculations.cigAvoidedCost((_g = req.consumptionInfo) !== null && _g !== void 0 ? _g : this.consumptionInfo, this.consumptionInfo.cigarettesAvoided)).toFixed(1)
+            : calcs_1.calculations
+                .cigAvoidedCost((_h = req.consumptionInfo) !== null && _h !== void 0 ? _h : this.consumptionInfo, req.consumptionInfo
+                ? req.consumptionInfo.cigarettesAvoided
+                : this.consumptionInfo.cigarettesAvoided)
+                .toFixed(1);
     }
     return this.save();
 };

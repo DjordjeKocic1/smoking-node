@@ -37,10 +37,10 @@ router.get("/", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.get(
-  "/user-health/:id",
+router.post(
+  "/user-info/:id",
   [checkModelID(User)],
-  userController.getUserHealth
+  userController.getUserInfoCalc
 );
 router.post(
   "/create-user",
@@ -48,11 +48,7 @@ router.post(
   userController.createUser
 );
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
-router.put(
-  "/update-user-costs/:id",
-  [checkModelID(User)],
-  userController.updateUserCosts
-);
+
 router.delete(
   "/delete-user/:id",
   [checkModelID(User)],

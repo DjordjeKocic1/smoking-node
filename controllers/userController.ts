@@ -45,7 +45,7 @@ const getUserNotificationToken: RequestHandler<
   }
 };
 
-const getUserHealth: RequestHandler<IParams, {}, {}> = async (
+const getUserInfoCalc: RequestHandler<IParams, {}> = async (
   req,
   res,
   next
@@ -59,9 +59,15 @@ const getUserHealth: RequestHandler<IParams, {}, {}> = async (
 
     let user = (await User.findById(req.params.id)) as IUser;
 
-    let healthCalc = await user.calculateHealth(user);
+    let userInfoCalc;
 
-    res.status(201).json({ user: healthCalc });
+    if (!req.body.consumptionInfo) {
+      userInfoCalc = await user.calculateHealth(user);
+    }else{
+      userInfoCalc = await user.calculateHealth(user,req.body);
+    }
+
+    res.status(201).json({ user: userInfoCalc });
   } catch (error) {
     next(error);
   }
@@ -107,29 +113,6 @@ const updateUser: RequestHandler<IParams> = async (req, res, next) => {
       new: true,
     })) as IUser;
     res.status(201).json({ user });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const updateUserCosts: RequestHandler<IParams, {}> = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new http500Error();
-    }
-    const user = (await User.findById(req.params.id)) as IUser;
-    let userCost;
-    if (!req.body.consumptionInfo) {
-      userCost = await user.calculateCosts(user.consumptionInfo);
-    } else {
-      userCost = await user.calculateCosts(req?.body);
-    }
-    res.status(201).json({ user: userCost });
   } catch (error) {
     next(error);
   }
@@ -236,10 +219,9 @@ const pokeUser: RequestHandler<
 
 export const userController = {
   getUsers,
-  getUserHealth,
+  getUserInfoCalc,
   createUser,
   updateUser,
-  updateUserCosts,
   deleteUser,
   createPlan,
   deletePlane,

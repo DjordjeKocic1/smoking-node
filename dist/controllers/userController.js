@@ -43,15 +43,21 @@ const getUserNotificationToken = (req, res, next) => __awaiter(void 0, void 0, v
         next(error);
     }
 });
-const getUserHealth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getUserInfoCalc = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let user = (yield user_1.default.findById(req.params.id));
-        let healthCalc = yield user.calculateHealth(user);
-        res.status(201).json({ user: healthCalc });
+        let userInfoCalc;
+        if (!req.body.consumptionInfo) {
+            userInfoCalc = yield user.calculateHealth(user);
+        }
+        else {
+            userInfoCalc = yield user.calculateHealth(user, req.body);
+        }
+        res.status(201).json({ user: userInfoCalc });
     }
     catch (error) {
         next(error);
@@ -92,26 +98,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             new: true,
         }));
         res.status(201).json({ user });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const updateUserCosts = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            throw new errorHandler_1.http500Error();
-        }
-        const user = (yield user_1.default.findById(req.params.id));
-        let userCost;
-        if (!req.body.consumptionInfo) {
-            userCost = yield user.calculateCosts(user.consumptionInfo);
-        }
-        else {
-            userCost = yield user.calculateCosts(req === null || req === void 0 ? void 0 : req.body);
-        }
-        res.status(201).json({ user: userCost });
     }
     catch (error) {
         next(error);
@@ -192,10 +178,9 @@ const pokeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.userController = {
     getUsers,
-    getUserHealth,
+    getUserInfoCalc,
     createUser,
     updateUser,
-    updateUserCosts,
     deleteUser,
     createPlan,
     deletePlane,

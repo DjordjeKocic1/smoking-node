@@ -78,7 +78,7 @@ export interface IUser {
   consumptionInfo: IConsumptionInfo;
   savedInfo: IConsumptionInfo;
   plans: IPlans[];
-  calculateHealth: (user: IUser) => Promise<IUser>;
+  calculateHealth: (user: IUser,req?:IUser) => Promise<IUser>;
   calculateCosts: (user: IConsumptionInfo) => Promise<IConsumptionInfo>;
   toObject: Function;
   categories: ICategorie[];
