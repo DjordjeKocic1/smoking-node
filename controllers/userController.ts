@@ -45,11 +45,7 @@ const getUserNotificationToken: RequestHandler<
   }
 };
 
-const getUserInfoCalc: RequestHandler<IParams, {}> = async (
-  req,
-  res,
-  next
-) => {
+const getUserInfoCalc: RequestHandler<IParams, {}> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
 
@@ -62,9 +58,9 @@ const getUserInfoCalc: RequestHandler<IParams, {}> = async (
     let userInfoCalc;
 
     if (!req.body.consumptionInfo) {
-      userInfoCalc = await user.calculateHealth(user);
-    }else{
-      userInfoCalc = await user.calculateHealth(user,req.body);
+      userInfoCalc = await user.calculateHealth(user, user.consumptionInfo);
+    } else {
+      userInfoCalc = await user.calculateHealth(user, req.body);
     }
 
     res.status(201).json({ user: userInfoCalc });

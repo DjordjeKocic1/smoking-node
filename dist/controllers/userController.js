@@ -52,7 +52,7 @@ const getUserInfoCalc = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         let user = (yield user_1.default.findById(req.params.id));
         let userInfoCalc;
         if (!req.body.consumptionInfo) {
-            userInfoCalc = yield user.calculateHealth(user);
+            userInfoCalc = yield user.calculateHealth(user, user.consumptionInfo);
         }
         else {
             userInfoCalc = yield user.calculateHealth(user, req.body);

@@ -209,58 +209,56 @@ userShema.methods.calculateHealth = function (
   }
 
   //cost calculations
-  if (req) {
-    if (!!req.type && !!req.userVerified) {
-      this.type = req.type;
-      this.userVerified = req.userVerified;
-    }
-    this.consumptionInfo.cigarettesAvoided = req.consumptionInfo
-      ? req.consumptionInfo.cigarettesAvoided
-      : this.consumptionInfo.cigarettesAvoided;
-    this.consumptionInfo.packCigarettesPrice = req.consumptionInfo
-      ? req.consumptionInfo.packCigarettesPrice
-      : this.consumptionInfo.packCigarettesPrice;
-    this.consumptionInfo.cigarettesInPack = req.consumptionInfo
-      ? req.consumptionInfo.cigarettesInPack
-      : this.consumptionInfo.cigarettesInPack;
-    this.consumptionInfo.cigarettesDay = req.consumptionInfo
-      ? req.consumptionInfo.cigarettesDay
-      : this.consumptionInfo.cigarettesDay;
-    this.consumptionInfo.cigarettesDailyCost = calculations
-      .cigDailyCosts(req.consumptionInfo ?? this.consumptionInfo)
-      .toFixed(1);
-    this.consumptionInfo.cigarettesMontlyCost = calculations
-      .cigMontlyCost(req.consumptionInfo ?? this.consumptionInfo)
-      .toFixed(1);
-    this.consumptionInfo.cigarettesYearlyCost = calculations
-      .cigYearlyCost(req.consumptionInfo ?? this.consumptionInfo)
-      .toFixed(1);
-    this.consumptionInfo.cigarettes5YearCost = calculations
-      .cig5YearCost(req.consumptionInfo ?? this.consumptionInfo)
-      .toFixed(1);
-    this.consumptionInfo.cigarettes10YearCost = calculations
-      .cig10YearCost(req.consumptionInfo ?? this.consumptionInfo)
-      .toFixed(1);
-    this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
-      ? (
-          calculations.cigDailyCosts(
-            req.consumptionInfo ?? this.consumptionInfo
-          ) *
-            this.smokingInfo.noSmokingDays +
-          calculations.cigAvoidedCost(
-            req.consumptionInfo ?? this.consumptionInfo,
-            this.consumptionInfo.cigarettesAvoided
-          )
-        ).toFixed(1)
-      : calculations
-          .cigAvoidedCost(
-            req.consumptionInfo ?? this.consumptionInfo,
-            req.consumptionInfo
-              ? req.consumptionInfo.cigarettesAvoided
-              : this.consumptionInfo.cigarettesAvoided
-          )
-          .toFixed(1);
+  if (!!req.type && !!req.userVerified) {
+    this.type = req.type;
+    this.userVerified = req.userVerified;
   }
+  this.consumptionInfo.cigarettesAvoided = req.consumptionInfo
+    ? req.consumptionInfo.cigarettesAvoided
+    : this.consumptionInfo.cigarettesAvoided;
+  this.consumptionInfo.packCigarettesPrice = req.consumptionInfo
+    ? req.consumptionInfo.packCigarettesPrice
+    : this.consumptionInfo.packCigarettesPrice;
+  this.consumptionInfo.cigarettesInPack = req.consumptionInfo
+    ? req.consumptionInfo.cigarettesInPack
+    : this.consumptionInfo.cigarettesInPack;
+  this.consumptionInfo.cigarettesDay = req.consumptionInfo
+    ? req.consumptionInfo.cigarettesDay
+    : this.consumptionInfo.cigarettesDay;
+  this.consumptionInfo.cigarettesDailyCost = calculations
+    .cigDailyCosts(req.consumptionInfo ?? this.consumptionInfo)
+    .toFixed(1);
+  this.consumptionInfo.cigarettesMontlyCost = calculations
+    .cigMontlyCost(req.consumptionInfo ?? this.consumptionInfo)
+    .toFixed(1);
+  this.consumptionInfo.cigarettesYearlyCost = calculations
+    .cigYearlyCost(req.consumptionInfo ?? this.consumptionInfo)
+    .toFixed(1);
+  this.consumptionInfo.cigarettes5YearCost = calculations
+    .cig5YearCost(req.consumptionInfo ?? this.consumptionInfo)
+    .toFixed(1);
+  this.consumptionInfo.cigarettes10YearCost = calculations
+    .cig10YearCost(req.consumptionInfo ?? this.consumptionInfo)
+    .toFixed(1);
+  this.consumptionInfo.cigarettesAvoidedCost = this.smokingInfo.isQuiting
+    ? (
+        calculations.cigDailyCosts(
+          req.consumptionInfo ?? this.consumptionInfo
+        ) *
+          this.smokingInfo.noSmokingDays +
+        calculations.cigAvoidedCost(
+          req.consumptionInfo ?? this.consumptionInfo,
+          this.consumptionInfo.cigarettesAvoided
+        )
+      ).toFixed(1)
+    : calculations
+        .cigAvoidedCost(
+          req.consumptionInfo ?? this.consumptionInfo,
+          req.consumptionInfo
+            ? req.consumptionInfo.cigarettesAvoided
+            : this.consumptionInfo.cigarettesAvoided
+        )
+        .toFixed(1);
 
   return this.save();
 };
