@@ -68,11 +68,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         let mentorCreate;
         if (mentorExist) {
-            mentorExist.mentoringUser.push({
-                email: user.email,
-                name: user.name,
-                _id: user._id,
-            });
+            mentorExist.mentoringUser.push(user);
             mentorCreate = yield mentorExist.save();
         }
         else {

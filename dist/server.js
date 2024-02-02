@@ -27,7 +27,7 @@ app.use((error, req, res, next) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
-    app.listen(port, () => console.log("Server Start"));
+    app.listen(port, () => console.log("Server Start", port));
 })
     .catch(() => {
     throw new errorHandler_1.http500Error();

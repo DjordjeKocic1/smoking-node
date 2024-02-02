@@ -40,7 +40,7 @@ app.use(
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
-    app.listen(port, () => console.log("Server Start"));
+    app.listen(port, () => console.log("Server Start",port));
   })
   .catch(() => {
     throw new http500Error();

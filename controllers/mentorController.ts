@@ -10,7 +10,6 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 
 import Mentor from "../model/mentor";
 import Notification from "../model/notification";
-import Task from "../model/task";
 import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
@@ -87,11 +86,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     let mentorCreate: IMentor;
 
     if (mentorExist) {
-      mentorExist.mentoringUser.push({
-        email: user.email,
-        name: user.name,
-        _id: user._id,
-      });
+      mentorExist.mentoringUser.push(user);
       mentorCreate = await mentorExist.save();
     } else {
       mentorCreate = await mentor.save();

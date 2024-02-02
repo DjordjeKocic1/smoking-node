@@ -1,0 +1,2 @@
+@id = 65b8fc4aa9a17d0870246fca
+GET http://localhost:8000/get-mentor/{{id}}

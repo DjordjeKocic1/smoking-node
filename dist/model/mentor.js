@@ -13,23 +13,6 @@ const mentorSchema = new Schema({
         ref: "User",
         req: true,
     },
-    mentoringUser: [
-        {
-            name: String,
-            accepted: {
-                type: Boolean,
-                default: false,
-            },
-            email: {
-                type: String,
-                req: true,
-            },
-            userId: {
-                type: Schema.Types.ObjectId,
-                ref: "User",
-                req: true,
-            },
-        },
-    ],
+    mentoringUser: [],
 });
 exports.default = mongoose_1.default.model("Mentor", mentorSchema);
