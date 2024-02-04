@@ -52,10 +52,15 @@ export interface IConsumptionInfo {
   cigarettes10YearCost: number;
   cigarettesAvoidedCost: number;
 }
+
+export enum UserTypes {
+  User = "user",
+  Mentor = "mentor"
+}
 export interface IPlans {
   _id: string;
   name: string;
-  completed?: boolean;
+  type?:UserTypes;
   userId?: string;
   plansId?: string;
 }

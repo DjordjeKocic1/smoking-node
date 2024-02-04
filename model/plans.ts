@@ -1,4 +1,5 @@
-import { IPlans } from "../types/types";
+import { IPlans, UserTypes } from "../types/types";
+
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
@@ -8,6 +9,7 @@ const plansShema = new Schema({
     type: String,
     require: true,
   },
+  type:String,
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",

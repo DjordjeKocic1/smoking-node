@@ -10,6 +10,7 @@ const plansShema = new Schema({
         type: String,
         require: true,
     },
+    type: String,
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
