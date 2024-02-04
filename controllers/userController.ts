@@ -145,6 +145,7 @@ const createPlan: RequestHandler<IParams, {}, IPlans> = async (
     let plan = new Plans({
       name: req.body.name,
       completed: false,
+      type:req.body.type,
       userId: req.params.id,
     });
 

@@ -126,6 +126,7 @@ const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         let plan = new plans_1.default({
             name: req.body.name,
             completed: false,
+            type: req.body.type,
             userId: req.params.id,
         });
         let planCreated = yield plan.save();
