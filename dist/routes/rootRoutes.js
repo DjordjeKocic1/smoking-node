@@ -39,7 +39,7 @@ router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)],
 router.post("/poke-user", userController_1.userController.pokeUser);
 //Plans
 router.post("/create-plan/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.createPlan);
-router.delete("/delete-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], userController_1.userController.deletePlane);
+router.delete("/delete-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], userController_1.userController.deletePlan);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [

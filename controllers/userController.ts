@@ -167,7 +167,7 @@ const createPlan: RequestHandler<IParams, {}, IPlans> = async (
   }
 };
 
-const deletePlane: RequestHandler<IParams> = async (req, res, next) => {
+const deletePlan: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -221,7 +221,7 @@ export const userController = {
   updateUser,
   deleteUser,
   createPlan,
-  deletePlane,
+  deletePlan,
   pokeUser,
   getUserNotificationToken,
 };

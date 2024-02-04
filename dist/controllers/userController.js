@@ -142,7 +142,7 @@ const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const deletePlane = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const deletePlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
@@ -184,7 +184,7 @@ exports.userController = {
     updateUser,
     deleteUser,
     createPlan,
-    deletePlane,
+    deletePlan,
     pokeUser,
     getUserNotificationToken,
 };

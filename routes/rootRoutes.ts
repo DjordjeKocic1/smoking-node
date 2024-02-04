@@ -70,7 +70,7 @@ router.post(
 router.delete(
   "/delete-plan/:id",
   [checkModelID(Plans)],
-  userController.deletePlane
+  userController.deletePlan
 );
 
 //Mentor
