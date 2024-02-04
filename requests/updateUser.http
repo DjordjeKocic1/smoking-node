@@ -1,0 +1,11 @@
+@id = 65bfbe429e9cd7bea657187f
+PUT http://localhost:8000/update-user/{{id}}
+Content-Type: application/json
+
+{
+    "subscription": {
+        "subscriber": true,
+        "subscribeDate": "Sun Feb 04 2024",
+        "subscribeLasts": 30
+    }
+}
