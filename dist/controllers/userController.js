@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
-const errorHandler_1 = require("../errors/errorHandler");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const plans_1 = __importDefault(require("../model/plans"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
+const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {

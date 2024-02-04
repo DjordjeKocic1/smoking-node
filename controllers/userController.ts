@@ -5,13 +5,13 @@ import {
   IPlans,
   IUser,
 } from "../types/types";
-import { http422Error, http500Error } from "../errors/errorHandler";
 
 import Mentor from "../model/mentor";
 import Plans from "../model/plans";
 import { RequestHandler } from "express";
 import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
+import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
 const getUsers: RequestHandler = async (req, res, next) => {

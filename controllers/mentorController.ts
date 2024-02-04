@@ -27,10 +27,18 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
 
     let arr = mentors.filter(
       (mentor: IMentor) => mentor.userId == req.params.id
-    );
+    ) as any[];
 
     if (arr.length == 0) {
       return res.status(200).json({ mentor: null });
+    }
+    let ids = arr[0].mentoringUser.map((v: any) => v._id?.toString());
+
+    let usersMentoring = await User.find().where("_id").in(ids).exec();
+    console.log(arr);
+
+    if (usersMentoring) {
+      arr[0].mentoringUser = usersMentoring;
     }
 
     res.status(200).json({
@@ -72,7 +80,12 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
       name: req.body.name,
       email: req.body.email,
       userId: userMentor?._id,
-      mentoringUser: user,
+      mentoringUser: {
+        name: user.name,
+        email: user.email,
+        accepted: false,
+        _id: user._id,
+      },
     });
 
     let userExistWithinMentor =
@@ -86,7 +99,11 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     let mentorCreate: IMentor;
 
     if (mentorExist) {
-      mentorExist.mentoringUser.push(user);
+      mentorExist.mentoringUser.push({
+        email: user.email,
+        name: user.name,
+        _id: user._id,
+      });
       mentorCreate = await mentorExist.save();
     } else {
       mentorCreate = await mentor.save();

@@ -30,6 +30,12 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (arr.length == 0) {
             return res.status(200).json({ mentor: null });
         }
+        let ids = arr[0].mentoringUser.map((v) => { var _a; return (_a = v._id) === null || _a === void 0 ? void 0 : _a.toString(); });
+        let usersMentoring = yield user_1.default.find().where("_id").in(ids).exec();
+        console.log(arr);
+        if (usersMentoring) {
+            arr[0].mentoringUser = usersMentoring;
+        }
         res.status(200).json({
             mentor: arr[0],
         });
@@ -59,7 +65,12 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             name: req.body.name,
             email: req.body.email,
             userId: userMentor === null || userMentor === void 0 ? void 0 : userMentor._id,
-            mentoringUser: user,
+            mentoringUser: {
+                name: user.name,
+                email: user.email,
+                accepted: false,
+                _id: user._id,
+            },
         });
         let userExistWithinMentor = mentorExist &&
             mentorExist.mentoringUser.find((value) => value.email == user.email);
@@ -68,7 +79,11 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         }
         let mentorCreate;
         if (mentorExist) {
-            mentorExist.mentoringUser.push(user);
+            mentorExist.mentoringUser.push({
+                email: user.email,
+                name: user.name,
+                _id: user._id,
+            });
             mentorCreate = yield mentorExist.save();
         }
         else {

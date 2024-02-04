@@ -103,6 +103,7 @@ export interface IMentoringUser {
   email: string;
   name: string;
   accepted?: boolean;
+  _doc?:any;
 }
 export interface IMentor {
   _id: any;
