@@ -86,7 +86,7 @@ const userShema = new Schema(
       {
         name: String,
         completed: Boolean,
-        type:String,
+        userType:String,
         plansId: {
           type: Schema.Types.ObjectId,
           ref: "Plans",

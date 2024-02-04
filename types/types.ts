@@ -60,7 +60,7 @@ export enum UserTypes {
 export interface IPlans {
   _id: string;
   name: string;
-  type?:UserTypes;
+  userType?:UserTypes;
   userId?: string;
   plansId?: string;
 }
