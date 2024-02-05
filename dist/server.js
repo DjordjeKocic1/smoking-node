@@ -28,7 +28,7 @@ mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
     const server = app.listen(port);
-    const io = require("socket.io")(server);
+    const io = require("./socket").init(server);
     io.on("connection", () => {
         console.log("Client Connected");
     });

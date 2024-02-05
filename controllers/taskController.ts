@@ -8,6 +8,8 @@ import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
+const io = require("../socket");
+
 const getTasks: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -106,6 +108,8 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
       title: "Task",
       body: "You have a new task 📝",
     });
+
+    io.getIO().emit("tasks", { action: "create", task: taskCreate });
 
     res.status(201).json({ task: taskCreate });
   } catch (error) {

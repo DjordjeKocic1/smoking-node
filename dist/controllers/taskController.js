@@ -19,6 +19,7 @@ const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
+const io = require("../socket");
 const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -91,6 +92,7 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             title: "Task",
             body: "You have a new task 📝",
         });
+        io.getIO().emit("tasks", { action: "create", task: taskCreate });
         res.status(201).json({ task: taskCreate });
     }
     catch (error) {
