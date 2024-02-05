@@ -35,10 +35,18 @@ const getMentor: RequestHandler<IParams> = async (req, res, next) => {
     let ids = arr[0].mentoringUser.map((v: any) => v._id?.toString());
 
     let usersMentoring = await User.find().where("_id").in(ids).exec();
-    console.log(arr);
 
     if (usersMentoring) {
-      arr[0].mentoringUser = usersMentoring;
+      let userMapping = usersMentoring.map((userMentor: any) => {
+        let findUser = arr[0].mentoringUser.find(
+          (v: any) => v._id.toString() === userMentor._id.toString()
+        );
+        return {
+          ...userMentor._doc,
+          accepted: findUser.accepted,
+        };
+      });
+      arr[0].mentoringUser = userMapping;
     }
 
     res.status(200).json({

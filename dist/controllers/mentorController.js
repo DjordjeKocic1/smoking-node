@@ -32,9 +32,12 @@ const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         }
         let ids = arr[0].mentoringUser.map((v) => { var _a; return (_a = v._id) === null || _a === void 0 ? void 0 : _a.toString(); });
         let usersMentoring = yield user_1.default.find().where("_id").in(ids).exec();
-        console.log(arr);
         if (usersMentoring) {
-            arr[0].mentoringUser = usersMentoring;
+            let userMapping = usersMentoring.map((userMentor) => {
+                let findUser = arr[0].mentoringUser.find((v) => v._id.toString() === userMentor._id.toString());
+                return Object.assign(Object.assign({}, userMentor._doc), { accepted: findUser.accepted });
+            });
+            arr[0].mentoringUser = userMapping;
         }
         res.status(200).json({
             mentor: arr[0],
