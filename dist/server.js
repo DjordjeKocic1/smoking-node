@@ -14,7 +14,7 @@ require("dotenv").config();
 const port = process.env.PORT;
 const app = (0, express_1.default)();
 app.use((0, helmet_1.default)());
-app.use((0, morgan_1.default)('combined'));
+app.use((0, morgan_1.default)("combined"));
 (0, initPassport_1.initPassport)(app);
 app.use(express_1.default.json());
 app.use("/", rootRoutes_1.default);
@@ -27,7 +27,11 @@ app.use((error, req, res, next) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
-    app.listen(port, () => console.log("Server Start", port));
+    const server = app.listen(port);
+    const io = require("socket.io")(server);
+    io.on("connection", () => {
+        console.log("Client Connected");
+    });
 })
     .catch(() => {
     throw new errorHandler_1.http500Error();

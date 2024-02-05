@@ -30,7 +30,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth": "^2.0.0",
     "paypal-rest-sdk": "^1.8.1",
-    "socket.io": "^4.7.1",
+    "socket.io": "^4.7.4",
     "stripe": "^12.9.0",
     "textmagic-rest-client": "^1.0.11",
     "twilio": "^4.12.0",
@@ -52,6 +52,6 @@
     "@types/uuid": "^9.0.0",
     "concurrently": "^7.6.0",
     "nodeman": "^1.1.2",
-    "nodemon": "^2.0.20"
+    "nodemon": "^3.0.3"
   }
 }

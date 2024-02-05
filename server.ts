@@ -1,11 +1,11 @@
 import express, { NextFunction, Request, Response } from "express";
 
 import { ErrorMsg } from "./types/types";
-import helmet from 'helmet'
+import helmet from "helmet";
 import { http500Error } from "./errors/errorHandler";
 import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
-import morgan from 'morgan'
+import morgan from "morgan";
 import router from "./routes/rootRoutes";
 
 require("dotenv").config();
@@ -14,8 +14,8 @@ const port = process.env.PORT;
 
 const app = express();
 
-app.use(helmet())
-app.use(morgan('combined'))
+app.use(helmet());
+app.use(morgan("combined"));
 
 initPassport(app);
 
@@ -40,7 +40,11 @@ app.use(
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
-    app.listen(port, () => console.log("Server Start",port));
+    const server = app.listen(port);
+    const io = require("socket.io")(server);
+    io.on("connection", () => {
+      console.log("Client Connected");
+    });
   })
   .catch(() => {
     throw new http500Error();
