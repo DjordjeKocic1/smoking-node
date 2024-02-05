@@ -1,10 +1,4 @@
-import {
-  IConsumationPayload,
-  IConsumptionInfo,
-  IParams,
-  IPlans,
-  IUser,
-} from "../types/types";
+import { IParams, IPlans, IUser } from "../types/types";
 
 import Mentor from "../model/mentor";
 import Plans from "../model/plans";
@@ -145,7 +139,7 @@ const createPlan: RequestHandler<IParams, {}, IPlans> = async (
     let plan = new Plans({
       name: req.body.name,
       completed: false,
-      type:req.body.userType,
+      userType: req.body.userType,
       userId: req.params.id,
     });
 
