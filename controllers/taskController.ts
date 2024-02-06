@@ -1,4 +1,11 @@
-import { INotificaion, IParams, ITask, ITaskPayload, ITaskUser, IUser } from "../types/types";
+import {
+  INotificaion,
+  IParams,
+  ITask,
+  ITaskPayload,
+  ITaskUser,
+  IUser,
+} from "../types/types";
 
 import Notification from "../model/notification";
 import { RequestHandler } from "express";
@@ -8,7 +15,7 @@ import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
-const io = require("../socket")
+const io = require("../socket");
 
 const getTasks: RequestHandler<IParams> = async (req, res, next) => {
   try {
@@ -118,6 +125,7 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
     io.getIO().emit("notification", {
       action: "create",
       notification: notifications,
+      task: tasks,
       ID: user._id,
     });
 
