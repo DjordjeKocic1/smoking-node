@@ -96,7 +96,7 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         let notifications = yield notification_1.default.find({
             userId: taskCreate.userId,
         });
-        io.getIO().emit("notification", {
+        io.getIO().emit("live", {
             action: "create",
             notification: notifications,
             task: tasks,
@@ -130,7 +130,7 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         user.tasks = userTasks;
         yield user.save();
         let tasks = yield task_1.default.find({ userId: user._id });
-        io.getIO().emit("notification", {
+        io.getIO().emit("live", {
             action: "create",
             task: tasks,
             ID: user._id,
@@ -158,7 +158,7 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         user.tasks = userTasks;
         user.save();
         let tasks = yield task_1.default.find({ userId: user._id });
-        io.getIO().emit("notification", {
+        io.getIO().emit("live", {
             action: "create",
             task: tasks,
             ID: user._id,

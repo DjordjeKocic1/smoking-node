@@ -122,7 +122,7 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
       userId: taskCreate.userId,
     });
 
-    io.getIO().emit("notification", {
+    io.getIO().emit("live", {
       action: "create",
       notification: notifications,
       task: tasks,
@@ -170,7 +170,7 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
 
     let tasks = await Task.find({ userId: user._id });
 
-    io.getIO().emit("notification", {
+    io.getIO().emit("live", {
       action: "create",
       task: tasks,
       ID: user._id,
@@ -207,7 +207,7 @@ const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
 
     let tasks = await Task.find({ userId: user._id });
 
-    io.getIO().emit("notification", {
+    io.getIO().emit("live", {
       action: "create",
       task: tasks,
       ID: user._id,
