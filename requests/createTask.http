@@ -1,0 +1,10 @@
+POST http://localhost:8000/create-task
+Content-Type: application/json
+
+{
+    "toDo":"",
+    "status":"",
+    "comment":"Task1",
+    "userId":"65b90395a9a17d0870247050",
+    "mentorId":"65c1394795dd3bd67c55215c"
+}

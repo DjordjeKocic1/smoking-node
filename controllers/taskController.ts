@@ -109,13 +109,15 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
       body: "You have a new task 📝",
     });
 
+    let tasks = await Task.find({ userId: user._id });
+
     io.getIO().emit("tasks", {
       action: "create",
-      task: taskCreate,
+      task: tasks,
       ID: taskCreate.userId,
     });
 
-    res.status(201).json({ task: taskCreate });
+    res.status(201).json({ task: tasks });
   } catch (error) {
     next(error);
   }
