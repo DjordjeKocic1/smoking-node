@@ -17,6 +17,7 @@ const notification_1 = __importDefault(require("../model/notification"));
 const user_1 = __importDefault(require("../model/user"));
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
+const io = require("../socket");
 const getNotificationsByUserID = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -48,8 +49,16 @@ const createNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
             isRead: false,
             userId: user === null || user === void 0 ? void 0 : user._id,
         });
-        let notificationCreate = yield notification.save();
-        res.status(201).json({ notification: notificationCreate });
+        yield notification.save();
+        let notifications = yield notification_1.default.find({
+            userId: user._id,
+        });
+        io.getIO().emit("notification", {
+            action: "create",
+            notification: notifications,
+            ID: user._id,
+        });
+        res.status(201).json({ notification: notifications });
     }
     catch (error) {
         next(error);

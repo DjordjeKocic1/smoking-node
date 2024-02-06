@@ -1,7 +1,6 @@
 import {
   INotificaion,
   IParams,
-  IQuery,
   IQueryParams,
   IUser,
 } from "../types/types";
@@ -11,6 +10,8 @@ import { RequestHandler } from "express";
 import User from "../model/user";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
+
+const io = require("../socket")
 
 const getNotificationsByUserID: RequestHandler<IParams> = async (
   req,
@@ -58,9 +59,19 @@ const createNotification: RequestHandler<{}, {}, INotificaion> = async (
       userId: user?._id,
     });
 
-    let notificationCreate = await notification.save();
+    await notification.save();
 
-    res.status(201).json({ notification: notificationCreate });
+    let notifications: INotificaion[] = await Notification.find({
+      userId: user._id,
+    });
+
+    io.getIO().emit("notification", {
+      action: "create",
+      notification: notifications,
+      ID: user._id,
+    });
+
+    res.status(201).json({ notification: notifications });
   } catch (error) {
     next(error);
   }

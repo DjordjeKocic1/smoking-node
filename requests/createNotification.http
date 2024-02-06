@@ -1,0 +1,10 @@
+POST http://localhost:8000/create-notification
+Content-Type: application/json
+
+{
+    "email":"kocic19899@gmail.com",
+    "isMentoring":false,
+    "isTask":true,
+    "isRead":false,
+    "userId":"65b90395a9a17d0870247050"
+}

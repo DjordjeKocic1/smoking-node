@@ -8,8 +8,6 @@ import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
-const io = require("../socket");
-
 const getTasks: RequestHandler<IParams> = async (req, res, next) => {
   try {
     const errors = validationResult(req);
