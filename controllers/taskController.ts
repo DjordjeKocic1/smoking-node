@@ -168,7 +168,15 @@ const updateTask: RequestHandler<IParams, {}, ITaskPayload> = async (
     user.tasks = userTasks;
     await user.save();
 
-    res.status(201).json({ task: taskUpdate });
+    let tasks = await Task.find({ userId: user._id });
+
+    io.getIO().emit("notification", {
+      action: "create",
+      task: tasks,
+      ID: user._id,
+    });
+
+    res.status(201).json({ task: tasks });
   } catch (err: any) {
     next(err);
   }
@@ -197,7 +205,15 @@ const deleteTask: RequestHandler<IParams> = async (req, res, next) => {
     user.tasks = userTasks;
     user.save();
 
-    res.status(204).send({ success: "ok" });
+    let tasks = await Task.find({ userId: user._id });
+
+    io.getIO().emit("notification", {
+      action: "create",
+      task: tasks,
+      ID: user._id,
+    });
+
+    res.status(201).json({ task: tasks });
   } catch (error) {
     next(error);
   }

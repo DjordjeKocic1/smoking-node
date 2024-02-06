@@ -129,7 +129,13 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         });
         user.tasks = userTasks;
         yield user.save();
-        res.status(201).json({ task: taskUpdate });
+        let tasks = yield task_1.default.find({ userId: user._id });
+        io.getIO().emit("notification", {
+            action: "create",
+            task: tasks,
+            ID: user._id,
+        });
+        res.status(201).json({ task: tasks });
     }
     catch (err) {
         next(err);
@@ -151,7 +157,13 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         let userTasks = user.tasks.filter((v) => v._id && v._id.toString() != deletedTask._id.toString());
         user.tasks = userTasks;
         user.save();
-        res.status(204).send({ success: "ok" });
+        let tasks = yield task_1.default.find({ userId: user._id });
+        io.getIO().emit("notification", {
+            action: "create",
+            task: tasks,
+            ID: user._id,
+        });
+        res.status(201).json({ task: tasks });
     }
     catch (error) {
         next(error);
