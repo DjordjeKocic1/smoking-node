@@ -111,11 +111,11 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
 
     let tasks = await Task.find({ userId: user._id });
 
-    io.getIO().emit("tasks", {
-      action: "create",
-      task: tasks,
-      ID: taskCreate.userId,
-    });
+    // io.getIO().emit("tasks", {
+    //   action: "create",
+    //   task: tasks,
+    //   ID: taskCreate.userId,
+    // });
 
     res.status(201).json({ task: tasks });
   } catch (error) {

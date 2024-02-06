@@ -93,11 +93,11 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             body: "You have a new task 📝",
         });
         let tasks = yield task_1.default.find({ userId: user._id });
-        io.getIO().emit("tasks", {
-            action: "create",
-            task: tasks,
-            ID: taskCreate.userId,
-        });
+        // io.getIO().emit("tasks", {
+        //   action: "create",
+        //   task: tasks,
+        //   ID: taskCreate.userId,
+        // });
         res.status(201).json({ task: tasks });
     }
     catch (error) {
