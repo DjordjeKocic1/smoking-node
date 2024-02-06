@@ -19,6 +19,7 @@ const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
+const io = require("../socket");
 const getTasks = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -92,6 +93,14 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             body: "You have a new task 📝",
         });
         let tasks = yield task_1.default.find({ userId: user._id });
+        let notifications = yield notification_1.default.find({
+            userId: taskCreate.userId,
+        });
+        io.getIO().emit("notification", {
+            action: "create",
+            notification: notifications,
+            ID: user._id,
+        });
         res.status(201).json({ task: tasks });
     }
     catch (error) {
