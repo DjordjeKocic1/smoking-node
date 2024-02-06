@@ -109,7 +109,11 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
       body: "You have a new task 📝",
     });
 
-    io.getIO().emit("tasks", { action: "create", task: taskCreate });
+    io.getIO().emit("tasks", {
+      action: "create",
+      task: taskCreate,
+      ID: taskCreate.userId,
+    });
 
     res.status(201).json({ task: taskCreate });
   } catch (error) {
