@@ -200,6 +200,7 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         io.getIO().emit("live", {
             action: "create",
             mentors: mentor,
+            userM: user,
             ID: mentor.userId,
         });
         res.status(201).json({ mentor });

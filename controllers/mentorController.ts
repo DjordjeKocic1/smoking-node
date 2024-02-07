@@ -149,7 +149,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     io.getIO().emit("live", {
       action: "create",
       notification: notifications,
-      mentors:mentorCreate,
+      mentors: mentorCreate,
       ID: mentorCreate.userId,
     });
 
@@ -225,7 +225,7 @@ const updateMentor = async (
 
     io.getIO().emit("live", {
       action: "update",
-      userM:user,
+      userM: user,
       ID: user._id,
     });
 
@@ -268,12 +268,13 @@ const deleteMentor = async (
     user.mentors = userMentorRemoved;
     await user.save();
 
-   mentor.mentoringUser = mentorRemoveUser;
+    mentor.mentoringUser = mentorRemoveUser;
     await mentor.save();
 
     io.getIO().emit("live", {
       action: "create",
-      mentors:mentor,
+      mentors: mentor,
+      userM: user,
       ID: mentor.userId,
     });
 
