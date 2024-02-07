@@ -271,13 +271,6 @@ const deleteMentor = async (
     mentor.mentoringUser = mentorRemoveUser;
     await mentor.save();
 
-    io.getIO().emit("live", {
-      action: "create",
-      mentors: mentor,
-      userM: user,
-      ID: mentor.userId,
-    });
-
     res.status(201).json({ mentor });
   } catch (error) {
     next(error);
