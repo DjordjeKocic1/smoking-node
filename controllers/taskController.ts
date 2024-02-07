@@ -125,7 +125,6 @@ const createTask: RequestHandler<{}, {}, ITaskPayload> = async (
     io.getIO().emit("live", {
       action: "create",
       notification: notifications,
-      task: tasks,
       ID: user._id,
     });
 

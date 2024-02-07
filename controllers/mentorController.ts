@@ -3,6 +3,7 @@ import {
   IMentorPayload,
   IMentorUpdatePayload,
   IMentoringUser,
+  INotificaion,
   IParams,
   IUser,
 } from "../types/types";
@@ -14,6 +15,8 @@ import User from "../model/user";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
+
+const io = require("../socket");
 
 const getMentor: RequestHandler<IParams> = async (req, res, next) => {
   try {
@@ -138,6 +141,16 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     });
 
     await notification.save();
+
+    let notifications: INotificaion[] = await Notification.find({
+      userId: mentorCreate.userId,
+    });
+
+    io.getIO().emit("live", {
+      action: "create",
+      notification: notifications,
+      ID: mentorCreate.userId,
+    });
 
     res.status(201).json({ mentor: mentorCreate });
   } catch (error) {

@@ -19,6 +19,7 @@ const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
+const io = require("../socket");
 const getMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -109,6 +110,14 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             userId: mentor.userId,
         });
         yield notification.save();
+        let notifications = yield notification_1.default.find({
+            userId: mentorCreate.userId,
+        });
+        io.getIO().emit("live", {
+            action: "create",
+            notification: notifications,
+            ID: mentorCreate.userId,
+        });
         res.status(201).json({ mentor: mentorCreate });
     }
     catch (error) {
