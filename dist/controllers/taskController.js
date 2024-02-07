@@ -130,11 +130,6 @@ const updateTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         user.tasks = userTasks;
         yield user.save();
         let tasks = yield task_1.default.find({ userId: user._id });
-        io.getIO().emit("live", {
-            action: "create",
-            task: tasks,
-            ID: user._id,
-        });
         res.status(201).json({ task: tasks });
     }
     catch (err) {
@@ -158,11 +153,6 @@ const deleteTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         user.tasks = userTasks;
         user.save();
         let tasks = yield task_1.default.find({ userId: user._id });
-        io.getIO().emit("live", {
-            action: "create",
-            task: tasks,
-            ID: user._id,
-        });
         res.status(201).json({ task: tasks });
     }
     catch (error) {
