@@ -99,6 +99,7 @@ const createTask = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         io.getIO().emit("live", {
             action: "create",
             notification: notifications,
+            task: tasks,
             ID: user._id,
         });
         res.status(201).json({ task: tasks });

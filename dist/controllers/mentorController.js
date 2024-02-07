@@ -116,6 +116,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         io.getIO().emit("live", {
             action: "create",
             notification: notifications,
+            mentor: mentorCreate,
             ID: mentorCreate.userId,
         });
         res.status(201).json({ mentor: mentorCreate });
@@ -163,6 +164,11 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             to: user.notificationToken,
             title: "Mentor",
             body: `Mentor (${mentorUpdate.email}) accepted your request ✅`,
+        });
+        io.getIO().emit("live", {
+            action: "create",
+            mentor: mentorUpdate,
+            ID: mentorUpdate.userId,
         });
         res.status(201).json({ mentor: mentorUpdate });
     }

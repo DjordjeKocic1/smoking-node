@@ -149,6 +149,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     io.getIO().emit("live", {
       action: "create",
       notification: notifications,
+      mentor:mentorCreate,
       ID: mentorCreate.userId,
     });
 
@@ -220,6 +221,12 @@ const updateMentor = async (
       to: user.notificationToken,
       title: "Mentor",
       body: `Mentor (${mentorUpdate.email}) accepted your request ✅`,
+    });
+
+    io.getIO().emit("live", {
+      action: "create",
+      mentor:mentorUpdate,
+      ID: mentorUpdate.userId,
     });
 
     res.status(201).json({ mentor: mentorUpdate });
