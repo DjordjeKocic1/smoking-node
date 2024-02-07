@@ -149,7 +149,7 @@ const createMentor: RequestHandler<{}, {}, IMentorPayload> = async (
     io.getIO().emit("live", {
       action: "create",
       notification: notifications,
-      mentor:mentorCreate,
+      mentors:mentorCreate,
       ID: mentorCreate.userId,
     });
 
@@ -225,7 +225,7 @@ const updateMentor = async (
 
     io.getIO().emit("live", {
       action: "create",
-      mentor:mentorUpdate,
+      mentors:mentorUpdate,
       ID: mentorUpdate.userId,
     });
 

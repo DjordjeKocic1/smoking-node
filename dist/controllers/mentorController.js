@@ -116,7 +116,7 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         io.getIO().emit("live", {
             action: "create",
             notification: notifications,
-            mentor: mentorCreate,
+            mentors: mentorCreate,
             ID: mentorCreate.userId,
         });
         res.status(201).json({ mentor: mentorCreate });
@@ -167,7 +167,7 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         });
         io.getIO().emit("live", {
             action: "create",
-            mentor: mentorUpdate,
+            mentors: mentorUpdate,
             ID: mentorUpdate.userId,
         });
         res.status(201).json({ mentor: mentorUpdate });
