@@ -224,9 +224,9 @@ const updateMentor = async (
     });
 
     io.getIO().emit("live", {
-      action: "create",
-      mentors:mentorUpdate,
-      ID: mentorUpdate.userId,
+      action: "update",
+      userM:user,
+      ID: user._id,
     });
 
     res.status(201).json({ mentor: mentorUpdate });
@@ -237,7 +237,7 @@ const updateMentor = async (
 
 const deleteMentor = async (
   req: Request<{ mentorId: string; userId: string }, {}, {}>,
-  res: Response<{ success: any }>,
+  res: Response,
   next: NextFunction
 ) => {
   try {
@@ -268,10 +268,16 @@ const deleteMentor = async (
     user.mentors = userMentorRemoved;
     await user.save();
 
-    mentor.mentoringUser = mentorRemoveUser;
+   mentor.mentoringUser = mentorRemoveUser;
     await mentor.save();
 
-    res.status(204).json({ success: "ok" });
+    io.getIO().emit("live", {
+      action: "create",
+      mentors:mentor,
+      ID: mentor.userId,
+    });
+
+    res.status(201).json({ mentor });
   } catch (error) {
     next(error);
   }

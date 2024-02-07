@@ -166,9 +166,9 @@ const updateMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             body: `Mentor (${mentorUpdate.email}) accepted your request ✅`,
         });
         io.getIO().emit("live", {
-            action: "create",
-            mentors: mentorUpdate,
-            ID: mentorUpdate.userId,
+            action: "update",
+            userM: user,
+            ID: user._id,
         });
         res.status(201).json({ mentor: mentorUpdate });
     }
@@ -197,7 +197,12 @@ const deleteMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         yield user.save();
         mentor.mentoringUser = mentorRemoveUser;
         yield mentor.save();
-        res.status(204).json({ success: "ok" });
+        io.getIO().emit("live", {
+            action: "create",
+            mentors: mentor,
+            ID: mentor.userId,
+        });
+        res.status(201).json({ mentor });
     }
     catch (error) {
         next(error);
