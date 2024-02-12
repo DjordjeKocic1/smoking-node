@@ -6,6 +6,7 @@ import { http500Error } from "./errors/errorHandler";
 import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
 import morgan from "morgan";
+import path from "path";
 import router from "./routes/rootRoutes";
 
 require("dotenv").config();
@@ -13,6 +14,8 @@ require("dotenv").config();
 const port = process.env.PORT;
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'public'), {index: false}));
 
 app.use(helmet());
 app.use(morgan("combined"));

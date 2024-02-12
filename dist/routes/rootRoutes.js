@@ -26,8 +26,8 @@ const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
 const router = express_1.default.Router();
 //HTML
-router.get("/", (req, res, next) => {
-    res.sendFile(path_1.default.join(__dirname, "../", "views", "notifications.html"));
+router.get("/existing/users", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views", "users.html"));
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);

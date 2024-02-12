@@ -31,8 +31,8 @@ import { userController } from "../controllers/userController";
 const router = exporess.Router();
 
 //HTML
-router.get("/", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "../", "views", "notifications.html"));
+router.get("/existing/users", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views", "users.html"));
 });
 
 //Users
