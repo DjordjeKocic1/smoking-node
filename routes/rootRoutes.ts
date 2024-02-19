@@ -186,8 +186,8 @@ router.get(
 router.post("/email/create-email", emailController.createEmail);
 
 //404
-router.all("*", () => {
-  throw new http404Error();
+router.all("*", (req,res,next) => {
+  throw new http404Error(`Requested url:'${req.url}' not found`);
 });
 
 export default router;

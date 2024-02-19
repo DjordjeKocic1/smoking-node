@@ -87,7 +87,7 @@ router.get("/auth/google/callback", passport_1.default.authenticate("google", { 
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
 //404
-router.all("*", () => {
-    throw new errorHandler_1.http404Error();
+router.all("*", (req, res, next) => {
+    throw new errorHandler_1.http404Error(`Requested url:'${req.url}' not found`);
 });
 exports.default = router;

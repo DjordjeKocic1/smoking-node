@@ -19,13 +19,13 @@ const baseError = class BaseError extends Error {
     }
 };
 exports.baseError = baseError;
-const http404Error = class HTTP500Error extends exports.baseError {
-    constructor() {
-        super("PAGE NOT FOUND", HttpStatusCode.NOT_FOUND, "Page not found.");
+const http404Error = class HTTP404Error extends exports.baseError {
+    constructor(message) {
+        super("PAGE NOT FOUND", HttpStatusCode.NOT_FOUND, message);
     }
 };
 exports.http404Error = http404Error;
-const http422Error = class HTTP400Error extends exports.baseError {
+const http422Error = class HTTP422Error extends exports.baseError {
     constructor(message) {
         super("BAD REQUEST", HttpStatusCode.UNPROCESSABLE_ENTITY, message);
     }
