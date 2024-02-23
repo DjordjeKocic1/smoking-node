@@ -14,7 +14,7 @@ const rootRoutes_1 = __importDefault(require("./routes/rootRoutes"));
 require("dotenv").config();
 const port = process.env.PORT;
 const app = (0, express_1.default)();
-app.use(express_1.default.static(path_1.default.join(__dirname, 'public'), { index: false }));
+app.use(express_1.default.static(path_1.default.join(__dirname, "public"), { index: false }));
 app.use((0, helmet_1.default)());
 app.use((0, morgan_1.default)("combined"));
 (0, initPassport_1.initPassport)(app);
@@ -29,6 +29,8 @@ app.use((error, req, res, next) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
+    let env = process.env.NODE_ENV;
+    console.log("Enviroment is:", env);
     const server = app.listen(port);
     const io = require("./socket").init(server);
     io.on("connection", () => {

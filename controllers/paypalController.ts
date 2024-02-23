@@ -4,12 +4,22 @@ import paypal from "paypal-rest-sdk";
 import { http500Error } from "../errors/errorHandler";
 import { IQuery } from "../types/types";
 
-const { PAYPAL_CLIENT_ID, PAYPAL_SECRET } = process.env;
+const {
+  PAYPAL_CLIENT_ID,
+  PAYPAL_SECRET,
+  NODE_ENV,
+  PAYPAL_LIVE_CLIENT_ID,
+  PAYPAL_LIVE_SECRET,
+} = process.env;
 
 paypal.configure({
-  mode: "sandbox", //sandbox or live
-  client_id: <string>PAYPAL_CLIENT_ID,
-  client_secret: <string>PAYPAL_SECRET,
+  mode: NODE_ENV === "DEV" ? "sandbox" : "live", //sandbox or live
+  client_id:
+    NODE_ENV === "DEV"
+      ? <string>PAYPAL_CLIENT_ID
+      : <string>PAYPAL_LIVE_CLIENT_ID,
+  client_secret:
+    NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_LIVE_SECRET,
 });
 
 const paypalPay: RequestHandler<{}, {}, { price: string }> = (

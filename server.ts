@@ -15,7 +15,7 @@ const port = process.env.PORT;
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public'), {index: false}));
+app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
 app.use(helmet());
 app.use(morgan("combined"));
@@ -43,6 +43,8 @@ app.use(
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
+    let env = process.env.NODE_ENV;
+    console.log("Enviroment is:", env);
     const server = app.listen(port);
     const io = require("./socket").init(server);
     io.on("connection", () => {
