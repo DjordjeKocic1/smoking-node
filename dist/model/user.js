@@ -62,7 +62,7 @@ const userShema = new Schema({
         cigarettes10YearCost: Number,
         cigarettesAvoidedCost: {
             type: Number,
-            default: 0
+            default: 0,
         },
     },
     categories: [

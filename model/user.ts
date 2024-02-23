@@ -61,8 +61,8 @@ const userShema = new Schema(
       cigarettes5YearCost: Number,
       cigarettes10YearCost: Number,
       cigarettesAvoidedCost: {
-        type:Number,
-        default:0
+        type: Number,
+        default: 0,
       },
     },
     categories: [
@@ -89,7 +89,7 @@ const userShema = new Schema(
       {
         name: String,
         completed: Boolean,
-        userType:String,
+        userType: String,
         plansId: {
           type: Schema.Types.ObjectId,
           ref: "Plans",

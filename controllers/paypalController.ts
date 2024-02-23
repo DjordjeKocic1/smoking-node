@@ -33,8 +33,8 @@ const paypalPay: RequestHandler<{}, {}, { price: string }> = (
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "exp+istop://1doounm.djole232.8081.exp.direct",
-      cancel_url: "exp+istop://1doounm.djole232.8081.exp.direct",
+      return_url: "exp+istop://expo-development-client",
+      cancel_url: "exp+istop://expo-development-client",
     },
     transactions: [
       {
