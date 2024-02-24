@@ -43,7 +43,7 @@ const paypalPay: RequestHandler<{}, {}, { price: string }> = (
             {
               name: "Mentoring",
               sku: "001",
-              price: req.body.price,
+              price: "10.00",
               currency: "USD",
               quantity: 1,
             },
@@ -51,7 +51,7 @@ const paypalPay: RequestHandler<{}, {}, { price: string }> = (
         },
         amount: {
           currency: "USD",
-          total: req.body.price,
+          total: "10.00",
         },
         description: "Mentoring system",
       },
