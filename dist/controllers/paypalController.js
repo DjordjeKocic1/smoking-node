@@ -21,8 +21,8 @@ const paypalPay = (req, res, next) => {
             payment_method: "paypal",
         },
         redirect_urls: {
-            return_url: "exp+istop://expo-development-client/?url=http%3A%2F%2Fhqcqvt8.djole232.8081.exp.direct",
-            cancel_url: "exp+istop://expo-development-client/?url=http%3A%2F%2Fhqcqvt8.djole232.8081.exp.direct",
+            return_url: "exp+istop://1doounm.djole232.19000.exp.direct",
+            cancel_url: "exp+istop://1doounm.djole232.19000.exp.direct",
         },
         transactions: [
             {
