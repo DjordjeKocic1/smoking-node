@@ -26,6 +26,7 @@ app.use((error, req, res, next) => {
     const message = error.message;
     res.status(status).json({ error: message });
 });
+mongoose_1.default.set("strictQuery", false);
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {

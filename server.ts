@@ -40,6 +40,7 @@ app.use(
   }
 );
 
+mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGO_URI as string)
   .then(() => {
