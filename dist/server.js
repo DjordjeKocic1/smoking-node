@@ -29,8 +29,6 @@ app.use((error, req, res, next) => {
 mongoose_1.default
     .connect(process.env.MONGO_URI)
     .then(() => {
-    let env = process.env.NODE_ENV;
-    console.log("Enviroment is:", env);
     const server = app.listen(port);
     const io = require("./socket").init(server);
     io.on("connection", () => {
