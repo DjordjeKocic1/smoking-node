@@ -21,8 +21,8 @@ const paypalPay = (req, res, next) => {
             payment_method: "paypal",
         },
         redirect_urls: {
-            return_url: "exp+istop://1doounm.djole232.19000.exp.direct",
-            cancel_url: "exp+istop://1doounm.djole232.19000.exp.direct",
+            return_url: "http://hqcqvt8.djole232.8081.exp.direct",
+            cancel_url: "http://hqcqvt8.djole232.8081.exp.direct",
         },
         transactions: [
             {
