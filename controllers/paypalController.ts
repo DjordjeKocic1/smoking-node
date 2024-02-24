@@ -15,11 +15,9 @@ const {
 paypal.configure({
   mode: NODE_ENV === "DEV" ? "sandbox" : "live", //sandbox or live
   client_id:
-    NODE_ENV === "DEV"
-      ? <string>PAYPAL_CLIENT_ID
-      : <string>PAYPAL_LIVE_CLIENT_ID,
+    NODE_ENV === "DEV" ? <string>PAYPAL_CLIENT_ID : <string>PAYPAL_CLIENT_ID,
   client_secret:
-    NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_LIVE_SECRET,
+    NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_SECRET,
 });
 
 const paypalPay: RequestHandler<{}, {}, {}> = (req, res, next) => {
