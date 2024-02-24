@@ -22,11 +22,7 @@ paypal.configure({
     NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_LIVE_SECRET,
 });
 
-const paypalPay: RequestHandler<{}, {}, { price: string }> = (
-  req,
-  res,
-  next
-) => {
+const paypalPay: RequestHandler<{}, {}, {}> = (req, res, next) => {
   const create_payment_json = {
     intent: "sale",
     payer: {
