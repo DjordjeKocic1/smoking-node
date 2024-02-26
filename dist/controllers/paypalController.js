@@ -8,9 +8,11 @@ const paypal_rest_sdk_1 = __importDefault(require("paypal-rest-sdk"));
 const errorHandler_1 = require("../errors/errorHandler");
 const { PAYPAL_CLIENT_ID, PAYPAL_SECRET, NODE_ENV, PAYPAL_LIVE_CLIENT_ID, PAYPAL_LIVE_SECRET, } = process.env;
 paypal_rest_sdk_1.default.configure({
-    mode: NODE_ENV === "DEV" ? "sandbox" : "sandbox",
-    client_id: NODE_ENV === "DEV" ? PAYPAL_CLIENT_ID : PAYPAL_CLIENT_ID,
-    client_secret: NODE_ENV === "DEV" ? PAYPAL_SECRET : PAYPAL_SECRET,
+    mode: NODE_ENV === "DEV" ? "sandbox" : "live",
+    client_id: NODE_ENV === "DEV"
+        ? PAYPAL_CLIENT_ID
+        : PAYPAL_LIVE_CLIENT_ID,
+    client_secret: NODE_ENV === "DEV" ? PAYPAL_SECRET : PAYPAL_LIVE_SECRET,
 });
 const paypalPay = (req, res, next) => {
     console.log(NODE_ENV);
