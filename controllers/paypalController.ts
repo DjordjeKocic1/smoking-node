@@ -13,22 +13,26 @@ const {
 } = process.env;
 
 paypal.configure({
-  mode: NODE_ENV === "DEV" ? "sandbox" : "sandbox", //sandbox or live
+  mode: NODE_ENV === "DEV" ? "sandbox" : "live", //sandbox or live
   client_id:
-    NODE_ENV === "DEV" ? <string>PAYPAL_CLIENT_ID : <string>PAYPAL_CLIENT_ID,
+    NODE_ENV === "DEV"
+      ? <string>PAYPAL_CLIENT_ID
+      : <string>PAYPAL_LIVE_CLIENT_ID,
   client_secret:
-    NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_SECRET,
+    NODE_ENV === "DEV" ? <string>PAYPAL_SECRET : <string>PAYPAL_LIVE_SECRET,
 });
 
 const paypalPay: RequestHandler<{}, {}, {}> = (req, res, next) => {
+  console.log(NODE_ENV);
+
   const create_payment_json = {
     intent: "sale",
     payer: {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: "http://hqcqvt8.djole232.8081.exp.direct",
-      cancel_url: "http://hqcqvt8.djole232.8081.exp.direct",
+      return_url: "https://play.google.com/apps/test/com.istop.quitsmoking/9",
+      cancel_url: "https://play.google.com/apps/test/com.istop.quitsmoking/9",
     },
     transactions: [
       {
