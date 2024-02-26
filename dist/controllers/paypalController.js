@@ -20,8 +20,8 @@ const paypalPay = (req, res, next) => {
             payment_method: "paypal",
         },
         redirect_urls: {
-            return_url: "https://play.google.com/apps/test/com.istop.quitsmoking/9",
-            cancel_url: "https://play.google.com/apps/test/com.istop.quitsmoking/9",
+            return_url: "http://play.google.com/store/apps/details?id=com.istop.quitsmoking",
+            cancel_url: "http://play.google.com/store/apps/details?id=com.istop.quitsmoking",
         },
         transactions: [
             {
