@@ -3,9 +3,10 @@ Content-Type: application/json
 
 {
     "name":"Djole",
-    "email":"djordje@nueralabs.com",
+    "email":"kocic19899@gmail.com",
     "user":{
-        "email":"kocic19899@gmail.com",
-        "_id":"65b90395a9a17d0870247050"
+        "email":"mr.milosa@gmail.com",
+        "accepted":false,
+        "_id":"65ca2067824de6718e3f13ff"
     }
 }

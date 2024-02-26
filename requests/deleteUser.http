@@ -1,0 +1,3 @@
+@id = 65ca2067824de6718e3f13ff
+DELETE  http://localhost:8000/delete-user/{{id}}
+Content-Type: application/json

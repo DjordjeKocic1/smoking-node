@@ -115,12 +115,27 @@ const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
       throw new http422Error(errors.array()[0].msg);
     }
 
-    await User.findByIdAndDelete({ _id: req.params.id });
+    await User.findOne({ _id: req.params.id });
 
     let mentorDeleteId = await Mentor.findOne({ userId: req.params.id });
 
     if (mentorDeleteId) {
       await mentorDeleteId.remove();
+    }
+
+    let mentors = await Mentor.find();
+
+    for (const mentor of mentors) {
+      let findMentoringUser = mentor.mentoringUser.find(
+        (m) => m._id?.toString() === req.params.id
+      );
+      if (findMentoringUser) {
+        let filtered = mentor.mentoringUser.filter(
+          (m) => m._id?.toString() !== findMentoringUser?._id?.toString()
+        );
+        mentor.mentoringUser = filtered;
+        await mentor.save();
+      }
     }
 
     res.status(204).send({ success: "ok" });

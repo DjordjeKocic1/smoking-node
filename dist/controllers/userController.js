@@ -109,10 +109,19 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        yield user_1.default.findByIdAndDelete({ _id: req.params.id });
+        yield user_1.default.findOne({ _id: req.params.id });
         let mentorDeleteId = yield mentor_1.default.findOne({ userId: req.params.id });
         if (mentorDeleteId) {
             yield mentorDeleteId.remove();
+        }
+        let mentors = yield mentor_1.default.find();
+        for (const mentor of mentors) {
+            let findMentoringUser = mentor.mentoringUser.find((m) => { var _a; return ((_a = m._id) === null || _a === void 0 ? void 0 : _a.toString()) === req.params.id; });
+            if (findMentoringUser) {
+                let filtered = mentor.mentoringUser.filter((m) => { var _a, _b; return ((_a = m._id) === null || _a === void 0 ? void 0 : _a.toString()) !== ((_b = findMentoringUser === null || findMentoringUser === void 0 ? void 0 : findMentoringUser._id) === null || _b === void 0 ? void 0 : _b.toString()); });
+                mentor.mentoringUser = filtered;
+                yield mentor.save();
+            }
         }
         res.status(204).send({ success: "ok" });
     }
