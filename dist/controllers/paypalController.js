@@ -15,7 +15,6 @@ paypal_rest_sdk_1.default.configure({
     client_secret: NODE_ENV === "DEV" ? PAYPAL_SECRET : PAYPAL_LIVE_SECRET,
 });
 const paypalPay = (req, res, next) => {
-    console.log(NODE_ENV);
     const create_payment_json = {
         intent: "sale",
         payer: {

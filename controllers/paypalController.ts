@@ -23,8 +23,6 @@ paypal.configure({
 });
 
 const paypalPay: RequestHandler<{}, {}, {}> = (req, res, next) => {
-  console.log(NODE_ENV);
-
   const create_payment_json = {
     intent: "sale",
     payer: {
