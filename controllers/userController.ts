@@ -115,7 +115,7 @@ const deleteUser: RequestHandler<IParams> = async (req, res, next) => {
       throw new http422Error(errors.array()[0].msg);
     }
 
-    await User.findOne({ _id: req.params.id });
+    await User.findOneAndDelete({ _id: req.params.id });
 
     let mentorDeleteId = await Mentor.findOne({ userId: req.params.id });
 

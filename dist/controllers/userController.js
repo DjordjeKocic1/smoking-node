@@ -109,7 +109,7 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        yield user_1.default.findOne({ _id: req.params.id });
+        yield user_1.default.findOneAndDelete({ _id: req.params.id });
         let mentorDeleteId = yield mentor_1.default.findOne({ userId: req.params.id });
         if (mentorDeleteId) {
             yield mentorDeleteId.remove();

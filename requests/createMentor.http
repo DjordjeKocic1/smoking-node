@@ -5,8 +5,8 @@ Content-Type: application/json
     "name":"Djole",
     "email":"kocic19899@gmail.com",
     "user":{
-        "email":"mr.milosa@gmail.com",
+        "email":"djordje@nueralabs.com",
         "accepted":false,
-        "_id":"65ca2067824de6718e3f13ff"
+        "_id":"65b8fc4aa9a17d0870246fca"
     }
 }
