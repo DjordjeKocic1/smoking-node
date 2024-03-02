@@ -36,6 +36,9 @@ router.get("/account/delete/login", (req, res, next) => {
 router.get("/account/delete/request", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "delete.html"));
 });
+router.get("/account/delete/success", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "success.html"));
+});
 //Users
 router.get("/users", userController_1.userController.getUsers);
 router.post("/user", [(0, errorRoute_1.checkUserExist)()], userController_1.userController.getUser);
@@ -94,7 +97,7 @@ router.get("/auth/google/callback", passport_1.default.authenticate("google", { 
 });
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
-router.post("/email/create-delete-email", [(0, errorRoute_1.checkUserRequestDeleteIDExist)(), (0, errorRoute_1.checkUserRequestDeleteExist)()], emailController_1.emailController.createDeleteRequestEmail);
+router.post("/email/create-delete-email", [(0, errorRoute_1.checkUserRequestUsingSameEmailAndID)(), (0, errorRoute_1.checkUserRequestDeleteIDExist)(), (0, errorRoute_1.checkUserRequestDeleteExist)()], emailController_1.emailController.createDeleteRequestEmail);
 //feedback
 router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
 router.post("/create-feedback", [(0, errorRoute_1.checkUserExist)()], feedbackController_1.feedbackController.createFeedback);

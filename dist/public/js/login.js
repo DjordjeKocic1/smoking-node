@@ -1,27 +1,28 @@
 let loginForm = document.querySelector(".login");
 let errorTxt = document.querySelector(".error");
 
-loginForm.addEventListener("submit", (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  let data = { email: e.target.email.value };
-  fetch("/user", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-type": "application/json; charset=UTF-8",
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.error) {
-        let { error } = data;
-        errorTxt.textContent = error;
-        return;
-      }
-      window.location = data.redirect;
-      errorTxt.textContent = "";
-    })
-    .catch((err) => {
-      console.log(err);
+  try {
+    let dataToSend = { email: e.target.email.value };
+    let response = await fetch("/user", {
+      method: "POST",
+      body: JSON.stringify(dataToSend),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
     });
+
+    let responseData = await response.json();
+
+    if (responseData.error) {
+      let { error } = responseData;
+      errorTxt.textContent = error;
+      return;
+    }
+    window.location = responseData.redirect;
+    errorTxt.textContent = "";
+  } catch (error) {
+    console.log(error);
+  }
 });

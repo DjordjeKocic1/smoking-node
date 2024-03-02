@@ -9,6 +9,7 @@ import {
   checkUserIdParamExist,
   checkUserRequestDeleteExist,
   checkUserRequestDeleteIDExist,
+  checkUserRequestUsingSameEmailAndID,
 } from "../errors/errorRoute";
 
 import Mentor from "../model/mentor";
@@ -43,6 +44,9 @@ router.get("/account/delete/login", (req, res, next) => {
 });
 router.get("/account/delete/request", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views/account/", "delete.html"));
+});
+router.get("/account/delete/success", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views/account/", "success.html"));
 });
 
 //Users
@@ -197,7 +201,7 @@ router.get(
 router.post("/email/create-email", emailController.createEmail);
 router.post(
   "/email/create-delete-email",
-  [checkUserRequestDeleteIDExist(), checkUserRequestDeleteExist()],
+  [checkUserRequestUsingSameEmailAndID(),checkUserRequestDeleteIDExist(), checkUserRequestDeleteExist()],
   emailController.createDeleteRequestEmail
 );
 

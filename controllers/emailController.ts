@@ -45,7 +45,7 @@ const createEmail: RequestHandler<{}, { success: string }, IEmail> = async (
 
 const createDeleteRequestEmail: RequestHandler<
   {},
-  { success: string },
+  { success: string,redirect:string },
   IEmail
 > = async (req, res, next) => {
   var sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -70,7 +70,7 @@ const createDeleteRequestEmail: RequestHandler<
       throw new http422Error(errors.array()[0].msg);
     }
     await apiInstance.sendTransacEmail(sendSmtpEmail);
-    res.status(201).json({ success: "ok" });
+    res.status(201).json({ success: "ok", redirect:"/account/delete/success" });
   } catch (error) {
     next(error);
   }

@@ -19,6 +19,18 @@ export const checkUserExist = () =>
     });
   });
 
+export const checkUserRequestUsingSameEmailAndID = () =>
+  body("params").custom((value) => {
+    return User.findOne({ email: value.email, _id: value.id }).then((user) => {
+      if (!user) {
+        return Promise.reject(
+          "This is not your email."
+        );
+      } else {
+        return Promise.resolve();
+      }
+    });
+  });
 export const checkUserRequestDeleteExist = () =>
   body("params").custom((value) => {
     return User.findOne({ email: value.email }).then((user) => {

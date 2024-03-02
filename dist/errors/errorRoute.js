@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkUserRequestDeleteIDExist = exports.checkUserRequestDeleteExist = exports.checkUserExist = void 0;
+exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkUserRequestDeleteIDExist = exports.checkUserRequestDeleteExist = exports.checkUserRequestUsingSameEmailAndID = exports.checkUserExist = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
@@ -21,6 +21,17 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
     });
 });
 exports.checkUserExist = checkUserExist;
+const checkUserRequestUsingSameEmailAndID = () => (0, express_validator_1.body)("params").custom((value) => {
+    return user_1.default.findOne({ email: value.email, _id: value.id }).then((user) => {
+        if (!user) {
+            return Promise.reject("This is not your email.");
+        }
+        else {
+            return Promise.resolve();
+        }
+    });
+});
+exports.checkUserRequestUsingSameEmailAndID = checkUserRequestUsingSameEmailAndID;
 const checkUserRequestDeleteExist = () => (0, express_validator_1.body)("params").custom((value) => {
     return user_1.default.findOne({ email: value.email }).then((user) => {
         if (!user) {
