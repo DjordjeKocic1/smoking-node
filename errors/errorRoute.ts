@@ -11,7 +11,39 @@ export const checkUserExist = () =>
     return User.findOne({ email: value }).then((user) => {
       if (!user) {
         return Promise.reject(
-          "User with that email doesn't exist in our database. Share the app with him on a home screen"
+          "User with that email doesn't exist in our database."
+        );
+      } else {
+        return Promise.resolve();
+      }
+    });
+  });
+
+export const checkUserRequestDeleteExist = () =>
+  body("params").custom((value) => {
+    return User.findOne({ email: value.email }).then((user) => {
+      if (!user) {
+        return Promise.reject(
+          "User with that email doesn't exist in our database."
+        );
+      } else {
+        return Promise.resolve();
+      }
+    });
+  });
+
+export const checkUserRequestDeleteIDExist = () =>
+  body("params").custom((value) => {
+    if (value.id.length < 24) {
+      return Promise.reject("User ID from url is not correct");
+    }
+    if (value.id === "") {
+      return Promise.reject("User ID from url can't be empty");
+    }
+    return User.findOne({ _id: value.id }).then((user) => {
+      if (!user) {
+        return Promise.reject(
+          "User with that ID doesn't exist in our database. Please check if you accidentally removed 'id' from url, if you did, please go back to login page and try again."
         );
       } else {
         return Promise.resolve();

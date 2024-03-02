@@ -14,6 +14,7 @@ const achievementController_1 = require("../controllers/achievementController");
 const categorieController_1 = require("../controllers/categorieController");
 const emailController_1 = require("../controllers/emailController");
 const express_1 = __importDefault(require("express"));
+const feedbackController_1 = require("../controllers/feedbackController");
 const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
 const notificationController_1 = require("../controllers/notificationController");
@@ -29,8 +30,15 @@ const router = express_1.default.Router();
 router.get("/existing/users", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views", "users.html"));
 });
+router.get("/account/delete/login", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "login.html"));
+});
+router.get("/account/delete/request", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "delete.html"));
+});
 //Users
 router.get("/users", userController_1.userController.getUsers);
+router.post("/user", [(0, errorRoute_1.checkUserExist)()], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserInfoCalc);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
@@ -86,6 +94,10 @@ router.get("/auth/google/callback", passport_1.default.authenticate("google", { 
 });
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
+router.post("/email/create-delete-email", [(0, errorRoute_1.checkUserRequestDeleteIDExist)(), (0, errorRoute_1.checkUserRequestDeleteExist)()], emailController_1.emailController.createDeleteRequestEmail);
+//feedback
+router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
+router.post("/create-feedback", [(0, errorRoute_1.checkUserExist)()], feedbackController_1.feedbackController.createFeedback);
 //404
 router.all("*", (req, res, next) => {
     throw new errorHandler_1.http404Error(`Requested url:'${req.url}' not found`);

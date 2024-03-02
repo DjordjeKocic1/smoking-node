@@ -28,6 +28,21 @@ const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(error);
     }
 });
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let user = (yield user_1.default.findOne({ email: req.body.email }));
+        res
+            .status(200)
+            .json({ user, redirect: "/account/delete/request?id=" + user._id });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 const getUserNotificationToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -191,6 +206,7 @@ const pokeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.userController = {
     getUsers,
+    getUser,
     getUserInfoCalc,
     createUser,
     updateUser,

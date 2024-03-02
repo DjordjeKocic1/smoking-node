@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkUserExist = void 0;
+exports.checkModelID = exports.checkUserIdParamExist = exports.checkMentorIDParamExist = exports.checkMentorIDExist = exports.checkUserIDExist = exports.checkMentoringYourSelf = exports.checkUserRequestDeleteIDExist = exports.checkUserRequestDeleteExist = exports.checkUserExist = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
@@ -13,7 +13,7 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
     }
     return user_1.default.findOne({ email: value }).then((user) => {
         if (!user) {
-            return Promise.reject("User with that email doesn't exist in our database. Share the app with him on a home screen");
+            return Promise.reject("User with that email doesn't exist in our database.");
         }
         else {
             return Promise.resolve();
@@ -21,6 +21,34 @@ const checkUserExist = () => (0, express_validator_1.body)("email").custom((valu
     });
 });
 exports.checkUserExist = checkUserExist;
+const checkUserRequestDeleteExist = () => (0, express_validator_1.body)("params").custom((value) => {
+    return user_1.default.findOne({ email: value.email }).then((user) => {
+        if (!user) {
+            return Promise.reject("User with that email doesn't exist in our database.");
+        }
+        else {
+            return Promise.resolve();
+        }
+    });
+});
+exports.checkUserRequestDeleteExist = checkUserRequestDeleteExist;
+const checkUserRequestDeleteIDExist = () => (0, express_validator_1.body)("params").custom((value) => {
+    if (value.id.length < 24) {
+        return Promise.reject("User ID from url is not correct");
+    }
+    if (value.id === "") {
+        return Promise.reject("User ID from url can't be empty");
+    }
+    return user_1.default.findOne({ _id: value.id }).then((user) => {
+        if (!user) {
+            return Promise.reject("User with that ID doesn't exist in our database. Please check if you accidentally removed 'id' from url, if you did, please go back to login page and try again.");
+        }
+        else {
+            return Promise.resolve();
+        }
+    });
+});
+exports.checkUserRequestDeleteIDExist = checkUserRequestDeleteIDExist;
 const checkMentoringYourSelf = () => (0, express_validator_1.body)("email").custom((value, { req }) => {
     if (!req.body.email) {
         return Promise.reject("User doesn't exist.Please try again later.");

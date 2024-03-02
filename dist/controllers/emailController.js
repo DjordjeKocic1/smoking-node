@@ -10,6 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailController = void 0;
+const errorHandler_1 = require("../errors/errorHandler");
+const express_validator_1 = require("express-validator");
 const { BREVO_API_KEY } = process.env;
 var Brevo = require("@getbrevo/brevo");
 var defaultClient = Brevo.ApiClient.instance;
@@ -18,7 +20,9 @@ apiKey.apiKey = BREVO_API_KEY;
 var apiInstance = new Brevo.TransactionalEmailsApi();
 const createEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var sendSmtpEmail = new Brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = "Mentor Request";
+    sendSmtpEmail.subject = !!req.body.subject
+        ? req.body.subject
+        : "Mentor Request";
     sendSmtpEmail.sender = {
         name: "iStop",
         email: "sale.dalibor.djole@gmail.com",
@@ -40,6 +44,35 @@ const createEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
+const createDeleteRequestEmail = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var sendSmtpEmail = new Brevo.SendSmtpEmail();
+    sendSmtpEmail.subject = "Account deletion";
+    sendSmtpEmail.sender = {
+        name: "iStop",
+        email: "sale.dalibor.djole@gmail.com",
+    };
+    sendSmtpEmail.to = [
+        {
+            name: "sale.dalibor.djole@gmail.com",
+            email: "sale.dalibor.djole@gmail.com",
+        },
+    ];
+    sendSmtpEmail.params = req.body.params;
+    sendSmtpEmail.type = "classic";
+    sendSmtpEmail.templateId = 6;
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        yield apiInstance.sendTransacEmail(sendSmtpEmail);
+        res.status(201).json({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.emailController = {
     createEmail,
+    createDeleteRequestEmail,
 };

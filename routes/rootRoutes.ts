@@ -4,8 +4,11 @@ import {
   checkMentorIDParamExist,
   checkMentoringYourSelf,
   checkModelID,
+  checkUserExist,
   checkUserIDExist,
   checkUserIdParamExist,
+  checkUserRequestDeleteExist,
+  checkUserRequestDeleteIDExist,
 } from "../errors/errorRoute";
 
 import Mentor from "../model/mentor";
@@ -17,6 +20,7 @@ import { achievementController } from "../controllers/achievementController";
 import { categorieController } from "../controllers/categorieController";
 import { emailController } from "../controllers/emailController";
 import exporess from "express";
+import { feedbackController } from "../controllers/feedbackController";
 import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
 import { notificationController } from "../controllers/notificationController";
@@ -34,9 +38,16 @@ const router = exporess.Router();
 router.get("/existing/users", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views", "users.html"));
 });
+router.get("/account/delete/login", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views/account/", "login.html"));
+});
+router.get("/account/delete/request", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views/account/", "delete.html"));
+});
 
 //Users
 router.get("/users", userController.getUsers);
+router.post("/user", [checkUserExist()], userController.getUser);
 router.post(
   "/user-info/:id",
   [checkModelID(User)],
@@ -184,9 +195,22 @@ router.get(
 
 //email
 router.post("/email/create-email", emailController.createEmail);
+router.post(
+  "/email/create-delete-email",
+  [checkUserRequestDeleteIDExist(), checkUserRequestDeleteExist()],
+  emailController.createDeleteRequestEmail
+);
+
+//feedback
+router.get("/get-feedback", feedbackController.getFeedbacks);
+router.post(
+  "/create-feedback",
+  [checkUserExist()],
+  feedbackController.createFeedback
+);
 
 //404
-router.all("*", (req,res,next) => {
+router.all("*", (req, res, next) => {
   throw new http404Error(`Requested url:'${req.url}' not found`);
 });
 

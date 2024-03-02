@@ -55,9 +55,9 @@ const createMentor = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let user = (yield user_1.default.findOne({ _id: req.body.user._id }));
-        // if (!user.subscription.subscriber) {
-        //   throw new http422Error("User is not subscriber");
-        // }
+        if (!user.subscription.subscriber) {
+            throw new errorHandler_1.http422Error("User is not subscriber");
+        }
         let userMentor = (yield user_1.default.findOne({ email: req.body.email }));
         if (!userMentor) {
             return res.status(201).send("EXISTSFALSE");

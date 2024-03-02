@@ -17,6 +17,21 @@ const getUsers: RequestHandler = async (req, res, next) => {
   }
 };
 
+const getUser: RequestHandler = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+    let user = (await User.findOne({ email: req.body.email })) as IUser;
+    res
+      .status(200)
+      .json({ user, redirect: "/account/delete/request?id=" + user._id });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getUserNotificationToken: RequestHandler<
   IParams,
   {},
@@ -229,6 +244,7 @@ const pokeUser: RequestHandler<
 
 export const userController = {
   getUsers,
+  getUser,
   getUserInfoCalc,
   createUser,
   updateUser,

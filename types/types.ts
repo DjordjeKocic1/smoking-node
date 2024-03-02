@@ -55,12 +55,12 @@ export interface IConsumptionInfo {
 
 export enum UserTypes {
   User = "user",
-  Mentor = "mentor"
+  Mentor = "mentor",
 }
 export interface IPlans {
   _id: string;
   name: string;
-  userType?:UserTypes;
+  userType?: UserTypes;
   userId?: string;
   plansId?: string;
 }
@@ -103,7 +103,7 @@ export interface IMentoringUser {
   email: string;
   name: string;
   accepted?: boolean;
-  _doc?:any;
+  _doc?: any;
 }
 export interface IMentor {
   _id: any;
@@ -133,6 +133,11 @@ export interface ITask {
   comment: string;
   userId: string;
   mentorId: string;
+}
+
+export interface IFeedBack {
+  email: string;
+  message: string;
 }
 
 export interface ITaskUser {
@@ -218,6 +223,7 @@ export interface IEmail {
   email: string;
   templateId: number;
   params: IEmailParams;
+  subject: string;
 }
 
 export interface IEmailParams {
