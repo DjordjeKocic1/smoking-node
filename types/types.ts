@@ -94,6 +94,7 @@ export interface IUser {
   gameScore: number;
   save: () => Promise<IUser>;
   subscription: ISubscription;
+  apiKey: string;
 }
 
 export interface IMentoringUser {
@@ -125,7 +126,10 @@ export interface INotificaion extends IUser {
   userId: string;
   _doc?: any;
 }
-
+export interface ISession {
+  userId: string;
+  email: string;
+}
 export interface ITask {
   _id: string;
   toDo: string;

@@ -66,7 +66,9 @@ const createDeleteRequestEmail = (req, res, next) => __awaiter(void 0, void 0, v
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
-        res.status(201).json({ success: "ok", redirect: "/account/delete/success" });
+        res
+            .status(201)
+            .json({ success: "ok", redirect: "/account/delete/success" });
     }
     catch (error) {
         next(error);

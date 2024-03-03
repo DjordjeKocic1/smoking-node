@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
 const plans_1 = __importDefault(require("../model/plans"));
+const sessions_1 = __importDefault(require("../model/sessions"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
@@ -35,6 +36,11 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let user = (yield user_1.default.findOne({ email: req.body.email }));
+        let newSession = new sessions_1.default({
+            userId: user._id.toString(),
+            email: user.email,
+        });
+        yield newSession.save();
         res
             .status(200)
             .json({ user, redirect: "/account/delete/request?id=" + user._id });

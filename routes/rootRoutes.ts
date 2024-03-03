@@ -4,12 +4,11 @@ import {
   checkMentorIDParamExist,
   checkMentoringYourSelf,
   checkModelID,
+  checkSession,
   checkUserExist,
   checkUserIDExist,
   checkUserIdParamExist,
-  checkUserRequestDeleteExist,
-  checkUserRequestDeleteIDExist,
-  checkUserRequestUsingSameEmailAndID,
+  validateRemoveAccountReq,
 } from "../errors/errorRoute";
 
 import Mentor from "../model/mentor";
@@ -51,7 +50,11 @@ router.get("/account/delete/success", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.post("/user", [checkUserExist()], userController.getUser);
+router.post(
+  "/user",
+  [checkUserExist(), checkSession().checkBodyEmail],
+  userController.getUser
+);
 router.post(
   "/user-info/:id",
   [checkModelID(User)],
@@ -201,7 +204,12 @@ router.get(
 router.post("/email/create-email", emailController.createEmail);
 router.post(
   "/email/create-delete-email",
-  [checkUserRequestUsingSameEmailAndID(),checkUserRequestDeleteIDExist(), checkUserRequestDeleteExist()],
+  [
+    validateRemoveAccountReq().checkUserID,
+    validateRemoveAccountReq().checkUserEmail,
+    validateRemoveAccountReq().checkUserIdAndEmail,
+    checkSession().checkParamEmail,
+  ],
   emailController.createDeleteRequestEmail
 );
 

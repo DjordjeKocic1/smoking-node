@@ -1,6 +1,7 @@
 import { body, param } from "express-validator";
 
 import Mentor from "../model/mentor";
+import Sessions from "../model/sessions";
 import User from "../model/user";
 
 export const checkUserExist = () =>
@@ -19,50 +20,49 @@ export const checkUserExist = () =>
     });
   });
 
-export const checkUserRequestUsingSameEmailAndID = () =>
-  body("params").custom((value) => {
-    return User.findOne({ email: value.email, _id: value.id }).then((user) => {
-      if (!user) {
-        return Promise.reject(
-          "This is not your email."
-        );
-      } else {
-        return Promise.resolve();
+export const validateRemoveAccountReq = () => {
+  return {
+    checkUserIdAndEmail: body("params").custom((value) => {
+      return User.findOne({ email: value.email, _id: value.id }).then(
+        (user) => {
+          if (!user) {
+            return Promise.reject("This is not your email.");
+          } else {
+            return Promise.resolve();
+          }
+        }
+      );
+    }),
+    checkUserID: body("params").custom((value) => {
+      if (value.id.length < 24) {
+        return Promise.reject("User ID from url is missing or incorrect");
       }
-    });
-  });
-export const checkUserRequestDeleteExist = () =>
-  body("params").custom((value) => {
-    return User.findOne({ email: value.email }).then((user) => {
-      if (!user) {
-        return Promise.reject(
-          "User with that email doesn't exist in our database."
-        );
-      } else {
-        return Promise.resolve();
+      if (value.id === "") {
+        return Promise.reject("User ID from url can't be empty");
       }
-    });
-  });
-
-export const checkUserRequestDeleteIDExist = () =>
-  body("params").custom((value) => {
-    if (value.id.length < 24) {
-      return Promise.reject("User ID from url is not correct");
-    }
-    if (value.id === "") {
-      return Promise.reject("User ID from url can't be empty");
-    }
-    return User.findOne({ _id: value.id }).then((user) => {
-      if (!user) {
-        return Promise.reject(
-          "User with that ID doesn't exist in our database. Please check if you accidentally removed 'id' from url, if you did, please go back to login page and try again."
-        );
-      } else {
-        return Promise.resolve();
-      }
-    });
-  });
-
+      return User.findOne({ _id: value.id }).then((user) => {
+        if (!user) {
+          return Promise.reject(
+            "User with that ID doesn't exist in our database. Please check if you accidentally removed 'id' from url, if you did, please go back to login page and try again."
+          );
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
+    checkUserEmail: body("params").custom((value) => {
+      return User.findOne({ email: value.email }).then((user) => {
+        if (!user) {
+          return Promise.reject(
+            "User with that email doesn't exist in our database."
+          );
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
+  };
+};
 export const checkMentoringYourSelf = () =>
   body("email").custom((value, { req }) => {
     if (!req.body.email) {
@@ -132,3 +132,26 @@ export const checkModelID = (Model: any) =>
       }
     });
   });
+
+export const checkSession = () => {
+  return {
+    checkBodyEmail: body("email").custom((value) => {
+      return Sessions.findOne({ email: value }).then((data) => {
+        if (data) {
+          return Promise.reject("You already sent an request");
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
+    checkParamEmail: body("params").custom((value) => {
+      return Sessions.findOne({ email: value.email }).then((user) => {
+        if (user) {
+          return Promise.reject("You already sent an request");
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
+  };
+};

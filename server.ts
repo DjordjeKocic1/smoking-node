@@ -16,13 +16,12 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
+app.use(express.json());
 
 app.use(helmet());
 app.use(morgan("combined"));
 
 initPassport(app);
-
-app.use(express.json());
 
 app.use("/", router);
 

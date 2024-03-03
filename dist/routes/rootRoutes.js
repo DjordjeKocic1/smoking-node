@@ -41,7 +41,7 @@ router.get("/account/delete/success", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/user", [(0, errorRoute_1.checkUserExist)()], userController_1.userController.getUser);
+router.post("/user", [(0, errorRoute_1.checkUserExist)(), (0, errorRoute_1.checkSession)().checkBodyEmail], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserInfoCalc);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
@@ -97,7 +97,12 @@ router.get("/auth/google/callback", passport_1.default.authenticate("google", { 
 });
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
-router.post("/email/create-delete-email", [(0, errorRoute_1.checkUserRequestUsingSameEmailAndID)(), (0, errorRoute_1.checkUserRequestDeleteIDExist)(), (0, errorRoute_1.checkUserRequestDeleteExist)()], emailController_1.emailController.createDeleteRequestEmail);
+router.post("/email/create-delete-email", [
+    (0, errorRoute_1.validateRemoveAccountReq)().checkUserID,
+    (0, errorRoute_1.validateRemoveAccountReq)().checkUserEmail,
+    (0, errorRoute_1.validateRemoveAccountReq)().checkUserIdAndEmail,
+    (0, errorRoute_1.checkSession)().checkParamEmail,
+], emailController_1.emailController.createDeleteRequestEmail);
 //feedback
 router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
 router.post("/create-feedback", [(0, errorRoute_1.checkUserExist)()], feedbackController_1.feedbackController.createFeedback);

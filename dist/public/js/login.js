@@ -10,6 +10,7 @@ loginForm.addEventListener("submit", async (e) => {
       body: JSON.stringify(dataToSend),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        credentials: "include",
       },
     });
 
