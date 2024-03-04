@@ -231,6 +231,7 @@ export interface IEmail {
 }
 
 export interface IEmailParams {
+  id:string;
   name: string;
   email: string;
   price: string;

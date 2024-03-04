@@ -25,11 +25,6 @@ const getUser: RequestHandler = async (req, res, next) => {
       throw new http422Error(errors.array()[0].msg);
     }
     let user = (await User.findOne({ email: req.body.email })) as IUser;
-    let newSession = new Sessions({
-      userId: user._id.toString(),
-      email: user.email,
-    });
-    await newSession.save();
     res
       .status(200)
       .json({ user, redirect: "/account/delete/request?id=" + user._id });

@@ -1,5 +1,6 @@
 import { IEmail } from "../types/types";
 import { RequestHandler } from "express";
+import Sessions from "../model/sessions";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
@@ -68,6 +69,12 @@ const createDeleteRequestEmail: RequestHandler<
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
+
+    let newSession = new Sessions({
+      userId: req.body.params.id.toString(),
+      email: req.body.params.email,
+    });
+    await newSession.save();
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     res

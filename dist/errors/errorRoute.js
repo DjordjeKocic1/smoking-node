@@ -35,6 +35,9 @@ const validateRemoveAccountReq = () => {
             });
         }),
         checkUserID: (0, express_validator_1.body)("params").custom((value) => {
+            if (!value.id) {
+                return Promise.reject("User ID from url is missing, please login again.");
+            }
             if (value.id.length < 24) {
                 return Promise.reject("User ID from url is missing or incorrect");
             }

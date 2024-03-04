@@ -8,8 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailController = void 0;
+const sessions_1 = __importDefault(require("../model/sessions"));
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
 const { BREVO_API_KEY } = process.env;
@@ -65,6 +69,11 @@ const createDeleteRequestEmail = (req, res, next) => __awaiter(void 0, void 0, v
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
+        let newSession = new sessions_1.default({
+            userId: req.body.params.id.toString(),
+            email: req.body.params.email,
+        });
+        yield newSession.save();
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
         res
             .status(201)

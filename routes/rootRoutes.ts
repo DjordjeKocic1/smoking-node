@@ -52,7 +52,7 @@ router.get("/account/delete/success", (req, res, next) => {
 router.get("/users", userController.getUsers);
 router.post(
   "/user",
-  [checkUserExist(), checkSession().checkBodyEmail],
+  [checkUserExist()],
   userController.getUser
 );
 router.post(
