@@ -24,6 +24,12 @@ deleteForm.addEventListener("submit", async (e) => {
 
     let responseData = await response.json();
 
+    if (responseData.error) {
+      errorTxt.textContent = responseData.error;
+      successTxt.textContent = "";
+      return;
+    }
+
     if (e.target.feedback.value) {
       await fetch("/create-feedback", {
         method: "POST",
@@ -36,12 +42,7 @@ deleteForm.addEventListener("submit", async (e) => {
         },
       });
     }
-
-    if (responseData.error) {
-      errorTxt.textContent = responseData.error;
-      successTxt.textContent = "";
-      return;
-    }
+    
     errorTxt.textContent = "";
     successTxt.textContent = "Request sent!";
     setTimeout(() => {
