@@ -209,21 +209,6 @@ router.get(
     );
   }
 );
-/* Yahoo */
-
-router.get(
-  "/auth/yahoo",
-  passport.authenticate("yahoo", { scope: ["profile", "email"] })
-);
-router.get(
-  "/auth/yahoo/callback",
-  passport.authenticate("yahoo", { failureRedirect: "/auth/yahoo" }),
-  (req: any, res) => {
-    res.redirect(
-      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
-    );
-  }
-);
 //email
 router.post("/email/create-email", emailController.createEmail);
 router.post(
