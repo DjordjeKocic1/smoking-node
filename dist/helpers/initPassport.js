@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initPassport = void 0;
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
-const TwitterStrategy = require("passport-twitter").Strategy;
+const YahooStrategy = require("passport-yahoo-oauth").Strategy;
 require("dotenv").config();
 const passportStrategies_1 = require("../helpers/passportStrategies");
 const passport_1 = __importDefault(require("passport"));
@@ -36,6 +36,9 @@ passport_1.default.use(new GoogleStrategy(passportStrategies_1.google, (accessTo
     done(null, formatGoogle(profile._json));
 })));
 passport_1.default.use(new FacebookStrategy(passportStrategies_1.facebook, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
+    done(null, formatGoogle(profile._json));
+})));
+passport_1.default.use(new YahooStrategy(passportStrategies_1.yahoo, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     done(null, formatGoogle(profile._json));
 })));
 passport_1.default.serializeUser((user, done) => done(null, user));

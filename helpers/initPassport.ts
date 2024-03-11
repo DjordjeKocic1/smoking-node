@@ -1,10 +1,10 @@
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
-const TwitterStrategy = require("passport-twitter").Strategy;
+const YahooStrategy = require("passport-yahoo-oauth").Strategy;
 
 require("dotenv").config();
 
-import { facebook, google } from "../helpers/passportStrategies";
+import { facebook, google, yahoo } from "../helpers/passportStrategies";
 import passport from "passport";
 import session from "express-session";
 
@@ -34,6 +34,15 @@ passport.use(
 passport.use(
   new FacebookStrategy(
     facebook,
+    async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+      done(null, formatGoogle(profile._json));
+    }
+  )
+);
+
+passport.use(
+  new YahooStrategy(
+    yahoo,
     async (accessToken: any, refreshToken: any, profile: any, done: any) => {
       done(null, formatGoogle(profile._json));
     }

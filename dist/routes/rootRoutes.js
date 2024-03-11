@@ -103,6 +103,11 @@ router.get("/auth/facebook", passport_1.default.authenticate("facebook", { scope
 router.get("/auth/facebook/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
     res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
 });
+/* Yahoo */
+router.get("/auth/yahoo", passport_1.default.authenticate("yahoo", { scope: ["profile", "email"] }));
+router.get("/auth/yahoo/callback", passport_1.default.authenticate("yahoo", { failureRedirect: "/auth/yahoo" }), (req, res) => {
+    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
+});
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
 router.post("/email/create-delete-email", [

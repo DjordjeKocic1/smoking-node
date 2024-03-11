@@ -11,3 +11,9 @@ export const facebook = {
   callbackURL:
     "https://whale-app-hkbku.ondigitalocean.app/auth/facebook/callback",
 };
+
+export const yahoo = {
+  consumerKey: process.env.YAHOO_API_KEY,
+  consumerSecret: process.env.YAHOO_API_SECRET,
+  callbackURL: "https://whale-app-hkbku.ondigitalocean.app/auth/yahoo/callback",
+};
