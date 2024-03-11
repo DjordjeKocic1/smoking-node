@@ -1,0 +1,8 @@
+POST http://localhost:8000/send-notification
+Content-Type: application/json
+
+{
+    "notificationToken":"ExponentPushToken[dZeUdWAsSTSU_pcpVO7NHi]",
+    "title":"Hello",
+    "body":"You just jaooo"
+}

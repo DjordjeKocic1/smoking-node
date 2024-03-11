@@ -22,6 +22,7 @@ const passport_1 = __importDefault(require("passport"));
 const path_1 = __importDefault(require("path"));
 const stripeController_1 = require("../controllers/stripeController");
 const paypalController_1 = require("../controllers/paypalController");
+const planController_1 = require("../controllers/planController");
 const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
@@ -41,36 +42,37 @@ router.get("/account/delete/success", (req, res, next) => {
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/user", [(0, errorRoute_1.checkUserExist)()], userController_1.userController.getUser);
-router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserInfoCalc);
+router.post("/user", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.getUser);
+router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserConsumption);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
-router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.getUserNotificationToken);
+router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserNotificationToken);
 router.post("/poke-user", userController_1.userController.pokeUser);
+router.post("/send-notification", userController_1.userController.sendNotification);
 //Plans
-router.post("/create-plan/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.createPlan);
-router.delete("/delete-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], userController_1.userController.deletePlan);
+router.post("/create-plan/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], planController_1.planController.createPlan);
+router.delete("/delete-plan/:id", [(0, errorRoute_1.checkModelID)(plans_1.default)], planController_1.planController.deletePlan);
 //Mentor
 router.get("/get-mentor/:id", mentorController_1.mentorController.getMentor);
 router.post("/create-mentor", [
     (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"),
-    (0, errorRoute_1.checkMentoringYourSelf)(),
+    (0, errorRoute_1.checkMentor)().checkMentoringYourSelf,
 ], mentorController_1.mentorController.createMentor);
 router.put("/update-mentor/:id", [(0, errorRoute_1.checkModelID)(mentor_1.default)], mentorController_1.mentorController.updateMentor);
-router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], mentorController_1.mentorController.deleteMentor);
+router.delete("/delete-mentor/:mentorId/:userId", [(0, errorRoute_1.checkMentor)().checkMentorIDParamExist, (0, errorRoute_1.checkUser)().checkUserParamIDExist], mentorController_1.mentorController.deleteMentor);
 //Tasks
 router.get("/get-task/:id", taskController_1.taskController.getTasks);
-router.get("/get-task/:userId/:mentorId", [(0, errorRoute_1.checkMentorIDParamExist)(), (0, errorRoute_1.checkUserIdParamExist)()], taskController_1.taskController.getTasksByMentor);
-router.post("/create-task", [(0, errorRoute_1.checkUserIDExist)(), (0, errorRoute_1.checkMentorIDExist)()], taskController_1.taskController.createTask);
+router.get("/get-task/:userId/:mentorId", [(0, errorRoute_1.checkMentor)().checkMentorIDParamExist, (0, errorRoute_1.checkUser)().checkUserParamIDExist], taskController_1.taskController.getTasksByMentor);
+router.post("/create-task", [(0, errorRoute_1.checkUser)().checkUserIDExist, (0, errorRoute_1.checkMentor)().checkMentorIDExist], taskController_1.taskController.createTask);
 router.put("/update-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.updateTask);
 router.delete("/delete-task/:id", [(0, errorRoute_1.checkModelID)(task_1.default)], taskController_1.taskController.deleteTask);
 //Notification
 router.get("/get-notification/:id", notificationController_1.notificationController.getNotificationsByUserID);
 router.post("/create-notification", (0, express_validator_1.body)("email").isEmail().withMessage("Email required"), notificationController_1.notificationController.createNotification);
-router.put("/update-notification/:userId", [(0, errorRoute_1.checkUserIdParamExist)()], notificationController_1.notificationController.updateNotification);
+router.put("/update-notification/:userId", [(0, errorRoute_1.checkUser)().checkUserParamIDExist], notificationController_1.notificationController.updateNotification);
 router.delete("/delete-notifcation/:userId", [
-    (0, errorRoute_1.checkUserIdParamExist)(),
+    (0, errorRoute_1.checkUser)().checkUserParamIDExist,
     (0, express_validator_1.query)("isTask").isString().withMessage("isTask query required"),
     (0, express_validator_1.query)("isMentoring").isString().withMessage("isMentoring query required"),
 ], notificationController_1.notificationController.deleteNotification);
@@ -91,8 +93,19 @@ router.get("/cancel", paypalController_1.paypalController.paypalCancel);
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
 //Authenticate
+/* Google */
 router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
 router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
+    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
+});
+/* Facebook */
+router.get("/auth/facebook", passport_1.default.authenticate("facebook", { scope: ["profile", "email"] }));
+router.get("/auth/facebook/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
+    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
+});
+/* Twitter */
+router.get("/auth/twitter", passport_1.default.authenticate("twitter", { scope: ['tweet.read', 'user.read', 'tweet.write', 'offline.access'] }));
+router.get("/auth/twitter/callback", passport_1.default.authenticate("twitter", { failureRedirect: "/auth/twitter" }), (req, res) => {
     res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
 });
 //email
@@ -105,7 +118,7 @@ router.post("/email/create-delete-email", [
 ], emailController_1.emailController.createDeleteRequestEmail);
 //feedback
 router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
-router.post("/create-feedback", [(0, errorRoute_1.checkUserExist)()], feedbackController_1.feedbackController.createFeedback);
+router.post("/create-feedback", [(0, errorRoute_1.checkUser)().checkUserEmail], feedbackController_1.feedbackController.createFeedback);
 //404
 router.all("*", (req, res, next) => {
     throw new errorHandler_1.http404Error(`Requested url:'${req.url}' not found`);

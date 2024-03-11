@@ -1,13 +1,15 @@
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+const TwitterStrategy = require("passport-twitter").Strategy;
 
 require("dotenv").config();
 
-import { google } from "../helpers/passportStrategies";
+import { facebook, google, twitter } from "../helpers/passportStrategies";
 import passport from "passport";
 import session from "express-session";
 
 export const initPassport = (app: any) => {
-  const secretSession:string = <string> process.env.SESSION_SECRET
+  const secretSession: string = <string>process.env.SESSION_SECRET;
   app.use(
     session({
       resave: false,
@@ -23,6 +25,24 @@ export const initPassport = (app: any) => {
 passport.use(
   new GoogleStrategy(
     google,
+    async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+      done(null, formatGoogle(profile._json));
+    }
+  )
+);
+
+passport.use(
+  new FacebookStrategy(
+    facebook,
+    async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+      done(null, formatGoogle(profile._json));
+    }
+  )
+);
+
+passport.use(
+  new TwitterStrategy(
+    twitter,
     async (accessToken: any, refreshToken: any, profile: any, done: any) => {
       done(null, formatGoogle(profile._json));
     }

@@ -1,0 +1,2 @@
+GET http://localhost:8000/auth/facebook
+Content-Type: application/json

@@ -1,13 +1,9 @@
 import { body, query } from "express-validator";
 import {
-  checkMentorIDExist,
-  checkMentorIDParamExist,
-  checkMentoringYourSelf,
+  checkMentor,
   checkModelID,
   checkSession,
-  checkUserExist,
-  checkUserIDExist,
-  checkUserIdParamExist,
+  checkUser,
   validateRemoveAccountReq,
 } from "../errors/errorRoute";
 
@@ -28,6 +24,7 @@ import passport from "passport";
 import path from "path";
 import { paymentController } from "../controllers/stripeController";
 import { paypalController } from "../controllers/paypalController";
+import { planController } from "../controllers/planController";
 import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
@@ -50,15 +47,11 @@ router.get("/account/delete/success", (req, res, next) => {
 
 //Users
 router.get("/users", userController.getUsers);
-router.post(
-  "/user",
-  [checkUserExist()],
-  userController.getUser
-);
+router.post("/user", [checkUser().checkUserEmail], userController.getUser);
 router.post(
   "/user-info/:id",
   [checkModelID(User)],
-  userController.getUserInfoCalc
+  userController.updateUserConsumption
 );
 router.post(
   "/create-user",
@@ -75,20 +68,22 @@ router.delete(
 router.post(
   "/user-token/:id",
   [checkModelID(User)],
-  userController.getUserNotificationToken
+  userController.updateUserNotificationToken
 );
 router.post("/poke-user", userController.pokeUser);
+
+router.post("/send-notification", userController.sendNotification);
 
 //Plans
 router.post(
   "/create-plan/:id",
   [checkModelID(User)],
-  userController.createPlan
+  planController.createPlan
 );
 router.delete(
   "/delete-plan/:id",
   [checkModelID(Plans)],
-  userController.deletePlan
+  planController.deletePlan
 );
 
 //Mentor
@@ -97,7 +92,7 @@ router.post(
   "/create-mentor",
   [
     body("email").isEmail().withMessage("Email is invalid"),
-    checkMentoringYourSelf(),
+    checkMentor().checkMentoringYourSelf,
   ],
   mentorController.createMentor
 );
@@ -108,7 +103,7 @@ router.put(
 );
 router.delete(
   "/delete-mentor/:mentorId/:userId",
-  [checkMentorIDParamExist(), checkUserIdParamExist()],
+  [checkMentor().checkMentorIDParamExist, checkUser().checkUserParamIDExist],
   mentorController.deleteMentor
 );
 
@@ -116,12 +111,12 @@ router.delete(
 router.get("/get-task/:id", taskController.getTasks);
 router.get(
   "/get-task/:userId/:mentorId",
-  [checkMentorIDParamExist(), checkUserIdParamExist()],
+  [checkMentor().checkMentorIDParamExist, checkUser().checkUserParamIDExist],
   taskController.getTasksByMentor
 );
 router.post(
   "/create-task",
-  [checkUserIDExist(), checkMentorIDExist()],
+  [checkUser().checkUserIDExist, checkMentor().checkMentorIDExist],
   taskController.createTask
 );
 router.put("/update-task/:id", [checkModelID(Task)], taskController.updateTask);
@@ -143,13 +138,13 @@ router.post(
 );
 router.put(
   "/update-notification/:userId",
-  [checkUserIdParamExist()],
+  [checkUser().checkUserParamIDExist],
   notificationController.updateNotification
 );
 router.delete(
   "/delete-notifcation/:userId",
   [
-    checkUserIdParamExist(),
+    checkUser().checkUserParamIDExist,
     query("isTask").isString().withMessage("isTask query required"),
     query("isMentoring").isString().withMessage("isMentoring query required"),
   ],
@@ -186,6 +181,7 @@ router.get("/report/verify-users", reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController.getAllUsersByCategorie);
 
 //Authenticate
+/* Google */
 router.get(
   "/auth/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -193,6 +189,34 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/auth/google" }),
+  (req: any, res) => {
+    res.redirect(
+      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
+    );
+  }
+);
+/* Facebook */
+router.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", { scope: ["profile", "email"] })
+);
+router.get(
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/auth/facebook" }),
+  (req: any, res) => {
+    res.redirect(
+      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
+    );
+  }
+);
+/* Twitter */
+router.get(
+  "/auth/twitter",
+  passport.authenticate("twitter", { scope: ['tweet.read', 'user.read', 'tweet.write', 'offline.access']  })
+);
+router.get(
+  "/auth/twitter/callback",
+  passport.authenticate("twitter", { failureRedirect: "/auth/twitter" }),
   (req: any, res) => {
     res.redirect(
       `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
@@ -217,7 +241,7 @@ router.post(
 router.get("/get-feedback", feedbackController.getFeedbacks);
 router.post(
   "/create-feedback",
-  [checkUserExist()],
+  [checkUser().checkUserEmail],
   feedbackController.createFeedback
 );
 

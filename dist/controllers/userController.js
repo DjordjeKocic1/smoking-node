@@ -14,20 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const mentor_1 = __importDefault(require("../model/mentor"));
-const plans_1 = __importDefault(require("../model/plans"));
 const user_1 = __importDefault(require("../model/user"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
-const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let users = yield user_1.default.find();
-        res.status(200).json({ users });
-    }
-    catch (error) {
-        next(error);
-    }
-});
 const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -43,36 +33,10 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         next(error);
     }
 });
-const getUserNotificationToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            throw new errorHandler_1.http422Error(errors.array()[0].msg);
-        }
-        let userUpdate = (yield user_1.default.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        }));
-        res.status(201).json({ user: userUpdate });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const getUserInfoCalc = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const errors = (0, express_validator_1.validationResult)(req);
-        if (!errors.isEmpty()) {
-            throw new errorHandler_1.http422Error(errors.array()[0].msg);
-        }
-        let user = (yield user_1.default.findById(req.params.id));
-        let userInfoCalc;
-        if (!req.body.consumptionInfo) {
-            userInfoCalc = yield user.calculateHealth(user, user.consumptionInfo);
-        }
-        else {
-            userInfoCalc = yield user.calculateHealth(user, req.body);
-        }
-        res.status(201).json({ user: userInfoCalc });
+        let users = yield user_1.default.find();
+        res.status(200).json({ users });
     }
     catch (error) {
         next(error);
@@ -144,48 +108,36 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(error);
     }
 });
-const createPlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserNotificationToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let plan = new plans_1.default({
-            name: req.body.name,
-            completed: false,
-            userType: req.body.userType,
-            userId: req.params.id,
-        });
-        let planCreated = yield plan.save();
-        let user = (yield user_1.default.findOne({ _id: req.params.id }));
-        if (!user) {
-            throw new errorHandler_1.http422Error("User doesn't exist");
-        }
-        user.plans.push(planCreated);
-        yield user.save();
-        res.status(201).json({ plan: planCreated });
+        let userUpdate = (yield user_1.default.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        }));
+        res.status(201).json({ user: userUpdate });
     }
     catch (error) {
         next(error);
     }
 });
-const deletePlan = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserConsumption = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        const deletedPlan = (yield plans_1.default.findByIdAndDelete({
-            _id: req.params.id,
-        }));
-        let user = yield user_1.default.findOne({ _id: deletedPlan.userId });
-        if (!user) {
-            throw new errorHandler_1.http422Error("User doesn't exist");
+        let user = (yield user_1.default.findById(req.params.id));
+        let userInfoCalc;
+        if (!req.body.consumptionInfo) {
+            userInfoCalc = yield user.calculateHealth(user, user.consumptionInfo);
         }
-        let userPlans = user.plans.filter((v) => v._id && v._id.toString() != deletedPlan._id.toString());
-        user.plans = userPlans;
-        user.save();
-        res.status(204).send({ success: "ok" });
+        else {
+            userInfoCalc = yield user.calculateHealth(user, req.body);
+        }
+        res.status(201).json({ user: userInfoCalc });
     }
     catch (error) {
         next(error);
@@ -204,15 +156,27 @@ const pokeUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         next(error);
     }
 });
+const sendNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield notifications_1.expoNotification.sendPushNotification({
+            to: req.body.notificationToken,
+            title: req.body.title,
+            body: req.body.body,
+        });
+        res.status(201).json({ success: "ok" });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.userController = {
     getUsers,
     getUser,
-    getUserInfoCalc,
+    updateUserConsumption,
     createUser,
     updateUser,
     deleteUser,
-    createPlan,
-    deletePlan,
     pokeUser,
-    getUserNotificationToken,
+    sendNotification,
+    updateUserNotificationToken,
 };

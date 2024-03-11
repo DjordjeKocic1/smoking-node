@@ -4,3 +4,17 @@ export const google = {
   callbackURL:
     "https://whale-app-hkbku.ondigitalocean.app/auth/google/callback",
 };
+
+export const facebook = {
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL:
+    "https://whale-app-hkbku.ondigitalocean.app/auth/facebook/callback",
+};
+
+export const twitter = {
+  consumerKey: process.env.TWITTER_API_KEY,
+  consumerSecret: process.env.TWITTER_API_SECRET,
+  callbackURL:
+    "https://whale-app-hkbku.ondigitalocean.app/auth/twitter/callback",
+};
