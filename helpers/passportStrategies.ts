@@ -11,10 +11,3 @@ export const facebook = {
   callbackURL:
     "https://whale-app-hkbku.ondigitalocean.app/auth/facebook/callback",
 };
-
-export const twitter = {
-  consumerKey: process.env.TWITTER_API_KEY,
-  consumerSecret: process.env.TWITTER_API_SECRET,
-  callbackURL:
-    "https://whale-app-hkbku.ondigitalocean.app/auth/twitter/callback",
-};

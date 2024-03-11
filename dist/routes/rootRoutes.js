@@ -103,11 +103,6 @@ router.get("/auth/facebook", passport_1.default.authenticate("facebook", { scope
 router.get("/auth/facebook/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
     res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
 });
-/* Twitter */
-router.get("/auth/twitter", passport_1.default.authenticate("twitter", { scope: ['tweet.read', 'user.read', 'tweet.write', 'offline.access'] }));
-router.get("/auth/twitter/callback", passport_1.default.authenticate("twitter", { failureRedirect: "/auth/twitter" }), (req, res) => {
-    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
-});
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
 router.post("/email/create-delete-email", [

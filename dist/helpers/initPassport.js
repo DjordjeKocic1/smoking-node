@@ -38,9 +38,6 @@ passport_1.default.use(new GoogleStrategy(passportStrategies_1.google, (accessTo
 passport_1.default.use(new FacebookStrategy(passportStrategies_1.facebook, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     done(null, formatGoogle(profile._json));
 })));
-passport_1.default.use(new TwitterStrategy(passportStrategies_1.twitter, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    done(null, formatGoogle(profile._json));
-})));
 passport_1.default.serializeUser((user, done) => done(null, user));
 passport_1.default.deserializeUser((user, done) => done(null, user));
 const formatGoogle = (profile) => {

@@ -209,20 +209,6 @@ router.get(
     );
   }
 );
-/* Twitter */
-router.get(
-  "/auth/twitter",
-  passport.authenticate("twitter", { scope: ['tweet.read', 'user.read', 'tweet.write', 'offline.access']  })
-);
-router.get(
-  "/auth/twitter/callback",
-  passport.authenticate("twitter", { failureRedirect: "/auth/twitter" }),
-  (req: any, res) => {
-    res.redirect(
-      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
-    );
-  }
-);
 
 //email
 router.post("/email/create-email", emailController.createEmail);
