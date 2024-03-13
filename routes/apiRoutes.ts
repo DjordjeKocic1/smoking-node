@@ -31,10 +31,6 @@ import { userController } from "../controllers/userController";
 
 const router = exporess.Router();
 
-//HTML
-router.get("/existing/users", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "../", "views", "users.html"));
-});
 router.get("/account/delete/login", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views/account/", "login.html"));
 });
@@ -44,9 +40,23 @@ router.get("/account/delete/request", (req, res, next) => {
 router.get("/account/delete/success", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views/account/", "success.html"));
 });
+router.get("/account/registration/verification", (req, res, next) => {
+  res.sendFile(
+    path.join(__dirname, "../", "views/account/", "verification.html")
+  );
+});
+router.get(
+  "/account/registration/generate-password?:token",
+  (req, res, next) => {
+    res.sendFile(
+      path.join(__dirname, "../", "views/account/", "password.html")
+    );
+  }
+);
 
 //Users
 router.get("/users", userController.getUsers);
+router.post("/get-user-token", userController.getUserSession);
 router.post("/user", [checkUser().checkUserEmail], userController.getUser);
 router.post(
   "/user-info/:id",
@@ -58,8 +68,21 @@ router.post(
   body("email").isEmail().withMessage("Email is invalid"),
   userController.createUser
 );
+router.post(
+  "/create-user-with-token",
+  [
+    checkUser().checkUserRegistratedToken,
+    checkUser().checkUserRegistratedPassword,
+    body("email").isEmail().withMessage("Email is invalid"),
+  ],
+  userController.creatUserWithToken
+);
+router.post(
+  "/user-login",
+  [checkUser().checkUserEmail],
+  userController.userLogin
+);
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
-
 router.delete(
   "/delete-user/:id",
   [checkModelID(User)],
@@ -220,6 +243,10 @@ router.post(
     checkSession().checkParamEmail,
   ],
   emailController.createDeleteRequestEmail
+);
+router.post(
+  "/email/create-email-verification",
+  emailController.createEmailVerification
 );
 
 //feedback

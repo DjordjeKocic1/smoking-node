@@ -1,6 +1,8 @@
-import { IEmail } from "../types/types";
+import { IEmail, Session } from "../types/types";
+
 import { RequestHandler } from "express";
 import Sessions from "../model/sessions";
+import crypto from "crypto";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
 
@@ -71,9 +73,12 @@ const createDeleteRequestEmail: RequestHandler<
     }
 
     let newSession = new Sessions({
+      type: Session.deleteRequest,
       userId: req.body.params.id.toString(),
       email: req.body.params.email,
+      expireAt: new Date().setDate(new Date().getDate() + 30),
     });
+
     await newSession.save();
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
@@ -85,7 +90,47 @@ const createDeleteRequestEmail: RequestHandler<
   }
 };
 
+const createEmailVerification: RequestHandler<
+  {},
+  { success: string },
+  IEmail
+> = async (req, res, next) => {
+  var sendSmtpEmail = new Brevo.SendSmtpEmail();
+  sendSmtpEmail.subject = "Email Verification";
+  sendSmtpEmail.sender = {
+    name: "iStop",
+    email: "sale.dalibor.djole@gmail.com",
+  };
+  sendSmtpEmail.to = [
+    {
+      email: req.body.email,
+    },
+  ];
+  sendSmtpEmail.params = {
+    token: crypto.randomBytes(32).toString("hex"),
+  };
+  sendSmtpEmail.type = "classic";
+  sendSmtpEmail.templateId = 7;
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    let newSession = new Sessions({
+      type: Session.tokenRequest,
+      token: sendSmtpEmail.params.token,
+      email: req.body.email,
+      expireAt: new Date().setDate(new Date().getDate() + 1),
+    });
+
+    await newSession.save();
+
+    res.status(201).json({ success: "ok" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const emailController = {
   createEmail,
   createDeleteRequestEmail,
+  createEmailVerification,
 };

@@ -6,11 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const sessionSchema = new Schema({
+    type: { type: String, enum: ["tokenRequest", "deleteRequest"] },
     expireAt: {
         type: Date,
-        default: new Date().setDate(new Date().getDate() + 30),
     },
     userId: String,
     email: String,
+    token: String,
 });
 exports.default = mongoose_1.default.model("Sessions", sessionSchema);

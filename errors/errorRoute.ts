@@ -3,6 +3,7 @@ import { body, param } from "express-validator";
 import Mentor from "../model/mentor";
 import Sessions from "../model/sessions";
 import User from "../model/user";
+import bcryprt from "bcryptjs";
 
 export const checkUser = () => {
   return {
@@ -37,6 +38,27 @@ export const checkUser = () => {
           return Promise.resolve();
         }
       });
+    }),
+    checkUserRegistratedToken: body("token").custom((value) => {
+      if (!value) {
+        return Promise.reject("Token is required");
+      }
+      return Sessions.findOne({ token: value }).then((session) => {
+        if (!session) {
+          return Promise.reject("Token doesn't exist. Please try again");
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
+    checkUserRegistratedPassword: body().custom((value) => {
+      if (!value.password) {
+        return Promise.reject("Password is required");
+      }
+      if (value.password !== value.repassword) {
+        return Promise.reject("Passwords do not match");
+      }
+      return Promise.resolve();
     }),
   };
 };

@@ -73,6 +73,8 @@ export interface IUser {
   _id: any;
   name: string;
   email: string;
+  password: string;
+  repassword: string;
   address: string;
   city: string;
   image: string;
@@ -95,6 +97,7 @@ export interface IUser {
   save: () => Promise<IUser>;
   subscription: ISubscription;
   apiKey: string;
+  token: string;
 }
 
 export interface IMentoringUser {
@@ -126,9 +129,16 @@ export interface INotificaion extends IUser {
   userId: string;
   _doc?: any;
 }
+
+export enum Session {
+  tokenRequest = "tokenRequest",
+  deleteRequest = "deleteRequest",
+}
 export interface ISession {
+  type: string;
   userId: string;
   email: string;
+  token: string;
 }
 export interface ITask {
   _id: string;
@@ -210,6 +220,7 @@ export interface IParams {
   id: string;
   userId?: string;
   mentorId?: string;
+  token?: string;
 }
 
 export interface IQuery {
@@ -228,10 +239,11 @@ export interface IEmail {
   templateId: number;
   params: IEmailParams;
   subject: string;
+  token?: string;
 }
 
 export interface IEmailParams {
-  id:string;
+  id: string;
   name: string;
   email: string;
   price: string;

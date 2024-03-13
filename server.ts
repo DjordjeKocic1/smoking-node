@@ -7,7 +7,7 @@ import { initPassport } from "./helpers/initPassport";
 import mongoose from "mongoose";
 import morgan from "morgan";
 import path from "path";
-import router from "./routes/rootRoutes";
+import router from "./routes/apiRoutes";
 
 require("dotenv").config();
 
@@ -23,7 +23,7 @@ app.use(morgan("combined"));
 
 initPassport(app);
 
-app.use("/", router);
+app.use("/",router);
 
 app.use(
   (

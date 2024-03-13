@@ -13,8 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const types_1 = require("../types/types");
 const mentor_1 = __importDefault(require("../model/mentor"));
+const sessions_1 = __importDefault(require("../model/sessions"));
 const user_1 = __importDefault(require("../model/user"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const express_validator_1 = require("express-validator");
@@ -62,6 +65,52 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         }
         let userCreate = yield user.save();
         res.status(201).json({ user: userCreate });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const creatUserWithToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        const user = new user_1.default({
+            email: req.body.email,
+        });
+        let password = yield bcryptjs_1.default.hash(req.body.password, 12);
+        user.password = password;
+        let users = yield user_1.default.find();
+        let existingUser = users.find((user) => user.email == req.body.email);
+        yield sessions_1.default.findOneAndDelete({
+            type: types_1.Session.tokenRequest,
+            token: req.body.token,
+        });
+        if (!!existingUser) {
+            existingUser.password = password;
+            yield existingUser.save();
+            return res.status(201).json({ user: existingUser });
+        }
+        let userCreate = yield user.save();
+        res.status(201).json({ user: userCreate });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
+        let userFind = (yield user_1.default.findOne({ email: req.body.email }));
+        let passwordCompare = yield bcryptjs_1.default.compare(req.body.password, userFind.password);
+        if (!passwordCompare) {
+            throw new errorHandler_1.http422Error("Wrong password");
+        }
+        res.status(201).json({ user: userFind });
     }
     catch (error) {
         next(error);
@@ -169,14 +218,29 @@ const sendNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 });
+const getUserSession = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let sessionFind = yield sessions_1.default.findOne({ token: req.body.token });
+        if (!sessionFind) {
+            throw new errorHandler_1.http422Error("Invalid token");
+        }
+        res.status(201).json({ email: sessionFind.email });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.userController = {
     getUsers,
     getUser,
     updateUserConsumption,
     createUser,
+    creatUserWithToken,
+    userLogin,
     updateUser,
     deleteUser,
     pokeUser,
     sendNotification,
     updateUserNotificationToken,
+    getUserSession,
 };

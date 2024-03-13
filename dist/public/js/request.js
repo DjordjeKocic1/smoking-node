@@ -1,6 +1,7 @@
 let deleteForm = document.querySelector(".deleteForm");
 let errorTxt = document.querySelector(".error");
 let successTxt = document.querySelector(".text-success");
+let btn = document.querySelector("button");
 
 deleteForm.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -42,11 +43,11 @@ deleteForm.addEventListener("submit", async (e) => {
         },
       });
     }
-    
+    btn.setAttribute("disabled", "disabled");
     errorTxt.textContent = "";
     successTxt.textContent = "Request sent!";
     setTimeout(() => {
-      window.location = responseData.redirect
+      window.location = responseData.redirect;
     }, 2000);
   } catch (error) {
     console.log(error);

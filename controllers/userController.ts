@@ -1,9 +1,10 @@
-import { IParams, IPlans, IUser } from "../types/types";
+import { IParams, IUser, Session } from "../types/types";
 
 import Mentor from "../model/mentor";
-import Plans from "../model/plans";
 import { RequestHandler } from "express";
+import Sessions from "../model/sessions";
 import User from "../model/user";
+import bcryprt from "bcryptjs";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
@@ -56,6 +57,75 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
 
     let userCreate = await user.save();
     res.status(201).json({ user: userCreate });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const creatUserWithToken: RequestHandler<{}, {}, IUser> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+    const user = new User({
+      email: req.body.email,
+    });
+
+    let password = await bcryprt.hash(req.body.password, 12);
+
+    user.password = password;
+
+    let users = await User.find();
+
+    let existingUser = users.find((user) => user.email == req.body.email);
+
+    await Sessions.findOneAndDelete({
+      type: Session.tokenRequest,
+      token: req.body.token,
+    });
+
+    if (!!existingUser) {
+      existingUser.password = password;
+      await existingUser.save();
+      return res.status(201).json({ user: existingUser });
+    }
+
+    let userCreate = await user.save();
+
+    res.status(201).json({ user: userCreate });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const userLogin: RequestHandler<
+  {},
+  {},
+  { email: string; password: string }
+> = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
+
+    let userFind = (await User.findOne({ email: req.body.email })) as IUser;
+
+    let passwordCompare = await bcryprt.compare(
+      req.body.password,
+      userFind.password
+    );
+
+    if (!passwordCompare) {
+      throw new http422Error("Wrong password");
+    }
+
+    res.status(201).json({ user: userFind });
   } catch (error) {
     next(error);
   }
@@ -199,14 +269,34 @@ const sendNotification: RequestHandler<
   }
 };
 
+const getUserSession: RequestHandler<{}, {}, { token: string }> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    let sessionFind = await Sessions.findOne({ token: req.body.token });
+    if (!sessionFind) {
+      throw new http422Error("Invalid token");
+    }
+
+    res.status(201).json({ email: sessionFind.email });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const userController = {
   getUsers,
   getUser,
   updateUserConsumption,
   createUser,
+  creatUserWithToken,
+  userLogin,
   updateUser,
   deleteUser,
   pokeUser,
   sendNotification,
   updateUserNotificationToken,
+  getUserSession,
 };

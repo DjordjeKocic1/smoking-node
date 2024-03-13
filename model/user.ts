@@ -21,6 +21,7 @@ const userShema = new Schema(
       type: String,
       required: true,
     },
+    password: String,
     healthInfo: {
       bloodPressure: Number,
       heartRhythm: Number,

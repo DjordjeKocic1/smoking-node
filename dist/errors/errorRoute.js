@@ -43,6 +43,28 @@ const checkUser = () => {
                 }
             });
         }),
+        checkUserRegistratedToken: (0, express_validator_1.body)("token").custom((value) => {
+            if (!value) {
+                return Promise.reject("Token is required");
+            }
+            return sessions_1.default.findOne({ token: value }).then((session) => {
+                if (!session) {
+                    return Promise.reject("Token doesn't exist. Please try again");
+                }
+                else {
+                    return Promise.resolve();
+                }
+            });
+        }),
+        checkUserRegistratedPassword: (0, express_validator_1.body)().custom((value) => {
+            if (!value.password) {
+                return Promise.reject("Password is required");
+            }
+            if (value.password !== value.repassword) {
+                return Promise.reject("Passwords do not match");
+            }
+            return Promise.resolve();
+        }),
     };
 };
 exports.checkUser = checkUser;

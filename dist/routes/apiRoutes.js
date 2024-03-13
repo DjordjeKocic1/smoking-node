@@ -27,10 +27,6 @@ const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
 const router = express_1.default.Router();
-//HTML
-router.get("/existing/users", (req, res, next) => {
-    res.sendFile(path_1.default.join(__dirname, "../", "views", "users.html"));
-});
 router.get("/account/delete/login", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "login.html"));
 });
@@ -40,11 +36,24 @@ router.get("/account/delete/request", (req, res, next) => {
 router.get("/account/delete/success", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "success.html"));
 });
+router.get("/account/registration/verification", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "verification.html"));
+});
+router.get("/account/registration/generate-password?:token", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "password.html"));
+});
 //Users
 router.get("/users", userController_1.userController.getUsers);
+router.post("/get-user-token", userController_1.userController.getUserSession);
 router.post("/user", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserConsumption);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
+router.post("/create-user-with-token", [
+    (0, errorRoute_1.checkUser)().checkUserRegistratedToken,
+    (0, errorRoute_1.checkUser)().checkUserRegistratedPassword,
+    (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"),
+], userController_1.userController.creatUserWithToken);
+router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserNotificationToken);
@@ -111,6 +120,7 @@ router.post("/email/create-delete-email", [
     (0, errorRoute_1.validateRemoveAccountReq)().checkUserIdAndEmail,
     (0, errorRoute_1.checkSession)().checkParamEmail,
 ], emailController_1.emailController.createDeleteRequestEmail);
+router.post("/email/create-email-verification", emailController_1.emailController.createEmailVerification);
 //feedback
 router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
 router.post("/create-feedback", [(0, errorRoute_1.checkUser)().checkUserEmail], feedbackController_1.feedbackController.createFeedback);

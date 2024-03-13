@@ -1,15 +1,15 @@
-import { ISession, ITask } from "../types/types";
-
+import { ISession } from "../types/types";
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const sessionSchema = new Schema({
+  type: { type: String, enum: ["tokenRequest", "deleteRequest"] },
   expireAt: {
     type: Date,
-    default: new Date().setDate(new Date().getDate() + 30),
   },
   userId: String,
   email: String,
+  token: String,
 });
 export default mongoose.model<ISession>("Sessions", sessionSchema);
