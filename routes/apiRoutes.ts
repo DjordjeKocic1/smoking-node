@@ -33,7 +33,8 @@ import { userController } from "../controllers/userController";
 require("dotenv").config();
 
 const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET } = process.env;
-const REDIRECT_URI = "<http://localhost:8000/auth/facebook/callback>";
+const REDIRECT_URI =
+  "<https://whale-app-hkbku.ondigitalocean.app/auth/facebook/callback>";
 
 const router = exporess.Router();
 
@@ -245,7 +246,7 @@ router.get("/auth/facebook/callback", async (req, res) => {
     );
 
     res.redirect(
-      `exp+istop://1doounm.djole232.19000.exp.direct?email=${data.email}`
+      `exp+istop://1doounm.djole232.19000.exp.direct?email=${profile.email}`
     );
   } catch (error: any) {
     console.error("Error:", error.response.data.error);
