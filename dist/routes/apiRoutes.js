@@ -125,7 +125,7 @@ router.get("/auth/google/callback", passport_1.default.authenticate("google", { 
 router.get("/auth/facebook", passport_1.default.authenticate("facebook", {
     scope: ["public_profile", "email"],
 }));
-router.get("/auth/google/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
+router.get("/auth/facebook/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
     res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
 });
 //404

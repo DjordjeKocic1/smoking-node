@@ -256,7 +256,7 @@ router.get(
   })
 );
 router.get(
-  "/auth/google/callback",
+  "/auth/facebook/callback",
   passport.authenticate("facebook", { failureRedirect: "/auth/facebook" }),
   (req: any, res) => {
     res.redirect(
