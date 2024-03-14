@@ -224,9 +224,10 @@ router.get(
     );
   }
 );
+
 /* Facebook */
 router.get("/auth/facebook", (req, res) => {
-  const url = `https://www.facebook.com/v13.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=<https://istop.site/auth/facebook/callback>&scope=email`;
+  const url = `https://www.facebook.com/v13.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=https://istop.site/auth/facebook/callback&scope=email`;
   res.redirect(url);
 });
 router.get("/auth/facebook/callback", facebookController.login);
