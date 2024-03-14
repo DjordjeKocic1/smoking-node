@@ -8,6 +8,5 @@ export const google = {
 export const facebook = {
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL:
-    "https://whale-app-hkbku.ondigitalocean.app/auth/facebook/callback",
+  callbackURL: "https://istop.site/auth/facebook/callback",
 };

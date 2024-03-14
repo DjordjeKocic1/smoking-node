@@ -14,7 +14,6 @@ const achievementController_1 = require("../controllers/achievementController");
 const categorieController_1 = require("../controllers/categorieController");
 const emailController_1 = require("../controllers/emailController");
 const express_1 = __importDefault(require("express"));
-const facebookController_1 = require("../controllers/facebookController");
 const feedbackController_1 = require("../controllers/feedbackController");
 const errorHandler_1 = require("../errors/errorHandler");
 const mentorController_1 = require("../controllers/mentorController");
@@ -104,18 +103,6 @@ router.get("/cancel", paypalController_1.paypalController.paypalCancel);
 //Reports
 router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
-//Authenticate
-/* Google */
-router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
-router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
-    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
-});
-/* Facebook */
-router.get("/auth/facebook", (req, res) => {
-    const url = `https://www.facebook.com/v13.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=<https://istop.site/auth/facebook/callback>&scope=email`;
-    res.redirect(url);
-});
-router.get("/auth/facebook/callback", facebookController_1.facebookController.login);
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
 router.post("/email/create-delete-email", [
@@ -128,6 +115,19 @@ router.post("/email/create-email-verification", emailController_1.emailControlle
 //feedback
 router.get("/get-feedback", feedbackController_1.feedbackController.getFeedbacks);
 router.post("/create-feedback", [(0, errorRoute_1.checkUser)().checkUserEmail], feedbackController_1.feedbackController.createFeedback);
+//Authenticate
+/* Google */
+router.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/auth/google" }), (req, res) => {
+    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
+});
+/* Facebook */
+router.get("/auth/facebook", passport_1.default.authenticate("facebook", {
+    scope: ["public_profile", "email"],
+}));
+router.get("/auth/google/callback", passport_1.default.authenticate("facebook", { failureRedirect: "/auth/facebook" }), (req, res) => {
+    res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`);
+});
 //404
 router.all("*", (req, res, next) => {
     throw new errorHandler_1.http404Error(`Requested url:'${req.url}' not found`);

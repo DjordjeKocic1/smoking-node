@@ -13,11 +13,9 @@ import Plans from "../model/plans";
 import Task from "../model/task";
 import User from "../model/user";
 import { achievementController } from "../controllers/achievementController";
-import axios from "axios";
 import { categorieController } from "../controllers/categorieController";
 import { emailController } from "../controllers/emailController";
 import exporess from "express";
-import { facebookController } from "../controllers/facebookController";
 import { feedbackController } from "../controllers/feedbackController";
 import { http404Error } from "../errors/errorHandler";
 import { mentorController } from "../controllers/mentorController";
@@ -209,29 +207,6 @@ router.get("/cancel", paypalController.paypalCancel);
 router.get("/report/verify-users", reportsController.getAllVerifyUsers);
 router.get("/report/categorie/:name", reportsController.getAllUsersByCategorie);
 
-//Authenticate
-/* Google */
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
-router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/google" }),
-  (req: any, res) => {
-    res.redirect(
-      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
-    );
-  }
-);
-
-/* Facebook */
-router.get("/auth/facebook", (req, res) => {
-  const url = `https://www.facebook.com/v13.0/dialog/oauth?client_id=${FACEBOOK_APP_ID}&redirect_uri=<https://istop.site/auth/facebook/callback>&scope=email`;
-  res.redirect(url);
-});
-router.get("/auth/facebook/callback", facebookController.login);
-
 //email
 router.post("/email/create-email", emailController.createEmail);
 router.post(
@@ -255,6 +230,39 @@ router.post(
   "/create-feedback",
   [checkUser().checkUserEmail],
   feedbackController.createFeedback
+);
+
+//Authenticate
+/* Google */
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/auth/google" }),
+  (req: any, res) => {
+    res.redirect(
+      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
+    );
+  }
+);
+
+/* Facebook */
+router.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", {
+    scope: ["public_profile", "email"],
+  })
+);
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("facebook", { failureRedirect: "/auth/facebook" }),
+  (req: any, res) => {
+    res.redirect(
+      `exp+istop://1doounm.djole232.19000.exp.direct?email=${req.user.email}`
+    );
+  }
 );
 
 //404
