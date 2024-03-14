@@ -8,7 +8,7 @@ const login: RequestHandler<{}, {}, {}> = async (req, res, next) => {
   const { code } = req.query;
   try {
     const { data } = await axios.get(
-      `https://graph.facebook.com/v13.0/oauth/access_token?client_id=${FACEBOOK_APP_ID}&client_secret=${FACEBOOK_APP_SECRET}&code=${code}&redirect_uri=https://istop.site/auth/facebook/callback`
+      `https://graph.facebook.com/v13.0/oauth/access_token?client_id=${FACEBOOK_APP_ID}&client_secret=${FACEBOOK_APP_SECRET}&code=${code}&redirect_uri=<https://istop.site/auth/facebook/callback>`
     );
 
     const { access_token } = data;

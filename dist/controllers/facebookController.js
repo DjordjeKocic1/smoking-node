@@ -19,7 +19,7 @@ const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET } = process.env;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { code } = req.query;
     try {
-        const { data } = yield axios_1.default.get(`https://graph.facebook.com/v13.0/oauth/access_token?client_id=${FACEBOOK_APP_ID}&client_secret=${FACEBOOK_APP_SECRET}&code=${code}&redirect_uri=https://istop.site/auth/facebook/callback`);
+        const { data } = yield axios_1.default.get(`https://graph.facebook.com/v13.0/oauth/access_token?client_id=${FACEBOOK_APP_ID}&client_secret=${FACEBOOK_APP_SECRET}&code=${code}&redirect_uri=<https://istop.site/auth/facebook/callback>`);
         const { access_token } = data;
         const { data: profile } = yield axios_1.default.get(`https://graph.facebook.com/v13.0/me?fields=name,email&access_token=${access_token}`);
         res.redirect(`exp+istop://1doounm.djole232.19000.exp.direct?email=${profile.email}`);
