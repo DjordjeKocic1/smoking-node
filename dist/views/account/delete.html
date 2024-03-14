@@ -75,10 +75,11 @@
     <h1>Account Deletion Request</h1>
     <form class="deleteForm">
         <label for="email">Your Email:</label>
-        <input type="email" name="email" id="email" placeholder="Your Email" required>
+        <input class="form-control" type="email" name="email" id="email" placeholder="Your Email" required>
         <p class="error"></p>
         <label for="feedback">Your Feedback (please tell us why are you leaving us):</label>
-        <textarea placeholder="Write Your Feedback" name="feedback" id="feedback" cols="30" rows="10"></textarea>
+        <textarea class="form-control" placeholder="Write Your Feedback" name="feedback" id="feedback" cols="30"
+            rows="10"></textarea>
         <button type="submit" class="btn btn-primary">Send request</button><span class="text-success ml-3"></span>
     </form>
     <script type="module" src="/js/request.js"></script>
