@@ -26,6 +26,11 @@ form.addEventListener("submit", async (e) => {
     }
     error.textContent = "";
     success.textContent = "A Link has been sent to your email";
+
+    setTimeout(() => {
+      error.textContent = "";
+      success.textContent = "";
+    }, 2000);
   } catch (error) {
     console.log(error);
   }
