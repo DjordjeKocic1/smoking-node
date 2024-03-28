@@ -63,8 +63,10 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!!existingUser) {
             return res.status(201).json({ user: existingUser });
         }
-        let userCreate = yield user.save();
-        res.status(201).json({ user: userCreate });
+        else {
+            let userCreate = yield user.save();
+            res.status(201).json({ user: userCreate });
+        }
     }
     catch (error) {
         next(error);
@@ -84,8 +86,10 @@ const creatUserWithToken = (req, res, next) => __awaiter(void 0, void 0, void 0,
         let users = yield user_1.default.find();
         let existingUser = users.find((user) => user.email == req.body.email);
         yield sessions_1.default.findOneAndDelete({
-            type: types_1.Session.tokenRequest,
+            type: types_1.Session.verificationRequest,
             token: req.body.token,
+            email: req.body.email,
+            expireAt: new Date().setDate(new Date().getDate() + 1),
         });
         if (!!existingUser) {
             existingUser.password = password;

@@ -8,6 +8,7 @@ var UserTypes;
 })(UserTypes = exports.UserTypes || (exports.UserTypes = {}));
 var Session;
 (function (Session) {
-    Session["tokenRequest"] = "tokenRequest";
+    Session["verificationRequest"] = "verificationRequest";
     Session["deleteRequest"] = "deleteRequest";
+    Session["loginRequest"] = "loginRequest";
 })(Session = exports.Session || (exports.Session = {}));

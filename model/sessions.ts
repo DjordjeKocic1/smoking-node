@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const sessionSchema = new Schema({
-  type: { type: String, enum: ["tokenRequest", "deleteRequest"] },
+  type: { type: String, enum: ["verificationRequest", "deleteRequest","loginRequest"] },
   expireAt: {
     type: Date,
   },

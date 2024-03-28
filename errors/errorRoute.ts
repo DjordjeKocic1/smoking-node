@@ -160,6 +160,15 @@ export const checkModelID = (Model: any) =>
 
 export const checkSession = () => {
   return {
+    checkUserToken: body("token").custom((value) => {
+      return Sessions.findOne({ token: value }).then((data) => {
+        if (!data) {
+          return Promise.reject("Missing a token");
+        } else {
+          return Promise.resolve();
+        }
+      });
+    }),
     checkBodyEmail: body("email").custom((value) => {
       return Sessions.findOne({ email: value }).then((data) => {
         if (data) {

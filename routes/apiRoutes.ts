@@ -31,9 +31,15 @@ import { userController } from "../controllers/userController";
 
 require("dotenv").config();
 
-const { FACEBOOK_APP_ID } = process.env;
-
 const router = exporess.Router();
+
+router.get("/", (req, res, next) => {
+  res.redirect("/login");
+});
+
+router.get("/login", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "../", "views/", "login.html"));
+});
 
 router.get("/account/delete/login", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views/account/", "login.html"));

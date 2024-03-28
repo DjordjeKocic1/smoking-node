@@ -160,6 +160,16 @@ const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((val
 exports.checkModelID = checkModelID;
 const checkSession = () => {
     return {
+        checkUserToken: (0, express_validator_1.body)("token").custom((value) => {
+            return sessions_1.default.findOne({ token: value }).then((data) => {
+                if (!data) {
+                    return Promise.reject("Missing a token");
+                }
+                else {
+                    return Promise.resolve();
+                }
+            });
+        }),
         checkBodyEmail: (0, express_validator_1.body)("email").custom((value) => {
             return sessions_1.default.findOne({ email: value }).then((data) => {
                 if (data) {

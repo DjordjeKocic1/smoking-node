@@ -131,8 +131,9 @@ export interface INotificaion extends IUser {
 }
 
 export enum Session {
-  tokenRequest = "tokenRequest",
+  verificationRequest = "verificationRequest",
   deleteRequest = "deleteRequest",
+  loginRequest = "loginRequest",
 }
 export interface ISession {
   type: string;

@@ -5,6 +5,7 @@ import { RequestHandler } from "express";
 import Sessions from "../model/sessions";
 import User from "../model/user";
 import bcryprt from "bcryptjs";
+import crypto from "crypto";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
 import { validationResult } from "express-validator";
@@ -53,10 +54,10 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
 
     if (!!existingUser) {
       return res.status(201).json({ user: existingUser });
+    } else {
+      let userCreate = await user.save();
+      res.status(201).json({ user: userCreate });
     }
-
-    let userCreate = await user.save();
-    res.status(201).json({ user: userCreate });
   } catch (error) {
     next(error);
   }
@@ -85,8 +86,10 @@ const creatUserWithToken: RequestHandler<{}, {}, IUser> = async (
     let existingUser = users.find((user) => user.email == req.body.email);
 
     await Sessions.findOneAndDelete({
-      type: Session.tokenRequest,
+      type: Session.verificationRequest,
       token: req.body.token,
+      email: req.body.email,
+      expireAt: new Date().setDate(new Date().getDate() + 1),
     });
 
     if (!!existingUser) {

@@ -27,8 +27,13 @@ const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
 require("dotenv").config();
-const { FACEBOOK_APP_ID } = process.env;
 const router = express_1.default.Router();
+router.get("/", (req, res, next) => {
+    res.redirect("/login");
+});
+router.get("/login", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/", "login.html"));
+});
 router.get("/account/delete/login", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "login.html"));
 });

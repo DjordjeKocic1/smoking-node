@@ -115,7 +115,7 @@ const createEmailVerification: RequestHandler<
     await apiInstance.sendTransacEmail(sendSmtpEmail);
 
     let newSession = new Sessions({
-      type: Session.tokenRequest,
+      type: Session.verificationRequest,
       token: sendSmtpEmail.params.token,
       email: req.body.email,
       expireAt: new Date().setDate(new Date().getDate() + 1),

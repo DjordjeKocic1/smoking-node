@@ -107,7 +107,7 @@ const createEmailVerification = (req, res, next) => __awaiter(void 0, void 0, vo
     try {
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
         let newSession = new sessions_1.default({
-            type: types_1.Session.tokenRequest,
+            type: types_1.Session.verificationRequest,
             token: sendSmtpEmail.params.token,
             email: req.body.email,
             expireAt: new Date().setDate(new Date().getDate() + 1),
