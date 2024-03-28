@@ -61,7 +61,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         let users = yield user_1.default.find();
         let existingUser = users.find((user) => user.email == req.body.email);
         if (!!existingUser) {
-            return res.status(201).json({ user: existingUser });
+            res.status(201).json({ user: existingUser });
         }
         else {
             let userCreate = yield user.save();

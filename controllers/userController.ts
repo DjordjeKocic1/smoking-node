@@ -53,7 +53,7 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
     let existingUser = users.find((user) => user.email == req.body.email);
 
     if (!!existingUser) {
-      return res.status(201).json({ user: existingUser });
+      res.status(201).json({ user: existingUser });
     } else {
       let userCreate = await user.save();
       res.status(201).json({ user: userCreate });
