@@ -76,6 +76,13 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
     let password = await bcryprt.hash(req.body.password, 12);
     let existingUser = await User.findOne({ email: req.body.email });
 
+    await Sessions.findOneAndDelete({
+      type: Session.verificationRequest,
+      token: req.body.token,
+      email: req.body.email,
+      expireAt: new Date().setDate(new Date().getDate() + 1),
+    });
+
     if (!existingUser) {
       const user = new User({
         email: req.body.email,
@@ -85,13 +92,6 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
       res.status(201).json({ user: userCreate });
       return;
     }
-
-    await Sessions.findOneAndDelete({
-      type: Session.verificationRequest,
-      token: req.body.token,
-      email: req.body.email,
-      expireAt: new Date().setDate(new Date().getDate() + 1),
-    });
 
     existingUser.password = password;
     await existingUser.save();

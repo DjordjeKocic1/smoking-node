@@ -78,6 +78,12 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
         }
         let password = yield bcryptjs_1.default.hash(req.body.password, 12);
         let existingUser = yield user_1.default.findOne({ email: req.body.email });
+        yield sessions_1.default.findOneAndDelete({
+            type: types_1.Session.verificationRequest,
+            token: req.body.token,
+            email: req.body.email,
+            expireAt: new Date().setDate(new Date().getDate() + 1),
+        });
         if (!existingUser) {
             const user = new user_1.default({
                 email: req.body.email,
@@ -87,12 +93,6 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
             res.status(201).json({ user: userCreate });
             return;
         }
-        yield sessions_1.default.findOneAndDelete({
-            type: types_1.Session.verificationRequest,
-            token: req.body.token,
-            email: req.body.email,
-            expireAt: new Date().setDate(new Date().getDate() + 1),
-        });
         existingUser.password = password;
         yield existingUser.save();
         res.status(201).json({ user: existingUser });
