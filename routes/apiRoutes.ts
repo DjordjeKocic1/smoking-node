@@ -85,7 +85,7 @@ router.post(
     checkUser().checkUserRegistratedPassword,
     body("email").isEmail().withMessage("Email is invalid"),
   ],
-  userController.creatUserWithToken
+  userController.creatUserWithPassword
 );
 router.post(
   "/user-login",

@@ -40,30 +40,29 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      image: req.body.image,
-      address: req.body.address,
-      city: req.body.city,
-    });
 
-    let users = await User.find();
+    let existingUser = await User.findOne({ email: req.body.email });
 
-    let existingUser = users.find((user) => user.email == req.body.email);
-
-    if (!!existingUser) {
-      res.status(201).json({ user: existingUser });
-    } else {
+    if (!existingUser) {
+      const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        image: req.body.image,
+        address: req.body.address,
+        city: req.body.city,
+      });
       let userCreate = await user.save();
       res.status(201).json({ user: userCreate });
+      return;
     }
+
+    res.status(201).json({ user: existingUser });
   } catch (error) {
     next(error);
   }
 };
 
-const creatUserWithToken: RequestHandler<{}, {}, IUser> = async (
+const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
   req,
   res,
   next
@@ -73,17 +72,19 @@ const creatUserWithToken: RequestHandler<{}, {}, IUser> = async (
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
-    const user = new User({
-      email: req.body.email,
-    });
 
     let password = await bcryprt.hash(req.body.password, 12);
+    let existingUser = await User.findOne({ email: req.body.email });
 
-    user.password = password;
-
-    let users = await User.find();
-
-    let existingUser = users.find((user) => user.email == req.body.email);
+    if (!existingUser) {
+      const user = new User({
+        email: req.body.email,
+      });
+      user.password = password;
+      let userCreate = await user.save();
+      res.status(201).json({ user: userCreate });
+      return;
+    }
 
     await Sessions.findOneAndDelete({
       type: Session.verificationRequest,
@@ -92,15 +93,9 @@ const creatUserWithToken: RequestHandler<{}, {}, IUser> = async (
       expireAt: new Date().setDate(new Date().getDate() + 1),
     });
 
-    if (!!existingUser) {
-      existingUser.password = password;
-      await existingUser.save();
-      return res.status(201).json({ user: existingUser });
-    }
-
-    let userCreate = await user.save();
-
-    res.status(201).json({ user: userCreate });
+    existingUser.password = password;
+    await existingUser.save();
+    res.status(201).json({ user: existingUser });
   } catch (error) {
     next(error);
   }
@@ -294,7 +289,7 @@ export const userController = {
   getUser,
   updateUserConsumption,
   createUser,
-  creatUserWithToken,
+  creatUserWithPassword,
   userLogin,
   updateUser,
   deleteUser,

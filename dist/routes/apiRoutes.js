@@ -59,7 +59,7 @@ router.post("/create-user-with-token", [
     (0, errorRoute_1.checkUser)().checkUserRegistratedToken,
     (0, errorRoute_1.checkUser)().checkUserRegistratedPassword,
     (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"),
-], userController_1.userController.creatUserWithToken);
+], userController_1.userController.creatUserWithPassword);
 router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);

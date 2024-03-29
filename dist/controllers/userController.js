@@ -51,53 +51,51 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        const user = new user_1.default({
-            name: req.body.name,
-            email: req.body.email,
-            image: req.body.image,
-            address: req.body.address,
-            city: req.body.city,
-        });
-        let users = yield user_1.default.find();
-        let existingUser = users.find((user) => user.email == req.body.email);
-        if (!!existingUser) {
-            res.status(201).json({ user: existingUser });
-        }
-        else {
+        let existingUser = yield user_1.default.findOne({ email: req.body.email });
+        if (!existingUser) {
+            const user = new user_1.default({
+                name: req.body.name,
+                email: req.body.email,
+                image: req.body.image,
+                address: req.body.address,
+                city: req.body.city,
+            });
             let userCreate = yield user.save();
             res.status(201).json({ user: userCreate });
+            return;
         }
+        res.status(201).json({ user: existingUser });
     }
     catch (error) {
         next(error);
     }
 });
-const creatUserWithToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        const user = new user_1.default({
-            email: req.body.email,
-        });
         let password = yield bcryptjs_1.default.hash(req.body.password, 12);
-        user.password = password;
-        let users = yield user_1.default.find();
-        let existingUser = users.find((user) => user.email == req.body.email);
+        let existingUser = yield user_1.default.findOne({ email: req.body.email });
+        if (!existingUser) {
+            const user = new user_1.default({
+                email: req.body.email,
+            });
+            user.password = password;
+            let userCreate = yield user.save();
+            res.status(201).json({ user: userCreate });
+            return;
+        }
         yield sessions_1.default.findOneAndDelete({
             type: types_1.Session.verificationRequest,
             token: req.body.token,
             email: req.body.email,
             expireAt: new Date().setDate(new Date().getDate() + 1),
         });
-        if (!!existingUser) {
-            existingUser.password = password;
-            yield existingUser.save();
-            return res.status(201).json({ user: existingUser });
-        }
-        let userCreate = yield user.save();
-        res.status(201).json({ user: userCreate });
+        existingUser.password = password;
+        yield existingUser.save();
+        res.status(201).json({ user: existingUser });
     }
     catch (error) {
         next(error);
@@ -239,7 +237,7 @@ exports.userController = {
     getUser,
     updateUserConsumption,
     createUser,
-    creatUserWithToken,
+    creatUserWithPassword,
     userLogin,
     updateUser,
     deleteUser,
