@@ -2,6 +2,12 @@ const form = document.querySelector("form");
 let error = document.querySelector(".error");
 let success = document.querySelector(".success");
 let showPassword = document.querySelector("#passwordShow");
+let psw = document.querySelector("[name='password']");
+let repsw = document.querySelector("[name='repassword']");
+
+psw.addEventListener("keydown", (e) => {
+  return e.which !== 32
+})
 
 showPassword.addEventListener("click", () => {
   if (showPassword.classList.contains("fa-eye")) {
@@ -33,24 +39,13 @@ form.addEventListener("submit", async (e) => {
     let param = new URLSearchParams(window.location.search);
     let token = param.get("ver");
 
-    let getUserEmail = await fetch("/get-user-token", {
-      method: "POST",
-      body: JSON.stringify({ token }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-
-    let userEmailResponseData = await getUserEmail.json();
-
     let dataToSend = {
       password,
       repassword,
       token,
-      email: userEmailResponseData.email,
     };
 
-    let response = await fetch("/create-user-with-token", {
+    let response = await fetch("/create-user-with-password", {
       method: "POST",
       body: JSON.stringify(dataToSend),
       headers: {

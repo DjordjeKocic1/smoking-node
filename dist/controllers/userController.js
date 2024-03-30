@@ -13,13 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
-const types_1 = require("../types/types");
 const mentor_1 = __importDefault(require("../model/mentor"));
-const sessions_1 = __importDefault(require("../model/sessions"));
 const user_1 = __importDefault(require("../model/user"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
 const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -76,17 +75,13 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let password = yield bcryptjs_1.default.hash(req.body.password, 12);
-        let existingUser = yield user_1.default.findOne({ email: req.body.email });
-        yield sessions_1.default.findOneAndDelete({
-            type: types_1.Session.verificationRequest,
-            token: req.body.token,
-            email: req.body.email,
-            expireAt: new Date().setDate(new Date().getDate() + 1),
-        });
+        let token = jsonwebtoken_1.default.decode(req.body.token);
+        let email = token.email;
+        let password = yield bcryptjs_1.default.hash(req.body.password.replace(" ", ""), 12);
+        let existingUser = yield user_1.default.findOne({ email });
         if (!existingUser) {
             const user = new user_1.default({
-                email: req.body.email,
+                email,
             });
             user.password = password;
             let userCreate = yield user.save();
@@ -220,18 +215,6 @@ const sendNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(error);
     }
 });
-const getUserSession = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let sessionFind = yield sessions_1.default.findOne({ token: req.body.token });
-        if (!sessionFind) {
-            throw new errorHandler_1.http422Error("Invalid token");
-        }
-        res.status(201).json({ email: sessionFind.email });
-    }
-    catch (error) {
-        next(error);
-    }
-});
 exports.userController = {
     getUsers,
     getUser,
@@ -244,5 +227,4 @@ exports.userController = {
     pokeUser,
     sendNotification,
     updateUserNotificationToken,
-    getUserSession,
 };

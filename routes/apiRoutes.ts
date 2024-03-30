@@ -2,7 +2,6 @@ import { body, query } from "express-validator";
 import {
   checkMentor,
   checkModelID,
-  checkSession,
   checkUser,
   validateRemoveAccountReq,
 } from "../errors/errorRoute";
@@ -66,7 +65,6 @@ router.get(
 
 //Users
 router.get("/users", userController.getUsers);
-router.post("/get-user-token", userController.getUserSession);
 router.post("/user", [checkUser().checkUserEmail], userController.getUser);
 router.post(
   "/user-info/:id",
@@ -79,11 +77,10 @@ router.post(
   userController.createUser
 );
 router.post(
-  "/create-user-with-token",
+  "/create-user-with-password",
   [
-    checkUser().checkUserRegistratedToken,
+    checkUser().checkUserToken,
     checkUser().checkUserRegistratedPassword,
-    body("email").isEmail().withMessage("Email is invalid"),
   ],
   userController.creatUserWithPassword
 );
@@ -221,7 +218,6 @@ router.post(
     validateRemoveAccountReq().checkUserID,
     validateRemoveAccountReq().checkUserEmail,
     validateRemoveAccountReq().checkUserIdAndEmail,
-    checkSession().checkParamEmail,
   ],
   emailController.createDeleteRequestEmail
 );

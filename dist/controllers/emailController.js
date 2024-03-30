@@ -13,12 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.emailController = void 0;
-const types_1 = require("../types/types");
-const sessions_1 = __importDefault(require("../model/sessions"));
-const crypto_1 = __importDefault(require("crypto"));
+const user_1 = __importDefault(require("../model/user"));
 const errorHandler_1 = require("../errors/errorHandler");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const request_ip_1 = __importDefault(require("request-ip"));
 const express_validator_1 = require("express-validator");
-const { BREVO_API_KEY } = process.env;
+const { BREVO_API_KEY, SESSION_SECRET } = process.env;
 var Brevo = require("@getbrevo/brevo");
 var defaultClient = Brevo.ApiClient.instance;
 var apiKey = defaultClient.authentications["api-key"];
@@ -71,13 +71,19 @@ const createDeleteRequestEmail = (req, res, next) => __awaiter(void 0, void 0, v
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let newSession = new sessions_1.default({
-            type: types_1.Session.deleteRequest,
-            userId: req.body.params.id.toString(),
-            email: req.body.params.email,
-            expireAt: new Date().setDate(new Date().getDate() + 30),
+        let user = yield user_1.default.findOne({ email: req.body.params.email });
+        if (user.removeAccountToken) {
+            jsonwebtoken_1.default.verify(user.removeAccountToken, SESSION_SECRET, (err, decoded) => {
+                if (!err) {
+                    throw new errorHandler_1.http422Error("You already sent a request to delete your account (approximately 7 days needed to delete your account)");
+                }
+            });
+        }
+        let token = jsonwebtoken_1.default.sign({ ip: request_ip_1.default.getClientIp(req) }, SESSION_SECRET, {
+            expiresIn: '7d',
         });
-        yield newSession.save();
+        user.removeAccountToken = token;
+        yield user.save();
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
         res
             .status(201)
@@ -99,20 +105,16 @@ const createEmailVerification = (req, res, next) => __awaiter(void 0, void 0, vo
             email: req.body.email,
         },
     ];
+    let token = jsonwebtoken_1.default.sign({ email: req.body.email }, SESSION_SECRET, {
+        expiresIn: '1h',
+    });
     sendSmtpEmail.params = {
-        token: crypto_1.default.randomBytes(32).toString("hex"),
+        token,
     };
     sendSmtpEmail.type = "classic";
     sendSmtpEmail.templateId = 7;
     try {
         yield apiInstance.sendTransacEmail(sendSmtpEmail);
-        let newSession = new sessions_1.default({
-            type: types_1.Session.verificationRequest,
-            token: sendSmtpEmail.params.token,
-            email: req.body.email,
-            expireAt: new Date().setDate(new Date().getDate() + 1),
-        });
-        yield newSession.save();
         res.status(201).json({ success: "ok" });
     }
     catch (error) {

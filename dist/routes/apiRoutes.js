@@ -51,14 +51,12 @@ router.get("/account/registration/generate-password?:token", (req, res, next) =>
 });
 //Users
 router.get("/users", userController_1.userController.getUsers);
-router.post("/get-user-token", userController_1.userController.getUserSession);
 router.post("/user", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserConsumption);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
-router.post("/create-user-with-token", [
-    (0, errorRoute_1.checkUser)().checkUserRegistratedToken,
+router.post("/create-user-with-password", [
+    (0, errorRoute_1.checkUser)().checkUserToken,
     (0, errorRoute_1.checkUser)().checkUserRegistratedPassword,
-    (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"),
 ], userController_1.userController.creatUserWithPassword);
 router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
@@ -114,7 +112,6 @@ router.post("/email/create-delete-email", [
     (0, errorRoute_1.validateRemoveAccountReq)().checkUserID,
     (0, errorRoute_1.validateRemoveAccountReq)().checkUserEmail,
     (0, errorRoute_1.validateRemoveAccountReq)().checkUserIdAndEmail,
-    (0, errorRoute_1.checkSession)().checkParamEmail,
 ], emailController_1.emailController.createDeleteRequestEmail);
 router.post("/email/create-email-verification", emailController_1.emailController.createEmailVerification);
 //feedback

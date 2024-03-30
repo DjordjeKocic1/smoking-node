@@ -140,6 +140,8 @@ const userShema = new Schema(
     },
     notificationToken: String,
     userVerified: Boolean,
+    removeAccountToken: String,
+    verificationToken:String
   },
   { timestamps: true }
 );

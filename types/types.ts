@@ -96,8 +96,9 @@ export interface IUser {
   gameScore: number;
   save: () => Promise<IUser>;
   subscription: ISubscription;
-  apiKey: string;
-  token: string;
+  token:string;
+  removeAccountToken: string;
+  verificationToken:string;
 }
 
 export interface IMentoringUser {
@@ -128,18 +129,6 @@ export interface INotificaion extends IUser {
   isRead: boolean;
   userId: string;
   _doc?: any;
-}
-
-export enum Session {
-  verificationRequest = "verificationRequest",
-  deleteRequest = "deleteRequest",
-  loginRequest = "loginRequest",
-}
-export interface ISession {
-  type: string;
-  userId: string;
-  email: string;
-  token: string;
 }
 export interface ITask {
   _id: string;

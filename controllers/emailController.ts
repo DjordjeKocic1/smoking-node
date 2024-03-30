@@ -1,12 +1,13 @@
-import { IEmail, Session } from "../types/types";
+import { IEmail, IUser } from "../types/types";
 
 import { RequestHandler } from "express";
-import Sessions from "../model/sessions";
-import crypto from "crypto";
+import User from "../model/user";
 import { http422Error } from "../errors/errorHandler";
+import jwt from 'jsonwebtoken';
+import requestIP from 'request-ip';
 import { validationResult } from "express-validator";
 
-const { BREVO_API_KEY } = process.env;
+const { BREVO_API_KEY,SESSION_SECRET } = process.env;
 
 var Brevo = require("@getbrevo/brevo");
 var defaultClient = Brevo.ApiClient.instance;
@@ -71,15 +72,23 @@ const createDeleteRequestEmail: RequestHandler<
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
+    
+    let user = await User.findOne({ email: req.body.params.email }) as IUser;
 
-    let newSession = new Sessions({
-      type: Session.deleteRequest,
-      userId: req.body.params.id.toString(),
-      email: req.body.params.email,
-      expireAt: new Date().setDate(new Date().getDate() + 30),
+    if(user.removeAccountToken){
+      jwt.verify(user.removeAccountToken, SESSION_SECRET as string, (err, decoded) => {
+        if (!err) {
+          throw new http422Error("You already sent a request to delete your account (approximately 7 days needed to delete your account)");
+        }
+      })
+    }
+    let token = jwt.sign({ ip: requestIP.getClientIp(req) }, SESSION_SECRET as string, {
+      expiresIn: '7d',
     });
+    
+    user.removeAccountToken = token;
 
-    await newSession.save();
+    await user.save();
 
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     res
@@ -106,23 +115,18 @@ const createEmailVerification: RequestHandler<
       email: req.body.email,
     },
   ];
+
+  let token = jwt.sign({ email: req.body.email }, SESSION_SECRET as string, {
+    expiresIn: '1h',
+  });
+
   sendSmtpEmail.params = {
-    token: crypto.randomBytes(32).toString("hex"),
+    token,
   };
   sendSmtpEmail.type = "classic";
   sendSmtpEmail.templateId = 7;
   try {
     await apiInstance.sendTransacEmail(sendSmtpEmail);
-
-    let newSession = new Sessions({
-      type: Session.verificationRequest,
-      token: sendSmtpEmail.params.token,
-      email: req.body.email,
-      expireAt: new Date().setDate(new Date().getDate() + 1),
-    });
-
-    await newSession.save();
-
     res.status(201).json({ success: "ok" });
   } catch (error) {
     next(error);

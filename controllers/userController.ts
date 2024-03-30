@@ -1,13 +1,12 @@
-import { IParams, IUser, Session } from "../types/types";
+import { IParams, IUser } from "../types/types";
 
 import Mentor from "../model/mentor";
 import { RequestHandler } from "express";
-import Sessions from "../model/sessions";
 import User from "../model/user";
 import bcryprt from "bcryptjs";
-import crypto from "crypto";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
+import jwt from 'jsonwebtoken';
 import { validationResult } from "express-validator";
 
 const getUser: RequestHandler = async (req, res, next) => {
@@ -73,19 +72,16 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let password = await bcryprt.hash(req.body.password, 12);
-    let existingUser = await User.findOne({ email: req.body.email });
+    let token = jwt.decode(req.body.token) as { email: string };
+    let email = token.email;
+    
 
-    await Sessions.findOneAndDelete({
-      type: Session.verificationRequest,
-      token: req.body.token,
-      email: req.body.email,
-      expireAt: new Date().setDate(new Date().getDate() + 1),
-    });
+    let password = await bcryprt.hash(req.body.password.replace(" ", ""), 12);
+    let existingUser = await User.findOne({ email });
 
     if (!existingUser) {
       const user = new User({
-        email: req.body.email,
+        email,
       });
       user.password = password;
       let userCreate = await user.save();
@@ -267,22 +263,6 @@ const sendNotification: RequestHandler<
   }
 };
 
-const getUserSession: RequestHandler<{}, {}, { token: string }> = async (
-  req,
-  res,
-  next
-) => {
-  try {
-    let sessionFind = await Sessions.findOne({ token: req.body.token });
-    if (!sessionFind) {
-      throw new http422Error("Invalid token");
-    }
-
-    res.status(201).json({ email: sessionFind.email });
-  } catch (error) {
-    next(error);
-  }
-};
 
 export const userController = {
   getUsers,
@@ -296,5 +276,4 @@ export const userController = {
   pokeUser,
   sendNotification,
   updateUserNotificationToken,
-  getUserSession,
 };

@@ -140,6 +140,8 @@ const userShema = new Schema({
     },
     notificationToken: String,
     userVerified: Boolean,
+    removeAccountToken: String,
+    verificationToken: String
 }, { timestamps: true });
 userShema.methods.calculateHealth = function (user, req) {
     var _a, _b, _c, _d, _e, _f, _g, _h;

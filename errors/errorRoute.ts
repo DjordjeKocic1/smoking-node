@@ -1,9 +1,8 @@
 import { body, param } from "express-validator";
 
 import Mentor from "../model/mentor";
-import Sessions from "../model/sessions";
 import User from "../model/user";
-import bcryprt from "bcryptjs";
+import jwt from 'jsonwebtoken';
 
 export const checkUser = () => {
   return {
@@ -39,18 +38,6 @@ export const checkUser = () => {
         }
       });
     }),
-    checkUserRegistratedToken: body("token").custom((value) => {
-      if (!value) {
-        return Promise.reject("Token is required");
-      }
-      return Sessions.findOne({ token: value }).then((session) => {
-        if (!session) {
-          return Promise.reject("Token doesn't exist. Please try again");
-        } else {
-          return Promise.resolve();
-        }
-      });
-    }),
     checkUserRegistratedPassword: body().custom((value) => {
       if (!value.password) {
         return Promise.reject("Password is required");
@@ -60,6 +47,15 @@ export const checkUser = () => {
       }
       return Promise.resolve();
     }),
+    checkUserToken: body("token").custom((value) => {
+      return jwt.verify(value,process.env.SESSION_SECRET as string, (error:any) => {
+           if(error) {
+             return Promise.reject("Token is invalid or expired");
+           }else{
+             return Promise.resolve();
+           }
+       });
+   }),
   };
 };
 
@@ -79,19 +75,19 @@ export const validateRemoveAccountReq = () => {
     checkUserID: body("params").custom((value) => {
       if (!value.id) {
         return Promise.reject(
-          "User ID from url is missing, please login again."
+          "Params from url is missing, please login again."
         );
       }
       if (value.id.length < 24) {
-        return Promise.reject("User ID from url is missing or incorrect");
+        return Promise.reject("Params from url is missing or incorrect");
       }
       if (value.id === "") {
-        return Promise.reject("User ID from url can't be empty");
+        return Promise.reject("Params from url can't be empty");
       }
       return User.findOne({ _id: value.id }).then((user) => {
         if (!user) {
           return Promise.reject(
-            "User with that ID doesn't exist in our database. Please check if you accidentally removed 'id' from url, if you did, please go back to login page and try again."
+            "User doesn't exist in our database. Please check if you accidentally removed params from url, if you did, please go back to login page and try again."
           );
         } else {
           return Promise.resolve();
@@ -108,7 +104,7 @@ export const validateRemoveAccountReq = () => {
           return Promise.resolve();
         }
       });
-    }),
+    })
   };
 };
 
@@ -157,35 +153,3 @@ export const checkModelID = (Model: any) =>
       }
     });
   });
-
-export const checkSession = () => {
-  return {
-    checkUserToken: body("token").custom((value) => {
-      return Sessions.findOne({ token: value }).then((data) => {
-        if (!data) {
-          return Promise.reject("Missing a token");
-        } else {
-          return Promise.resolve();
-        }
-      });
-    }),
-    checkBodyEmail: body("email").custom((value) => {
-      return Sessions.findOne({ email: value }).then((data) => {
-        if (data) {
-          return Promise.reject("You already sent an request");
-        } else {
-          return Promise.resolve();
-        }
-      });
-    }),
-    checkParamEmail: body("params").custom((value) => {
-      return Sessions.findOne({ email: value.email }).then((user) => {
-        if (user) {
-          return Promise.reject("You already sent an request");
-        } else {
-          return Promise.resolve();
-        }
-      });
-    }),
-  };
-};
