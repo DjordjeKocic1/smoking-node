@@ -1,10 +1,7 @@
-@id = 65bfbe429e9cd7bea657187f
-PUT http://localhost:8000/update-user/{{id}}
+@id = 65b8fc4aa9a17d0870246fca
+POST http://localhost:8000/user-info/{{id}}
 Content-Type: application/json
 
 {
-    "consumptionInfo":{
-        "cigarettesAvoided": 0,
-        "cigarettesAvoidedCost":0
-    }
+    
 }

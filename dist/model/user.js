@@ -138,6 +138,11 @@ const userShema = new Schema({
         subscribeLasts: Number,
         subscribeDate: String,
     },
+    roles: {
+        type: String,
+        enum: ["admin", "user"],
+        default: "user"
+    },
     notificationToken: String,
     userVerified: Boolean,
     removeAccountToken: String,

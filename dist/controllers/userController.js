@@ -82,8 +82,8 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
         if (!existingUser) {
             const user = new user_1.default({
                 email,
+                password: password,
             });
-            user.password = password;
             let userCreate = yield user.save();
             res.status(201).json({ user: userCreate });
             return;
@@ -103,11 +103,11 @@ const userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
         let userFind = (yield user_1.default.findOne({ email: req.body.email }));
-        let passwordCompare = yield bcryptjs_1.default.compare(req.body.password, userFind.password);
+        let passwordCompare = yield bcryptjs_1.default.compare(req.body.password.replace(" ", ""), userFind.password);
         if (!passwordCompare) {
             throw new errorHandler_1.http422Error("Wrong password");
         }
-        res.status(201).json({ user: userFind });
+        res.status(201).json({ user: { email: userFind.email, userVerified: userFind.userVerified } });
     }
     catch (error) {
         next(error);

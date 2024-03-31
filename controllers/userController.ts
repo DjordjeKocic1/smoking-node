@@ -75,15 +75,15 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
     let token = jwt.decode(req.body.token) as { email: string };
     let email = token.email;
     
-
     let password = await bcryprt.hash(req.body.password.replace(" ", ""), 12);
     let existingUser = await User.findOne({ email });
 
     if (!existingUser) {
       const user = new User({
         email,
+        password: password,
       });
-      user.password = password;
+     
       let userCreate = await user.save();
       res.status(201).json({ user: userCreate });
       return;
@@ -111,7 +111,7 @@ const userLogin: RequestHandler<
     let userFind = (await User.findOne({ email: req.body.email })) as IUser;
 
     let passwordCompare = await bcryprt.compare(
-      req.body.password,
+      req.body.password.replace(" ", ""),
       userFind.password
     );
 
@@ -119,7 +119,7 @@ const userLogin: RequestHandler<
       throw new http422Error("Wrong password");
     }
 
-    res.status(201).json({ user: userFind });
+    res.status(201).json({ user: {email: userFind.email, userVerified: userFind.userVerified} });
   } catch (error) {
     next(error);
   }

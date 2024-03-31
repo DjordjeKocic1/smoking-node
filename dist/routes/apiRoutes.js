@@ -31,8 +31,11 @@ const router = express_1.default.Router();
 router.get("/", (req, res, next) => {
     res.redirect("/login");
 });
-router.get("/login", (req, res, next) => {
-    res.sendFile(path_1.default.join(__dirname, "../", "views/", "login.html"));
+router.get("/admin/users", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "users.html"));
+});
+router.get("/admin/login", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/admin/", "login.html"));
 });
 router.get("/account/delete/login", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "login.html"));
