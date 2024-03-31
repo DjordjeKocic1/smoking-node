@@ -33,7 +33,7 @@ require("dotenv").config();
 const router = exporess.Router();
 
 router.get("/", (req, res, next) => {
-  res.redirect("/login");
+  res.redirect("/admin/login");
 });
 
 router.get("/admin/users", (req, res, next) => {

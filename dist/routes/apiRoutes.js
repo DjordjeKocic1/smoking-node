@@ -29,7 +29,7 @@ const userController_1 = require("../controllers/userController");
 require("dotenv").config();
 const router = express_1.default.Router();
 router.get("/", (req, res, next) => {
-    res.redirect("/login");
+    res.redirect("/admin/login");
 });
 router.get("/admin/users", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "users.html"));
