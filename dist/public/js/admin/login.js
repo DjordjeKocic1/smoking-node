@@ -23,7 +23,7 @@ loginForm.addEventListener("submit", async (e) => {
   let password = e.target.password.value;
 
   let dataToSend = { email, password };
-  let response = await fetch("/user-login", {
+  let response = await fetch("/admin-login", {
     method: "POST",
     body: JSON.stringify(dataToSend),
     headers: {
@@ -39,10 +39,12 @@ loginForm.addEventListener("submit", async (e) => {
     return;
   }
 
+  sessionStorage.setItem("token", responseData.user.token);
   success.textContent = "Login Successful";
+  errorTxt.textContent = "";
 
   setTimeout(() => {
     success.textContent = "";
-  },2000)
-  
+    window.location = "/admin/users";
+  }, 2000);
 });

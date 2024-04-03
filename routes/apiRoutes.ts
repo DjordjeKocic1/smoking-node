@@ -1,5 +1,6 @@
 import { body, query } from "express-validator";
 import {
+  checkHeaderAuthorization,
   checkMentor,
   checkModelID,
   checkUser,
@@ -24,7 +25,6 @@ import path from "path";
 import { paymentController } from "../controllers/stripeController";
 import { paypalController } from "../controllers/paypalController";
 import { planController } from "../controllers/planController";
-import { reportsController } from "../controllers/reportsController";
 import { taskController } from "../controllers/taskController";
 import { userController } from "../controllers/userController";
 
@@ -32,16 +32,17 @@ require("dotenv").config();
 
 const router = exporess.Router();
 
+/* Views */
 router.get("/", (req, res, next) => {
   res.redirect("/admin/login");
 });
 
-router.get("/admin/users", (req, res, next) => {
-  res.sendFile(path.join(__dirname, "../", "views/account/", "users.html"));
-});
-
 router.get("/admin/login", (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "views/admin/", "login.html"));
+});
+
+router.get("/admin/users", (req: any, res: any, next: any) => {
+  res.sendFile(path.join(__dirname, "../", "views/admin/", "users.html"));
 });
 
 router.get("/account/delete/login", (req, res, next) => {
@@ -66,9 +67,33 @@ router.get(
     );
   }
 );
+/* end */
 
 //Users
-router.get("/users", userController.getUsers);
+/* Admin */
+router.post(
+  "/admin-login",
+  [checkUser().checkUserAdmin],
+  userController.userLogin
+);
+router.get(
+  "/admin-users",
+  [checkHeaderAuthorization().checkJwt, checkHeaderAuthorization().checkAdmin],
+  userController.getUsers
+);
+/* end */
+
+// Client
+router.post(
+  "/user-login",
+  [checkUser().checkUserEmail],
+  userController.userLogin
+);
+router.get(
+  "/users",
+  [checkHeaderAuthorization().checkJwt],
+  userController.getUsers
+);
 router.post("/user", [checkUser().checkUserEmail], userController.getUser);
 router.post(
   "/user-info/:id",
@@ -82,16 +107,8 @@ router.post(
 );
 router.post(
   "/create-user-with-password",
-  [
-    checkUser().checkUserToken,
-    checkUser().checkUserRegistratedPassword,
-  ],
+  [checkUser().checkUserToken, checkUser().checkUserRegistratedPassword],
   userController.creatUserWithPassword
-);
-router.post(
-  "/user-login",
-  [checkUser().checkUserEmail],
-  userController.userLogin
 );
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
 router.delete(
@@ -209,10 +226,6 @@ router.post("/payment-sheet", paymentController.paymentSheet);
 router.post("/paypal-pay", paypalController.paypalPay);
 router.get("/success", paypalController.paypalSuccess);
 router.get("/cancel", paypalController.paypalCancel);
-
-//Reports
-router.get("/report/verify-users", reportsController.getAllVerifyUsers);
-router.get("/report/categorie/:name", reportsController.getAllUsersByCategorie);
 
 //email
 router.post("/email/create-email", emailController.createEmail);

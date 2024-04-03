@@ -12,6 +12,11 @@ const userShema = new Schema({
         type: String,
         default: "user",
     },
+    roles: {
+        type: String,
+        enum: ["admin", "user"],
+        default: "user",
+    },
     image: String,
     name: String,
     address: String,
@@ -138,15 +143,9 @@ const userShema = new Schema({
         subscribeLasts: Number,
         subscribeDate: String,
     },
-    roles: {
-        type: String,
-        enum: ["admin", "user"],
-        default: "user"
-    },
     notificationToken: String,
     userVerified: Boolean,
     removeAccountToken: String,
-    verificationToken: String
 }, { timestamps: true });
 userShema.methods.calculateHealth = function (user, req) {
     var _a, _b, _c, _d, _e, _f, _g, _h;

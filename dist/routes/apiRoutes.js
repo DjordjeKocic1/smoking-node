@@ -23,19 +23,19 @@ const path_1 = __importDefault(require("path"));
 const stripeController_1 = require("../controllers/stripeController");
 const paypalController_1 = require("../controllers/paypalController");
 const planController_1 = require("../controllers/planController");
-const reportsController_1 = require("../controllers/reportsController");
 const taskController_1 = require("../controllers/taskController");
 const userController_1 = require("../controllers/userController");
 require("dotenv").config();
 const router = express_1.default.Router();
+/* Views */
 router.get("/", (req, res, next) => {
     res.redirect("/admin/login");
 });
-router.get("/admin/users", (req, res, next) => {
-    res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "users.html"));
-});
 router.get("/admin/login", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/admin/", "login.html"));
+});
+router.get("/admin/users", (req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "../", "views/admin/", "users.html"));
 });
 router.get("/account/delete/login", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "login.html"));
@@ -52,16 +52,19 @@ router.get("/account/registration/verification", (req, res, next) => {
 router.get("/account/registration/generate-password?:token", (req, res, next) => {
     res.sendFile(path_1.default.join(__dirname, "../", "views/account/", "password.html"));
 });
+/* end */
 //Users
-router.get("/users", userController_1.userController.getUsers);
+/* Admin */
+router.post("/admin-login", [(0, errorRoute_1.checkUser)().checkUserAdmin], userController_1.userController.userLogin);
+router.get("/admin-users", [(0, errorRoute_1.checkHeaderAuthorization)().checkJwt, (0, errorRoute_1.checkHeaderAuthorization)().checkAdmin], userController_1.userController.getUsers);
+/* end */
+// Client
+router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
+router.get("/users", [(0, errorRoute_1.checkHeaderAuthorization)().checkJwt], userController_1.userController.getUsers);
 router.post("/user", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserConsumption);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
-router.post("/create-user-with-password", [
-    (0, errorRoute_1.checkUser)().checkUserToken,
-    (0, errorRoute_1.checkUser)().checkUserRegistratedPassword,
-], userController_1.userController.creatUserWithPassword);
-router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
+router.post("/create-user-with-password", [(0, errorRoute_1.checkUser)().checkUserToken, (0, errorRoute_1.checkUser)().checkUserRegistratedPassword], userController_1.userController.creatUserWithPassword);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserNotificationToken);
@@ -106,9 +109,6 @@ router.post("/payment-sheet", stripeController_1.paymentController.paymentSheet)
 router.post("/paypal-pay", paypalController_1.paypalController.paypalPay);
 router.get("/success", paypalController_1.paypalController.paypalSuccess);
 router.get("/cancel", paypalController_1.paypalController.paypalCancel);
-//Reports
-router.get("/report/verify-users", reportsController_1.reportsController.getAllVerifyUsers);
-router.get("/report/categorie/:name", reportsController_1.reportsController.getAllUsersByCategorie);
 //email
 router.post("/email/create-email", emailController_1.emailController.createEmail);
 router.post("/email/create-delete-email", [

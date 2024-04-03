@@ -1,6 +1,12 @@
-fetch("/users")
+let token = sessionStorage.getItem("token");
+let error = document.querySelector(".error");
+fetch("/admin-users", { headers: { Authorization: token } })
   .then((res) => res.json())
   .then((data) => {
+    if (data.error) {
+      error.textContent = data.error;
+      return;
+    }
     let { users } = data;
     const table = document.body.appendChild(document.createElement("table"));
     const thead = table.appendChild(document.createElement("thead"));
@@ -23,25 +29,3 @@ fetch("/users")
       });
     });
   });
-
-let btnPP = document.querySelector(".btnPP");
-let loginForm = document.querySelector(".login");
-
-btnPP.addEventListener("click", () => {
-  fetch("/paypal-pay", {
-    method: "POST",
-    body: JSON.stringify({ price: 12 }),
-  })
-    .then((res) => res.json())
-    .then((data) => console.log(data));
-});
-
-loginForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  fetch("/user", {
-    method: "GET",
-    body: JSON.stringify({ email: e.target.email }),
-  })
-    .then((res) => res.json())
-    .then((data) => console.log(data));
-});

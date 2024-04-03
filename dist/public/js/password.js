@@ -6,8 +6,8 @@ let psw = document.querySelector("[name='password']");
 let repsw = document.querySelector("[name='repassword']");
 
 psw.addEventListener("keydown", (e) => {
-  return e.which !== 32
-})
+  return e.which !== 32;
+});
 
 showPassword.addEventListener("click", () => {
   if (showPassword.classList.contains("fa-eye")) {
@@ -60,6 +60,11 @@ form.addEventListener("submit", async (e) => {
     error.textContent = "";
     success.textContent =
       "Your changes have been saved. You can now login with your new password.";
+    setTimeout(() => {
+      if (responseData.redirect) {
+        window.location = responseData.redirect;
+      }
+    }, 2000);
   } catch (error) {
     console.log(error);
   }

@@ -23,7 +23,7 @@ app.use(morgan("combined"));
 
 initPassport(app);
 
-app.use("/",router);
+app.use("/", router);
 
 app.use(
   (

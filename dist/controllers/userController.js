@@ -20,6 +20,7 @@ const notifications_1 = require("../helpers/notifications/notifications");
 const errorHandler_1 = require("../errors/errorHandler");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const express_validator_1 = require("express-validator");
+const { SESSION_SECRET } = process.env;
 const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const errors = (0, express_validator_1.validationResult)(req);
@@ -37,6 +38,10 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 });
 const getUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const errors = (0, express_validator_1.validationResult)(req);
+        if (!errors.isEmpty()) {
+            throw new errorHandler_1.http422Error(errors.array()[0].msg);
+        }
         let users = yield user_1.default.find();
         res.status(200).json({ users });
     }
@@ -50,6 +55,9 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
+        let token = jsonwebtoken_1.default.sign({ email: req.body.email }, SESSION_SECRET, {
+            expiresIn: "30d",
+        });
         let existingUser = yield user_1.default.findOne({ email: req.body.email });
         if (!existingUser) {
             const user = new user_1.default({
@@ -63,7 +71,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             res.status(201).json({ user: userCreate });
             return;
         }
-        res.status(201).json({ user: existingUser });
+        res.status(201).json({ user: existingUser, token });
     }
     catch (error) {
         next(error);
@@ -79,6 +87,12 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
         let email = token.email;
         let password = yield bcryptjs_1.default.hash(req.body.password.replace(" ", ""), 12);
         let existingUser = yield user_1.default.findOne({ email });
+        if ((existingUser === null || existingUser === void 0 ? void 0 : existingUser.roles) === "admin") {
+            existingUser.password = password;
+            yield existingUser.save();
+            res.json({ redirect: "/admin/login" });
+            return;
+        }
         if (!existingUser) {
             const user = new user_1.default({
                 email,
@@ -102,12 +116,22 @@ const userLogin = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
+        let token = jsonwebtoken_1.default.sign({ email: req.body.email }, SESSION_SECRET, {
+            expiresIn: "30d",
+        });
         let userFind = (yield user_1.default.findOne({ email: req.body.email }));
         let passwordCompare = yield bcryptjs_1.default.compare(req.body.password.replace(" ", ""), userFind.password);
         if (!passwordCompare) {
             throw new errorHandler_1.http422Error("Wrong password");
         }
-        res.status(201).json({ user: { email: userFind.email, userVerified: userFind.userVerified } });
+        yield userFind.save();
+        res.status(201).json({
+            user: {
+                email: userFind.email,
+                userVerified: userFind.userVerified,
+                token,
+            },
+        });
     }
     catch (error) {
         next(error);

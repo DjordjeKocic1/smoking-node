@@ -6,8 +6,10 @@ import User from "../model/user";
 import bcryprt from "bcryptjs";
 import { expoNotification } from "../helpers/notifications/notifications";
 import { http422Error } from "../errors/errorHandler";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
+
+const { SESSION_SECRET } = process.env;
 
 const getUser: RequestHandler = async (req, res, next) => {
   try {
@@ -26,6 +28,10 @@ const getUser: RequestHandler = async (req, res, next) => {
 
 const getUsers: RequestHandler = async (req, res, next) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new http422Error(errors.array()[0].msg);
+    }
     let users = await User.find();
     res.status(200).json({ users });
   } catch (error) {
@@ -39,6 +45,10 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
+
+    let token = jwt.sign({ email: req.body.email }, SESSION_SECRET as string, {
+      expiresIn: "30d",
+    });
 
     let existingUser = await User.findOne({ email: req.body.email });
 
@@ -55,7 +65,7 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
       return;
     }
 
-    res.status(201).json({ user: existingUser });
+    res.status(201).json({ user: existingUser, token });
   } catch (error) {
     next(error);
   }
@@ -74,16 +84,23 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
 
     let token = jwt.decode(req.body.token) as { email: string };
     let email = token.email;
-    
+
     let password = await bcryprt.hash(req.body.password.replace(" ", ""), 12);
     let existingUser = await User.findOne({ email });
+
+    if (existingUser?.roles === "admin") {
+      existingUser.password = password;
+      await existingUser.save();
+      res.json({ redirect: "/admin/login" });
+      return;
+    }
 
     if (!existingUser) {
       const user = new User({
         email,
         password: password,
       });
-     
+
       let userCreate = await user.save();
       res.status(201).json({ user: userCreate });
       return;
@@ -108,6 +125,10 @@ const userLogin: RequestHandler<
       throw new http422Error(errors.array()[0].msg);
     }
 
+    let token = jwt.sign({ email: req.body.email }, SESSION_SECRET as string, {
+      expiresIn: "30d",
+    });
+
     let userFind = (await User.findOne({ email: req.body.email })) as IUser;
 
     let passwordCompare = await bcryprt.compare(
@@ -119,7 +140,15 @@ const userLogin: RequestHandler<
       throw new http422Error("Wrong password");
     }
 
-    res.status(201).json({ user: {email: userFind.email, userVerified: userFind.userVerified} });
+    await userFind.save();
+
+    res.status(201).json({
+      user: {
+        email: userFind.email,
+        userVerified: userFind.userVerified,
+        token,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -262,7 +291,6 @@ const sendNotification: RequestHandler<
     next(error);
   }
 };
-
 
 export const userController = {
   getUsers,

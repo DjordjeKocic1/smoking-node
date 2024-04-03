@@ -96,9 +96,9 @@ export interface IUser {
   gameScore: number;
   save: () => Promise<IUser>;
   subscription: ISubscription;
-  token:string;
+  token: string;
   removeAccountToken: string;
-  verificationToken:string;
+  roles: string;
 }
 
 export interface IMentoringUser {

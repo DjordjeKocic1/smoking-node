@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkModelID = exports.checkMentor = exports.validateRemoveAccountReq = exports.checkUser = void 0;
+exports.checkHeaderAuthorization = exports.checkModelID = exports.checkMentor = exports.validateRemoveAccountReq = exports.checkUser = void 0;
 const express_validator_1 = require("express-validator");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const user_1 = __importDefault(require("../model/user"));
@@ -62,6 +62,16 @@ const checkUser = () => {
                 }
             });
         }),
+        checkUserAdmin: (0, express_validator_1.body)("email").custom((value) => {
+            return user_1.default.findOne({ email: value, roles: "admin" }).then((user) => {
+                if (!user) {
+                    return Promise.reject("You are not authorized to access this page");
+                }
+                else {
+                    return Promise.resolve();
+                }
+            });
+        }),
     };
 };
 exports.checkUser = checkUser;
@@ -105,7 +115,7 @@ const validateRemoveAccountReq = () => {
                     return Promise.resolve();
                 }
             });
-        })
+        }),
     };
 };
 exports.validateRemoveAccountReq = validateRemoveAccountReq;
@@ -155,3 +165,30 @@ const checkModelID = (Model) => (0, express_validator_1.param)("id").custom((val
     });
 });
 exports.checkModelID = checkModelID;
+const checkHeaderAuthorization = () => {
+    return {
+        checkJwt: (0, express_validator_1.header)("Authorization").custom((value) => {
+            return jsonwebtoken_1.default.verify(value, process.env.SESSION_SECRET, (error) => {
+                if (error) {
+                    return Promise.reject("Token is invalid or expired");
+                }
+                else {
+                    return Promise.resolve();
+                }
+            });
+        }),
+        checkAdmin: (0, express_validator_1.header)("Authorization").custom((value) => {
+            let decoded = jsonwebtoken_1.default.verify(value, process.env.SESSION_SECRET);
+            let email = decoded.email;
+            return user_1.default.findOne({ email, roles: "admin" }).then((user) => {
+                if (!user) {
+                    return Promise.reject("You are not authorized to access this page");
+                }
+                else {
+                    return Promise.resolve();
+                }
+            });
+        })
+    };
+};
+exports.checkHeaderAuthorization = checkHeaderAuthorization;
