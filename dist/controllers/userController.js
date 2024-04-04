@@ -83,7 +83,7 @@ const creatUserWithPassword = (req, res, next) => __awaiter(void 0, void 0, void
         if (!errors.isEmpty()) {
             throw new errorHandler_1.http422Error(errors.array()[0].msg);
         }
-        let token = jsonwebtoken_1.default.decode(req.body.token);
+        let token = jsonwebtoken_1.default.verify(req.header("Authorization"), process.env.SESSION_SECRET);
         let email = token.email;
         let password = yield bcryptjs_1.default.hash(req.body.password.replace(" ", ""), 12);
         let existingUser = yield user_1.default.findOne({ email });

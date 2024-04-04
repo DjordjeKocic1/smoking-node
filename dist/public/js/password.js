@@ -42,7 +42,6 @@ form.addEventListener("submit", async (e) => {
     let dataToSend = {
       password,
       repassword,
-      token,
     };
 
     let response = await fetch("/create-user-with-password", {
@@ -50,6 +49,7 @@ form.addEventListener("submit", async (e) => {
       body: JSON.stringify(dataToSend),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
+        Authorization: `${token}`,
       },
     });
     let responseData = await response.json();

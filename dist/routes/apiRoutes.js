@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_validator_1 = require("express-validator");
 const errorRoute_1 = require("../errors/errorRoute");
+const auth_1 = require("../errors/auth");
 const mentor_1 = __importDefault(require("../model/mentor"));
 const notification_1 = __importDefault(require("../model/notification"));
 const plans_1 = __importDefault(require("../model/plans"));
@@ -56,15 +57,15 @@ router.get("/account/registration/generate-password?:token", (req, res, next) =>
 //Users
 /* Admin */
 router.post("/admin-login", [(0, errorRoute_1.checkUser)().checkUserAdmin], userController_1.userController.userLogin);
-router.get("/admin-users", [(0, errorRoute_1.checkHeaderAuthorization)().checkJwt, (0, errorRoute_1.checkHeaderAuthorization)().checkAdmin], userController_1.userController.getUsers);
+router.get("/admin-users", [auth_1.verifyHeaderToken, auth_1.verifyHeaderTokenAdmin], userController_1.userController.getUsers);
 /* end */
 // Client
 router.post("/user-login", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.userLogin);
-router.get("/users", [(0, errorRoute_1.checkHeaderAuthorization)().checkJwt], userController_1.userController.getUsers);
+router.get("/users", auth_1.verifyHeaderToken, userController_1.userController.getUsers);
 router.post("/user", [(0, errorRoute_1.checkUser)().checkUserEmail], userController_1.userController.getUser);
 router.post("/user-info/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserConsumption);
 router.post("/create-user", (0, express_validator_1.body)("email").isEmail().withMessage("Email is invalid"), userController_1.userController.createUser);
-router.post("/create-user-with-password", [(0, errorRoute_1.checkUser)().checkUserToken, (0, errorRoute_1.checkUser)().checkUserRegistratedPassword], userController_1.userController.creatUserWithPassword);
+router.post("/create-user-with-password", [auth_1.verifyHeaderToken, (0, errorRoute_1.checkUser)().checkUserRegistratedPassword], userController_1.userController.creatUserWithPassword);
 router.put("/update-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUser);
 router.delete("/delete-user/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.deleteUser);
 router.post("/user-token/:id", [(0, errorRoute_1.checkModelID)(user_1.default)], userController_1.userController.updateUserNotificationToken);

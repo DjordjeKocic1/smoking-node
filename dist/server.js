@@ -24,7 +24,8 @@ app.use((error, req, res, next) => {
     console.log("Middleware error", error);
     const status = error.statusCode || 500;
     const message = error.message;
-    res.status(status).json({ error: message });
+    const type = error.type;
+    res.status(status).json({ error: message, type });
 });
 mongoose_1.default.set("strictQuery", false);
 mongoose_1.default

@@ -29,13 +29,15 @@ app.use(
   (
     error: ErrorMsg,
     req: Request,
-    res: Response<{ error: string }>,
+    res: Response<{ error: string; type: string }>,
     next: NextFunction
   ) => {
     console.log("Middleware error", error);
     const status: number = error.statusCode || 500;
+
     const message = error.message;
-    res.status(status).json({ error: message });
+    const type = error.type as string;
+    res.status(status).json({ error: message, type });
   }
 );
 

@@ -1,8 +1,7 @@
-import { body, header, param } from "express-validator";
+import { body, param } from "express-validator";
 
 import Mentor from "../model/mentor";
 import User from "../model/user";
-import jwt from "jsonwebtoken";
 
 export const checkUser = () => {
   return {
@@ -46,19 +45,6 @@ export const checkUser = () => {
         return Promise.reject("Passwords do not match");
       }
       return Promise.resolve();
-    }),
-    checkUserToken: body("token").custom((value) => {
-      return jwt.verify(
-        value,
-        process.env.SESSION_SECRET as string,
-        (error: any) => {
-          if (error) {
-            return Promise.reject("Token is invalid or expired");
-          } else {
-            return Promise.resolve();
-          }
-        }
-      );
     }),
     checkUserAdmin: body("email").custom((value) => {
       return User.findOne({ email: value, roles: "admin" }).then((user) => {
@@ -166,35 +152,3 @@ export const checkModelID = (Model: any) =>
       }
     });
   });
-
-export const checkHeaderAuthorization = () => {
-  return {
-    checkJwt: header("Authorization").custom((value) => {
-      return jwt.verify(
-        value,
-        process.env.SESSION_SECRET as string,
-        (error: any) => {
-          if (error) {
-            return Promise.reject("Token is invalid or expired");
-          } else {
-            return Promise.resolve();
-          }
-        }
-      );
-    }),
-    checkAdmin: header("Authorization").custom((value) => {
-      let decoded = jwt.verify(
-        value,
-        process.env.SESSION_SECRET as string
-      ) as {email:string};
-      let email = decoded.email;
-      return User.findOne({ email, roles: "admin" }).then((user) => {
-        if (!user) {
-          return Promise.reject("You are not authorized to access this page");
-        } else {
-          return Promise.resolve();
-        }
-      })
-    })
-  };
-};

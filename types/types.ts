@@ -1,8 +1,7 @@
-import { ObjectId, Types } from "mongoose";
-
 export interface ErrorMsg {
   statusCode: number;
   message: string;
+  type?: string;
 }
 export interface IUserBasicInfo {
   address: string;

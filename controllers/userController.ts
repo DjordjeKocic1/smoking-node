@@ -45,7 +45,6 @@ const createUser: RequestHandler<{}, {}, IUser> = async (req, res, next) => {
     if (!errors.isEmpty()) {
       throw new http422Error(errors.array()[0].msg);
     }
-
     let token = jwt.sign({ email: req.body.email }, SESSION_SECRET as string, {
       expiresIn: "30d",
     });
@@ -82,7 +81,11 @@ const creatUserWithPassword: RequestHandler<{}, {}, IUser> = async (
       throw new http422Error(errors.array()[0].msg);
     }
 
-    let token = jwt.decode(req.body.token) as { email: string };
+    let token = jwt.verify(
+      req.header("Authorization") as string,
+      process.env.SESSION_SECRET as string
+    ) as { email: string };
+
     let email = token.email;
 
     let password = await bcryprt.hash(req.body.password.replace(" ", ""), 12);

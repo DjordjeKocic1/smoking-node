@@ -1,11 +1,11 @@
 import { body, query } from "express-validator";
 import {
-  checkHeaderAuthorization,
   checkMentor,
   checkModelID,
   checkUser,
   validateRemoveAccountReq,
 } from "../errors/errorRoute";
+import { verifyHeaderToken, verifyHeaderTokenAdmin } from "../errors/auth";
 
 import Mentor from "../model/mentor";
 import Notification from "../model/notification";
@@ -78,7 +78,7 @@ router.post(
 );
 router.get(
   "/admin-users",
-  [checkHeaderAuthorization().checkJwt, checkHeaderAuthorization().checkAdmin],
+  [verifyHeaderToken, verifyHeaderTokenAdmin],
   userController.getUsers
 );
 /* end */
@@ -89,11 +89,7 @@ router.post(
   [checkUser().checkUserEmail],
   userController.userLogin
 );
-router.get(
-  "/users",
-  [checkHeaderAuthorization().checkJwt],
-  userController.getUsers
-);
+router.get("/users", verifyHeaderToken, userController.getUsers);
 router.post("/user", [checkUser().checkUserEmail], userController.getUser);
 router.post(
   "/user-info/:id",
@@ -107,7 +103,7 @@ router.post(
 );
 router.post(
   "/create-user-with-password",
-  [checkUser().checkUserToken, checkUser().checkUserRegistratedPassword],
+  [verifyHeaderToken, checkUser().checkUserRegistratedPassword],
   userController.creatUserWithPassword
 );
 router.put("/update-user/:id", [checkModelID(User)], userController.updateUser);
