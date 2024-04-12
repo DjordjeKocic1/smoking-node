@@ -60,11 +60,6 @@ form.addEventListener("submit", async (e) => {
     error.textContent = "";
     success.textContent =
       "Your changes have been saved. You can now login with your new password.";
-    setTimeout(() => {
-      if (responseData.redirect) {
-        window.location = responseData.redirect;
-      }
-    }, 2000);
   } catch (error) {
     console.log(error);
   }

@@ -19,10 +19,10 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const verifyHeaderToken = (req, res, next) => {
     const token = req.header("Authorization");
     if (!token)
-        throw new errorHandler_1.http403Error("Access denied. No token provided.");
+        throw new errorHandler_1.http401Error("Access denied. No token provided.");
     jsonwebtoken_1.default.verify(token, process.env.SESSION_SECRET, (error) => {
         if (error) {
-            throw new errorHandler_1.http403Error("Token expired or invalid.");
+            throw new errorHandler_1.http401Error("Token expired or invalid.");
         }
         else {
             next();
@@ -33,12 +33,12 @@ exports.verifyHeaderToken = verifyHeaderToken;
 const verifyHeaderTokenAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.header("Authorization");
     if (!token)
-        throw new errorHandler_1.http403Error("Access denied. No token provided.");
+        throw new errorHandler_1.http401Error("Access denied. No token provided.");
     let decoded = jsonwebtoken_1.default.verify(token, process.env.SESSION_SECRET);
     let email = decoded.email;
     let user = yield user_1.default.findOne({ email, roles: "admin" });
     if (!user) {
-        throw new errorHandler_1.http403Error("You are not authorized to access this page");
+        throw new errorHandler_1.http401Error("You are not authorized to access this page");
     }
     else {
         next();

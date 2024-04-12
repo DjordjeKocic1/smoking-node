@@ -34,7 +34,6 @@ app.use(
   ) => {
     console.log("Middleware error", error);
     const status: number = error.statusCode || 500;
-
     const message = error.message;
     const type = error.type as string;
     res.status(status).json({ error: message, type });

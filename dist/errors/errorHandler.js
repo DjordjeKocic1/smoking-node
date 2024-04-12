@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.http500Error = exports.http422Error = exports.http404Error = exports.http403Error = exports.baseError = exports.HttpStatusCode = void 0;
+exports.http500Error = exports.http422Error = exports.http404Error = exports.http401Error = exports.baseError = exports.HttpStatusCode = void 0;
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["OK"] = 200] = "OK";
@@ -21,12 +21,12 @@ const baseError = class BaseError extends Error {
     }
 };
 exports.baseError = baseError;
-const http403Error = class HTTP403Error extends exports.baseError {
+const http401Error = class HTTP401Error extends exports.baseError {
     constructor(message) {
-        super("FORBIDDEN", HttpStatusCode.FORBIDDEN, message, "FORBIDDEN");
+        super("UNAUTHORIZED", HttpStatusCode.FORBIDDEN, message, "UNAUTHORIZED");
     }
 };
-exports.http403Error = http403Error;
+exports.http401Error = http401Error;
 const http404Error = class HTTP404Error extends exports.baseError {
     constructor(message) {
         super("PAGE NOT FOUND", HttpStatusCode.NOT_FOUND, message, "NOT FOUND");

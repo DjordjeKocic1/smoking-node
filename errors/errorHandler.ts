@@ -28,9 +28,9 @@ export const baseError = class BaseError extends Error {
     Error.captureStackTrace(this);
   }
 };
-export const http403Error = class HTTP403Error extends baseError {
+export const http401Error = class HTTP401Error extends baseError {
   constructor(message: string) {
-    super("FORBIDDEN", HttpStatusCode.FORBIDDEN, message, "FORBIDDEN");
+    super("UNAUTHORIZED", HttpStatusCode.FORBIDDEN, message, "UNAUTHORIZED");
   }
 };
 export const http404Error = class HTTP404Error extends baseError {
