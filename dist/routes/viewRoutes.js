@@ -7,7 +7,10 @@ exports.viewRoutes = void 0;
 const path_1 = __importDefault(require("path"));
 const viewRoutes = (router) => {
     router.get("/", (req, res, next) => {
-        res.redirect("/admin/login");
+        res.redirect("/home");
+    });
+    router.get("/home", (req, res, next) => {
+        res.sendFile(path_1.default.join(__dirname, "../", "views/", "home.html"));
     });
     router.get("/admin/login", (req, res, next) => {
         res.sendFile(path_1.default.join(__dirname, "../", "views/admin/", "login.html"));

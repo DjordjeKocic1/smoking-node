@@ -1,0 +1,3 @@
+
+(function(){document.addEventListener("DOMContentLoaded",function(){if(!document.querySelector("html").classList.contains("is-builder")){var c=!0;window.addEventListener("scroll",function(){c&&0!==document.documentElement.scrollTop&&80<=(document.documentElement.scrollTop+window.innerHeight)/document.documentElement.offsetHeight*100&&(document.querySelectorAll(".mbr-popup[data-on-scroll]").forEach(function(b){var a;"undefined"!==typeof bootstrap?("undefined"!==typeof bootstrap.Modal.getInstance&&
+(a=bootstrap.Modal.getInstance(b)),a||(a=new bootstrap.Modal(b),{keyboard:!1}),a.show()):"undefined"!==typeof jQuery&&$(b).modal({keyboard:!1})}),c=!1)})}})})();

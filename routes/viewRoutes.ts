@@ -3,7 +3,11 @@ import path from "path";
 
 export const viewRoutes = (router: Router) => {
   router.get("/", (req, res, next) => {
-    res.redirect("/admin/login");
+    res.redirect("/home");
+  });
+
+  router.get("/home", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "../", "views/", "home.html"));
   });
 
   router.get("/admin/login", (req, res, next) => {
