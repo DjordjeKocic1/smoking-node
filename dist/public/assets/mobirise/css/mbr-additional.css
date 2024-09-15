@@ -1143,10 +1143,6 @@ a {
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  background-image: url("../../../assets/images/features19.png");
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
 }
 @media (max-width: 767px) {
   .cid-ucg0pUxZZU .img-item {
